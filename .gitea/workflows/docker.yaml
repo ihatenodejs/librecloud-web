@@ -24,7 +24,7 @@ jobs:
           PACKAGE_TOKEN: ${{ secrets.PACKAGE_TOKEN }}
 
       - name: Build Docker Image
-        run: docker build -t git.pontusmail.org/LibreCloud/web:latest .
+        run: docker build -t git.pontusmail.org/librecloud/web:latest .
 
       - name: Push Docker Image
-        run: docker push git.pontusmail.org/LibreCloud/web:latest
+        run: docker push git.pontusmail.org/librecloud/web:latest
