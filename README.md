@@ -11,7 +11,7 @@ LibreCloud's website
 2. **Clone the repo**
 
    ```bash
-   git clone https://git.pontusmail.org/LibreCloud/web.git
+   git clone https://git.pontusmail.org/librecloud/web.git
    cd web
    ```
 
