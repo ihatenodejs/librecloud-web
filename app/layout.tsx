@@ -3,6 +3,7 @@ import type { Metadata } from "next"
 import Head from "next/head"
 import { Inter } from "next/font/google"
 import Navbar from "../app/components/Navbar"
+import "@radix-ui/themes/styles.css";
 
 const inter = Inter({ subsets: ["latin"] })
 
