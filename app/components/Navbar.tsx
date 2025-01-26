@@ -31,7 +31,7 @@ const Navbar = () => {
                 <Server className="mr-2 h-5 w-5" /> Services
               </Link>
               <Link
-                href="/account"
+                href="/account/login"
                 className="flex items-center text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
               >
                 <User className="mr-2 h-5 w-5" /> My Account
@@ -71,7 +71,7 @@ const Navbar = () => {
               <Server className="mr-2 h-5 w-5" /> Services
             </Link>
             <Link
-              href="/account"
+              href="/account/login"
               className="flex items-center text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
             >
               <User className="mr-2 h-5 w-5" /> My Account
