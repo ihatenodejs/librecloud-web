@@ -3,11 +3,10 @@
 import Link from "next/link"
 import { useState } from "react"
 import { TextField, Button, Flex, Text, Card } from "@radix-ui/themes"
-import { Mail, Lock } from "lucide-react"
+import { Mail } from "lucide-react"
 
 export default function Login() {
   const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -32,19 +31,10 @@ export default function Login() {
                 <Mail height="16" width="16" />
               </TextField.Slot>
             </TextField.Root>
-            <TextField.Root
-              placeholder="Password"
-              type="password"
-              value={password}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
-              className="mb-3"
-              required
-            >
-              <TextField.Slot>
-                <Lock height="16" width="16" />
-              </TextField.Slot>
-            </TextField.Root>
-            <Button color="gray" variant="outline" type="submit" highContrast>Log in</Button>
+            <Button color="gray" variant="outline" type="submit" highContrast>
+              <Mail height="16" width="16" />
+              Send Magic Code
+            </Button>
             <Link
               href="https://user.pontusmail.org/admin/user/signup"
               className="text-sm underline text-center"
