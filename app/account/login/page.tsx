@@ -2,49 +2,92 @@
 
 import Link from "next/link"
 import { useState } from "react"
-import { TextField, Button, Flex, Text, Card } from "@radix-ui/themes"
+import { useRouter } from "next/navigation"
 import { Mail } from "lucide-react"
+import Cookies from "js-cookie"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Alert, AlertDescription } from "@/components/ui/alert"
 
 export default function Login() {
   const [email, setEmail] = useState("")
+  const [errorMessage, setErrorMessage] = useState("")
+  const [isLoading, setIsLoading] = useState(false)
+  const router = useRouter()
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    setIsLoading(true)
+    setErrorMessage("")
+
+    try {
+      const response = await fetch('http://localhost:3001/auth/login', {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email }),
+      })
+
+      const data = await response.json()
+
+      if (response.ok && data.success) {
+        Cookies.set("stageTwoKey", data.stageTwoKey)
+        Cookies.set("email", email)
+        router.push("/account/login/code")
+      } else {
+        setErrorMessage(data.error || "An unknown error occurred.")
+      }
+    } catch (error) {
+      console.error("There was a problem with requesting a magic code:", error)
+      setErrorMessage("An unexpected error occurred. Please try again.")
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
-    <Flex className="h-screen" align="center" justify="center">
-      <Card className="w-full max-w-md p-6">
-        <form onSubmit={handleSubmit}>
-          <Text size="5" weight="bold">
-            Log in to your account
-          </Text>
-          <Flex direction="column" gap="4" className="mt-6">
-            <TextField.Root
-              placeholder="Email"
-              type="email"
-              value={email}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
-              required
-            >
-              <TextField.Slot>
-                <Mail height="16" width="16" />
-              </TextField.Slot>
-            </TextField.Root>
-            <Button color="gray" variant="outline" type="submit" highContrast>
-              <Mail height="16" width="16" />
-              Send Magic Code
+    <div className="flex h-screen items-center justify-center">
+      <Card className="w-full max-w-md">
+        <CardHeader>
+          <CardTitle>Log in to your account</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="space-y-2">
+              <Input
+                type="email"
+                placeholder="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+            </div>
+            <Button type="submit" className="w-full" disabled={isLoading}>
+              {isLoading ? (
+                "Sending..."
+              ) : (
+                <>
+                  <Mail className="mr-2 h-4 w-4" />
+                  Send Magic Code
+                </>
+              )}
             </Button>
-            <Link
-              href="https://user.pontusmail.org/admin/user/signup"
-              className="text-sm underline text-center"
-            >
-              I don&apos;t have an account
-            </Link>
-          </Flex>
-        </form>
+            {errorMessage && (
+              <Alert variant="destructive">
+                <AlertDescription>{errorMessage}</AlertDescription>
+              </Alert>
+            )}
+            <div className="text-center">
+              <Link href="https://user.pontusmail.org/admin/user/signup" className="text-sm underline">
+                I don&apos;t have an account
+              </Link>
+            </div>
+          </form>
+        </CardContent>
       </Card>
-    </Flex>
+    </div>
   )
 }
 
