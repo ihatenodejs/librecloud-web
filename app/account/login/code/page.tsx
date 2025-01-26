@@ -16,7 +16,7 @@ export default function Login() {
   const router = useRouter()
 
   useEffect(() => {
-    const checkStatus = async () => {
+    const validateStageTwo = async () => {
       setErrorMessage("")
       setIsLoading(true)
 
@@ -42,7 +42,7 @@ export default function Login() {
       }
     }
 
-    checkStatus()
+    validateStageTwo()
   }, [magicCode, router])
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -63,7 +63,6 @@ export default function Login() {
 
       if (response.ok && data.success) {
         Cookies.set("key", data.key)
-        Cookies.remove("email")
         Cookies.remove("stageTwoKey")
         router.push("/account/dashboard")
       } else {
