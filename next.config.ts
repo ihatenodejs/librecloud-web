@@ -4,6 +4,16 @@ import type { NextConfig } from "next"
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   output: "standalone",
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "git.pontusmail.org",
+        port: "",
+        pathname: "**",
+      },
+    ],
+  },
 }
 
 export default nextConfig
