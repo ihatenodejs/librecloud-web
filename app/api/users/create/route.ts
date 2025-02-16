@@ -8,7 +8,7 @@ import { NextResponse } from "next/server"
 // (3) Migrate a p0ntus mail account to a LibreCloud account (creates/migrates Authentik/Email)
 
 async function createEmail(email: string, password: string, migrate: boolean) {
-  const response = await axios.post("http://localhost:6723/accounts/add", {
+  const response = await axios.post(`${process.env.MAIL_CONNECT_API_URL}/accounts/add`, {
     email,
     password,
     migrate,
@@ -61,7 +61,7 @@ export async function POST(request: Request) {
       const response = await axios.request({
         method: "post",
         maxBodyLength: Infinity,
-        url: "https://auth.librecloud.cc/api/v3/core/users/",
+        url: `${process.env.AUTHENTIK_API_URL}/core/users/`,
         headers: {
           "Content-Type": "application/json",
           Accept: "application/json",
@@ -89,7 +89,7 @@ export async function POST(request: Request) {
         const updCfg = await axios.request({
           method: "post",
           maxBodyLength: Infinity,
-          url: `https://auth.librecloud.cc/api/v3/core/users/${userID}/set_password/`,
+          url: `${process.env.AUTHENTIK_API_URL}/core/users/${userID}/set_password/`,
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${process.env.AUTHENTIK_API_KEY}`,

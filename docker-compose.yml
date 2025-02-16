@@ -1,6 +1,6 @@
 services:
   librecloud-web:
-    image: "git.pontusmail.org/librecloud/web:latest"
+    build: .
     ports:
       - "3019:3000"
     environment:

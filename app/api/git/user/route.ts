@@ -20,7 +20,7 @@ export async function GET() {
       return NextResponse.json({ message: "User not found in database" })
     }
 
-    const response = await fetch(`https://git.pontusmail.org/api/v1/users/${dbUser.username}`, {
+    const response = await fetch(`${process.env.GITEA_API_URL}/users/${dbUser.username}`, {
       headers: {
         Authorization: `Bearer ${process.env.GITEA_API_KEY}`,
         "Content-Type": "application/json",

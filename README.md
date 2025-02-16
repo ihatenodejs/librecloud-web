@@ -94,3 +94,7 @@ A Docker setup requires both Docker *and* Docker Compose.
    ```bash
    bun dev
    ```
+
+## To-Do
+
+* [ ] Add documentation on .env
