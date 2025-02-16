@@ -115,11 +115,15 @@ export async function POST(request: Request) {
     }
   } catch (error: unknown) {
     if (axios.isAxiosError(error) && error.response?.data?.detail) {
-      console.log("Axios error detail:", error.response.data.detail)
+      console.log("Error:", error.response.data.detail)
+      return NextResponse.json({ success: false, message: "Internal server error - Failed to create user" })
+    } else if (axios.isAxiosError(error) && error.response?.data?.error) {
+      console.log("Error:", error.response.data.error)
+      return NextResponse.json({ success: false, message: error.response.data.error })
     } else {
       console.log(error)
+      return NextResponse.json({ success: false, message: "Internal server error - Failed to create user" })
     }
-    return NextResponse.json({ success: false, message: "Internal server error - Failed to create user" })
   }
 }
 
