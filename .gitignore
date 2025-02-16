@@ -43,5 +43,13 @@ next-env.d.ts
 # vs code
 .vscode/
 
+# idea
+.idea/
+
 # package-lock
 package-lock.json
+bun.lockb
+
+# prisma
+prisma/dev.db
+prisma/migrations/
