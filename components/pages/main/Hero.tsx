@@ -22,7 +22,7 @@ const Hero = () => {
             Experience FOSS at its best with LibreCloud, a free service provider built with all kinds of people in mind.
           </p>
           <div className="mt-10 max-w-md mx-auto sm:flex sm:justify-center">
-            <div className="rounded-md shadow">
+            <div className="rounded-md shadow-sm">
               <Link href="/account/login">
                 <Button className="py-6 px-8">
                   Get started

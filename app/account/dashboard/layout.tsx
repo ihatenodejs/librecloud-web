@@ -14,7 +14,7 @@ const DashboardLayout = ({ children }: { children: ReactNode }) => {
       disableTransitionOnChange
     >
       <div className="min-h-screen flex flex-col bg-background text-foreground">
-        <div className="flex-grow">
+        <div className="grow">
           <SidebarProvider>
             <div className="flex flex-col w-full min-h-screen bg-background">
               <Header />

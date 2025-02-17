@@ -176,7 +176,7 @@ export default function Signup() {
                       required
                       value={formData.emailUsername}
                       onChange={handleInputChange}
-                      className="flex-grow"
+                      className="grow"
                     />
                     <span className="text-muted-foreground">@</span>
                     <Select
@@ -260,7 +260,7 @@ export default function Signup() {
                       required
                       value={formData.emailUsername}
                       onChange={handleInputChange}
-                      className="flex-grow"
+                      className="grow"
                     />
                     <span className="text-muted-foreground">@</span>
                     <Select

@@ -42,7 +42,7 @@ const WelcomePage = () => {
   return (
     <div className="flex flex-col md:flex-row h-screen overflow-hidden">
       <div className="w-full h-1/5 sm:h-2/5 md:h-full md:w-2/5 flex items-center justify-center relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-black/30 via-black/20 to-transparent dark:from-white/30 dark:via-white/20 dark:to-transparent"></div>
+        <div className="absolute inset-0 bg-linear-to-br from-black/30 via-black/20 to-transparent dark:from-white/30 dark:via-white/20 dark:to-transparent"></div>
         <div
           style={{
             backgroundImage: resolvedTheme === "dark"

@@ -39,7 +39,7 @@ export default function Home() {
   ]
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-950 to-gray-900">
+    <div className="min-h-screen bg-linear-to-b from-gray-950 to-gray-900">
       <Navbar />
       <main>
         <Hero />
