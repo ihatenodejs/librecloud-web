@@ -22,8 +22,6 @@ export default function Dashboard() {
     gitFollowingCt: 0,
     gitAvatar: "",
     gitLastLogin: "",
-    gitProfileCardLoading: true,
-    gitProfileCardError: false,
     gitIsAdmin: false,
     gitEmail: "",
     showRunSecurityCheckBtn: true,
@@ -33,7 +31,7 @@ export default function Dashboard() {
   useEffect(() => {
     const checkGitLinkStatus = async () => {
       try {
-        const response = await fetch("http://localhost:3000/api/git/user")
+        const response = await fetch("/api/git/user")
 
         if (response.ok) {
           const data = await response.json()
@@ -46,18 +44,12 @@ export default function Dashboard() {
             gitFollowingCt: data.following_count || 0,
             gitIsAdmin: data.is_admin || false,
             gitEmail: data.email || "",
-            gitProfileCardLoading: false,
           }))
         } else {
           throw new Error("Failed to fetch Gitea account details");
         }
       } catch (error) {
         console.error("Error fetching your Gitea user data:", error);
-        setDashboardState((prev) => ({
-          ...prev,
-          gitProfileCardError: true,
-          gitProfileCardLoading: false,
-        }))
       }
     }
 
