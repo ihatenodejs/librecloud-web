@@ -6,10 +6,10 @@ import { ReactTyped } from "react-typed"
 import Link from "next/link";
 
 const Hero = () => {
-  const phrases = ["developers", "students", "non-profits", "everyone"]
+  const phrases = ["everyone", "developers", "students", "non-profits", "teachers", "workers", "friends"]
 
   return (
-    <div className="py-20 text-white">
+    <div className="pt-20 pb-30 text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center">
           <h1 className="text-4xl tracking-tight font-extrabold sm:text-5xl md:text-6xl">
@@ -19,7 +19,7 @@ const Hero = () => {
             </span>
           </h1>
           <p className="mt-6 max-w-md mx-auto text-xl text-gray-300 sm:max-w-3xl">
-            Experience FOSS at its best with LibreCloud, a free service provider built with all kinds of people in mind.
+            Experience FOSS at its best with LibreCloud, a free service provider built with everyone in mind.
           </p>
           <div className="mt-10 max-w-md mx-auto sm:flex sm:justify-center">
             <div className="rounded-md shadow-sm">
