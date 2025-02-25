@@ -9,6 +9,4 @@ export default async function Page() {
   } else {
     redirect("/account/login")
   }
-
-  return null
 }

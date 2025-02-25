@@ -53,7 +53,7 @@ export default function Dashboard() {
       }
     }
 
-    checkGitLinkStatus()
+    checkGitLinkStatus().then(r => r)
   }, [])
 
   return (

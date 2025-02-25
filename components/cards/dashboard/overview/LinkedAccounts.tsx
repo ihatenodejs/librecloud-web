@@ -37,7 +37,7 @@ export const LinkedAccounts = () => {
       }
     };
 
-    fetchGitStatus()
+    fetchGitStatus().then(r => r)
   }, []);
 
   return (

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react"
+import React, { useState } from "react"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
@@ -61,3 +61,6 @@ export function CreateRepo() {
     </Card>
   )
 }
+
+export default CreateRepo;
+
