@@ -2,9 +2,8 @@
 
 ![Last Update](https://img.shields.io/badge/last_update-24_Feb_2024-blue)
 [![License: CC0-1.0](https://img.shields.io/badge/License-CC0_1.0-lightgrey.svg)](http://creativecommons.org/publicdomain/zero/1.0/)
-[![Build Status](https://git.pontusmail.org/librecloud/web/actions/workflows/docker.yaml/badge.svg)](https://git.pontusmail.org/librecloud/web/actions/?workflow=docker.yaml)
-[![Build Status](https://git.pontusmail.org/librecloud/web/actions/workflows/ci.yaml/badge.svg)](https://git.pontusmail.org/librecloud/web/actions/?workflow=ci.yaml)
-[![Build Status](https://git.pontusmail.org/librecloud/web/actions/workflows/bump.yml/badge.svg)](https://git.pontusmail.org/librecloud/web/actions/?workflow=bump.yml)
+[![Build and Push Docker Image](https://github.com/ihatenodejs/librecloud-web/actions/workflows/docker.yml/badge.svg)](https://github.com/ihatenodejs/librecloud-web/actions/workflows/docker.yml)
+[![Bump Dependencies](https://github.com/ihatenodejs/librecloud-web/actions/workflows/bump.yml/badge.svg)](https://github.com/ihatenodejs/librecloud-web/actions/workflows/bump.yml)
 
 LibreCloud's website, dashboard, and API
 
