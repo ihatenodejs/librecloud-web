@@ -128,7 +128,7 @@ export default function Pricing() {
               </div>
               <div className="pt-4">
                 <p className="text-xs text-muted-foreground">
-                  Calculator price rounded to nearest dollar and based on Namecheap provider, priced at $0.70/GB
+                  Calculator price rounded to nearest dollar and based on ElcroDigital provider
                 </p>
               </div>
             </div>
