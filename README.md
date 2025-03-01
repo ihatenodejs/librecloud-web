@@ -39,7 +39,7 @@ A Docker setup requires both Docker *and* Docker Compose.
 
 3. **Generate auth secret**
 
-   This step is relatively painless. Simply execute the below command to generate a `.env.local` file with an `AUTH_SECRET`.
+   This step is relatively painless. Execute the below command to generate a `.env.local` file with an `AUTH_SECRET`.
 
    ```bash
    bunx auth secret
@@ -51,7 +51,9 @@ A Docker setup requires both Docker *and* Docker Compose.
 
 5. **Initialize Prisma (optional)**
 
-   Because `web` uses a database for storing Git link statuses (and other things to come), you will need to initialize the SQLite database. However, if you are using Docker Compose, a database has already been generated in the container image, and is blank.
+   Because `web` uses a database for storing Git link statuses (and other things to come),
+   you will need to initialize the SQLite database.
+   However, if you are using Docker Compose, a database has already been generated in the container image and is blank.
 
    If you have a reason to initialize Prisma now, feel free to execute:
 
@@ -70,7 +72,8 @@ A Docker setup requires both Docker *and* Docker Compose.
 
 7. **Complete Setup**
 
-   If you would like to host the entire LibreCloud frontend and backend, you will also need to setup the following repositories and edit this project to work with *your* setup.
+   If you would like to host the entire LibreCloud frontend and backend,
+   you will also need to set up the following repositories and edit this project to work with *your* setup.
 
    * [mail-connect](https://git.pontusmail.org/librecloud/mail-connect)
    * [docker-mailserver](https://github.com/docker-mailserver/docker-mailserver)
@@ -100,7 +103,7 @@ A Docker setup requires both Docker *and* Docker Compose.
 
 4. **Generate auth secret**
 
-   This step is relatively painless. Simply execute the below command to generate a `.env.local` file with an `AUTH_SECRET`.
+   This step is relatively painless. Execute the below command to generate a `.env.local` file with an `AUTH_SECRET`.
 
    ```bash
    bunx auth secret
@@ -130,11 +133,14 @@ A Docker setup requires both Docker *and* Docker Compose.
 
 ## Environment Variables
 
-At the time of writing, LibreCloud is not in the state of perfection, and as such we are expecting that you have a setup exact to ours. While this will change in the future, we still suggest that provide all of the listed environment variables.
+At the time of writing, LibreCloud is not in the state of perfection,
+and as such we are expecting that you have a setup exact to ours.
+While this will change in the future, we still suggest that provide all the listed environment variables.
 
 ### Authentik
 
-We use [Auth.js](https://authjs.dev) to provide authentication for users through Authentik. To do this, you will need to create a new OAuth2 provider in Authentik and put it's configuration in your `.env` file.
+We use [Auth.js](https://authjs.dev) to provide authentication for users through Authentik.
+To do this, you will need to create a new OAuth2 provider in Authentik and put its configuration in your `.env` file.
 
 If you need more help doing this, there is a fantastic guide [on Authentik's wiki](https://docs.goauthentik.io/docs/add-secure-apps/providers/oauth2/).
 
@@ -148,7 +154,10 @@ If you need more help doing this, there is a fantastic guide [on Authentik's wik
 
 ### Gitea
 
-Next, you will need to configure `web` with your Gitea instance. Create a new access token in your Gitea user settings (), and input the key you receive, as well as the URL of your instance, and the API URL. You can find a link to the API and it's endpoint URL on the footer.
+Next, you will need to configure `web` with your Gitea instance.
+Create a new access token in your Gitea user settings (),
+and input the key you receive, as well as the URL of your instance, and the API URL.
+You can find a link to the API and its endpoint URL on the footer.
 
 | Environment Variable | Description                                   | Example                                    |
 |----------------------|-----------------------------------------------|--------------------------------------------|
@@ -162,8 +171,8 @@ mail-connect, another project by LibreCloud, is a bridge from `docker-mailserver
 
 Keep in mind, this endpoint should **NOT** be public, and `web` should be the only authorized user of the API, unless you know what you're doing. There is zero authentication.
 
-| Environment Variable | Description                  | Example               |
-|----------------------|------------------------------|-----------------------|
+| Environment Variable | Description                  | Example                 |
+|----------------------|------------------------------|-------------------------|
 | MAIL_CONNECT_API_URL | URL of your mail-connect API | `http://localhost:4200` |
 
 ### Auth.js
@@ -180,4 +189,4 @@ We suggest starting by allowing Auth.js
 
 * [X] Add documentation on .env
 * [ ] Implement security scans
-* [ ] Ratelimiting on API
+* [ ] Rate-limiting on API
