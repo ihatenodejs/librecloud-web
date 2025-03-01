@@ -4,6 +4,7 @@ import { Mail, Lock, Disc3, Headset } from "lucide-react"
 import { SiGitea, SiAuthentik } from "react-icons/si";
 import Navbar from "@/components/pages/main/Navbar"
 import PoweredBySection from "@/components/pages/main/PoweredBySection"
+import Pricing from "@/components/pages/main/Pricing"
 
 export default function Home() {
   const features = [
@@ -55,6 +56,7 @@ export default function Home() {
           </div>
         </section>
         <PoweredBySection />
+        <Pricing />
       </main>
     </div>
   )
