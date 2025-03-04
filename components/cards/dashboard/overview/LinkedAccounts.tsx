@@ -4,10 +4,10 @@ import { Badge } from "@/components/ui/badge";
 import { Loader2 } from "lucide-react";
 
 export const LinkedAccounts = () => {
-  const [gitStatus, setGitStatus] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isAdmin, setIsAdmin] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [gitStatus, setGitStatus] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+  const [isAdmin, setIsAdmin] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     const fetchGitStatus = async () => {
@@ -16,17 +16,20 @@ export const LinkedAccounts = () => {
         const response = await fetch("/api/git/user")
         const data = await response.json()
         if (!response.ok) {
-          if (data.error) {
+          if (data.error && !data.dismissErr) {
             throw new Error(data.error)
-          } else {
+          } else if (response.status !== 404) {
             throw new Error(`HTTP error: ${response.status}`)
+          } else {
+            console.log(data.error)
           }
-        }
-        if (data.is_admin) {
-          setIsAdmin(true)
-        }
-        if (!data.message) {
-          setGitStatus(true)
+        } else {
+          if (data.is_admin) {
+            setIsAdmin(true)
+          }
+          if (!data.message) {
+            setGitStatus(true)
+          }
         }
       } catch (err: unknown) {
         if (err instanceof Error) {
@@ -81,5 +84,5 @@ export const LinkedAccounts = () => {
         </div>
       </CardContent>
     </Card>
-  );
-};
+  )
+}

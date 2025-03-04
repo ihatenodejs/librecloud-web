@@ -18,6 +18,8 @@ export async function GET() {
 
     if (!dbUser) {
       return NextResponse.json({ message: "User not found in database" })
+    } else if (dbUser.username === null) {
+      return NextResponse.json({ error: "Git account not linked", dismissErr: true }, { status: 404 })
     }
 
     const response = await fetch(`${process.env.GITEA_API_URL}/users/${dbUser.username}`, {

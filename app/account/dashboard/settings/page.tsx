@@ -2,10 +2,11 @@
 
 import { motion } from "framer-motion"
 import { SideMenu } from "@/components/pages/dashboard/SideMenu"
-//import { Switch } from "@/components/ui/switch"
-//import { Label } from "@/components/ui/label"
-//import { Card } from "@/components/ui/card"
+import { Switch } from "@/components/ui/switch"
+import { Label } from "@/components/ui/label"
+import { Card } from "@/components/ui/card"
 import { ChangePassword } from "@/components/cards/dashboard/Settings/ChangePassword"
+import { useState, useEffect } from "react";
 
 const fadeIn = {
   initial: { opacity: 0, y: 20 },
@@ -14,6 +15,75 @@ const fadeIn = {
 }
 
 export default function Settings() {
+  const [settings, setSettings] = useState({
+    hideGenAI: false,
+    hideUpgrades: false,
+    hideCrypto: false
+  });
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const fetchSettings = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch('/api/users/settings');
+        if (response.ok) {
+          const data = await response.json();
+          setSettings(data);
+        } else {
+          console.error('[!] Failed to fetch settings');
+        }
+      } catch (error) {
+        console.error('[!] Error fetching settings:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchSettings();
+  }, []);
+
+  const updateSetting = async (settingName: string, value: boolean) => {
+    setSettings(prev => ({
+      ...prev,
+      [settingName]: value
+    }));
+
+    try {
+      setLoading(true);
+      const response = await fetch('/api/users/settings', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ...settings,
+          [settingName]: value
+        }),
+      });
+
+      if (response.ok) {
+        const updatedSettings = await response.json();
+        setSettings(updatedSettings);
+      } else {
+        console.error('[!] Failed to update settings');
+        setSettings(prev => ({
+          ...prev,
+          [settingName]: !value
+        }));
+      }
+    } catch (error) {
+      console.error('[!] Error updating settings:', error);
+      setSettings(prev => ({
+        ...prev,
+        [settingName]: !value
+      }));
+    } finally {
+      setLoading(false);
+      window.location.reload();
+    }
+  };
+
   return (
     <div className="flex flex-1 overflow-hidden">
       <SideMenu />
@@ -23,47 +93,40 @@ export default function Settings() {
             <h1 className="text-3xl font-bold mb-6 text-foreground">Settings</h1>
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               <ChangePassword />
-              {/* DISABLED FOR NOW
               <Card className="p-6">
                 <h2 className="text-xl font-semibold mb-4">UI Settings</h2>
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <Label htmlFor="hide-ai">Hide Generative AI</Label>
-                    <Switch id="hide-ai" />
+                    <Switch
+                      id="hide-ai"
+                      checked={settings.hideGenAI}
+                      disabled={loading}
+                      onCheckedChange={(checked) => updateSetting('hideGenAI', checked)}
+                    />
                   </div>
 
                   <div className="flex items-center justify-between">
                     <Label htmlFor="hide-upgrades">Hide all upgrades/roles</Label>
-                    <Switch id="hide-upgrades" />
+                    <Switch
+                      id="hide-upgrades"
+                      checked={settings.hideUpgrades}
+                      disabled={loading}
+                      onCheckedChange={(checked) => updateSetting('hideUpgrades', checked)}
+                    />
                   </div>
 
                   <div className="flex items-center justify-between">
                     <Label htmlFor="hide-crypto">Hide crypto exchange</Label>
-                    <Switch id="hide-crypto" />
+                    <Switch
+                      id="hide-crypto"
+                      checked={settings.hideCrypto}
+                      disabled={loading}
+                      onCheckedChange={(checked) => updateSetting('hideCrypto', checked)}
+                    />
                   </div>
                 </div>
               </Card>
-
-              <Card className="p-6">
-                <h2 className="text-xl font-semibold mb-4">Notifications</h2>
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <Label htmlFor="hide-ai">Enable Notification System</Label>
-                    <Switch id="hide-ai" />
-                  </div>
-
-                  <div className="flex items-center justify-between">
-                    <Label htmlFor="hide-upgrades">Browser Notifications (coming soon)</Label>
-                    <Switch id="hide-upgrades" disabled />
-                  </div>
-
-                  <div className="flex items-center justify-between">
-                    <Label htmlFor="hide-crypto">Hide crypto exchange</Label>
-                    <Switch id="hide-crypto" />
-                  </div>
-                </div>
-              </Card>
-              */}
             </div>
           </motion.div>
         </div>
@@ -71,3 +134,4 @@ export default function Settings() {
     </div>
   )
 }
+

@@ -49,7 +49,7 @@ A Docker setup requires both Docker *and* Docker Compose.
 
    Following the environment variables section of this README, update your newly created `.env.local` file with your configuration.
 
-5. **Initialize Prisma (optional)**
+5. **Initialize Prisma**
 
    Because `web` uses a database for storing Git link statuses (and other things to come),
    you will need to initialize the SQLite database.
@@ -59,6 +59,7 @@ A Docker setup requires both Docker *and* Docker Compose.
 
    ```bash
    bunx prisma migrate dev --name init
+   ```
 
 6. **Bring the container up**
 

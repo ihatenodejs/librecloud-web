@@ -34,18 +34,27 @@ export async function POST(request: Request) {
     }
 
     const dbUsrCheck = await prisma.user.findUnique({
-      where: {
-        email,
-      },
+      where: { email },
     })
 
     if (dbUsrCheck) {
-      return NextResponse.json({ error: "Git account already linked" }, { status: 409 })
+      if (dbUsrCheck.username) {
+        return NextResponse.json({ error: "Git account already linked" }, { status: 409 })
+      } else {
+        await prisma.user.update({
+          where: { email },
+          data: { username },
+        })
+        return NextResponse.json({ success: true })
+      }
     } else {
       await prisma.user.create({
         data: {
           email,
           username,
+          hideGenAI: false,
+          hideUpgrades: false,
+          hideCrypto: false,
         },
       })
       return NextResponse.json({ success: true })
