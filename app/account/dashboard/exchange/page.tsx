@@ -2,6 +2,10 @@
 
 import { motion } from "framer-motion"
 import { SideMenu } from "@/components/pages/dashboard/SideMenu"
+import { FaBitcoin } from "react-icons/fa6";
+import { TbArrowsExchange2 } from "react-icons/tb";
+import { SiLitecoin } from "react-icons/si";
+import { BadgeDollarSign } from "lucide-react"
 
 const fadeIn = {
   initial: { opacity: 0, y: 20 },
@@ -16,9 +20,17 @@ export default function Exchange() {
       <main className="flex-1 w-full overflow-y-auto pl-0 lg:pl-64">
         <div className="container mx-auto px-4 py-6 w-full">
           <motion.div {...fadeIn}>
-            <h1 className="text-3xl font-bold mb-6">Exchange Crypto</h1>
-            <p>Coming soon</p>
-            <p className="mt-4">If you prefer not to see this service, you will be able to hide it from Settings when it launches.</p>
+            <div className="flex justify-center">
+              <h3 className="text-xl font-bold mb-2 uppercase bg-slate-700 rounded px-2">Coming Soon</h3>
+            </div>
+            <h1 className="text-6xl text-center font-bold">Exchange Crypto</h1>
+            <div className="flex justify-center mt-16">
+              <BadgeDollarSign size={69} />
+            </div>
+            <div className="max-w-2xl mx-auto">
+              <h2 className="text-4xl mt-6">We find the best price, seriously</h2>
+              <p className="mt-4">We use the API from several providers to provide comparisons between the different providers. You complete the exchange via our exchange interface (via provider) or through the provider&#39;s website. Each time, you can walk out knowing you got the best deal. The best part? We don&#39;t take a cut or make a profit off your usage.</p>
+            </div>
           </motion.div>
         </div>
       </main>
