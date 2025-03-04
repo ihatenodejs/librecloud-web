@@ -2,9 +2,6 @@
 
 import { motion } from "framer-motion"
 import { SideMenu } from "@/components/pages/dashboard/SideMenu"
-import { FaBitcoin } from "react-icons/fa6";
-import { TbArrowsExchange2 } from "react-icons/tb";
-import { SiLitecoin } from "react-icons/si";
 import { BadgeDollarSign } from "lucide-react"
 
 const fadeIn = {
