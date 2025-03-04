@@ -186,6 +186,17 @@ We suggest starting by allowing Auth.js
 | AUTH_TRUST_HOST      | Required, should always be set to `true`          | `true`                                                                |
 | NEXTAUTH_URL         | The URL LibreCloud will be publicly accessible at | `http://localhost:3000` (testing), `https://example.com` (production) |
 
+## Database schema updates
+
+In case of an update to `prisma/schema.prisma`, you should run the below command to migrate the old database.
+
+Each update to this file is guaranteed to work with the previous version of the file to ensure maximum compatibility. While every effort has been made to ensure compatibility, we are not responsible for any data loss.
+
+```bash
+npx prisma migrate dev --name update-schema # Migrate
+npx prisma migrate deploy # Deploy
+```
+
 ## To-Do
 
 * [X] Add documentation on .env
