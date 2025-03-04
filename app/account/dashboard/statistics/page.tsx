@@ -22,36 +22,49 @@ export default function Statistics() {
             <Card className="col-span-full md:col-span-1">
               <CardHeader>
                 <CardTitle>Operational Costs</CardTitle>
-                <CardDescription>LibreCloud&#39;s monthly bill, for you to view.</CardDescription>
+                <CardDescription>How much it costs us to run LibreCloud each month</CardDescription>
               </CardHeader>
               <CardContent>
-                <span className="text-sm"><span className="font-bold">Month of:</span> February</span>
+                <span className="text-sm"><span className="font-bold">Month of:</span> March</span>
                 <Separator className="my-4" />
-                <span className="font-bold">Server</span>
-                <div className="flex items-center justify-between mt-2">
-                  <span className="text-sm">Main Server</span>
-                  <span className="text-bold text-right">$28.88</span>
-                </div>
-                <Separator className="my-4" />
-                <span className="font-bold">Domains</span>
-                <div className="flex items-center justify-between mt-2">
-                  <span className="text-sm">librecloud.cc</span>
-                  <span className="text-bold text-right">$3.10</span>
-                </div>
-                <Separator className="my-4" />
-                <span className="font-bold">Addons</span>
-                <div className="flex items-center justify-between mt-2">
-                  <span className="text-sm">+0GB Disk Space</span>
-                  <span className="text-bold text-right">$0.00</span>
+                <div className="flex items-center justify-between">
+                  <span className="font-bold uppercase">Server</span>
+                  <span className="font-bold uppercase">Price</span>
                 </div>
                 <div className="flex items-center justify-between mt-2">
-                  <span className="text-sm">+0GB RAM</span>
-                  <span className="text-bold text-right">$0.00</span>
+                  <span className="text-sm">node0.librecloud.cc</span>
+                  <span>$28.88</span>
+                </div>
+                <div className="flex items-center justify-between mt-2">
+                  <span className="text-sm">orbit.librecloud.cc</span>
+                  <span>$34.24</span>
+                </div>
+                <Separator className="my-4" />
+                <div className="flex items-center justify-between">
+                  <span className="font-bold uppercase">Domains</span>
+                  <span className="font-bold uppercase">Price</span>
+                </div>
+                <div className="flex items-center justify-between mt-2">
+                  <span className="text-sm">0 Domains</span>
+                  <span>$0.00</span>
+                </div>
+                <Separator className="my-4" />
+                <div className="flex items-center justify-between">
+                  <span className="font-bold uppercase">Addons</span>
+                  <span className="font-bold uppercase">Price</span>
+                </div>
+                <div className="flex items-center justify-between mt-2">
+                  <span className="text-sm">0GB Disk Space</span>
+                  <span>$0.00</span>
+                </div>
+                <div className="flex items-center justify-between mt-2">
+                  <span className="text-sm">0GB RAM</span>
+                  <span>$0.00</span>
                 </div>
                 <Separator className="my-4" />
                 <div className="flex items-center justify-between mt-2">
                   <span className="font-bold">TOTAL</span>
-                  <span className="text-bold text-right">$31.98</span>
+                  <span className="font-bold">$63.12</span>
                 </div>
               </CardContent>
             </Card>
