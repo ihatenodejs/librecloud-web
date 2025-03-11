@@ -417,7 +417,7 @@ export default function Signup() {
                     </Select>
                   </div>
                   <p className="text-xs text-muted-foreground">
-                    A username for Authentik will be generated based on your email. Contact support if a username isn&apos;t available.
+                    A username for Authentik will be generated based on your email. <Link href="mailto:support@librecloud.cc" className="underline">Contact support</Link> if a username isn&apos;t available.
                   </p>
                 </div>
                 <div className="space-y-2">

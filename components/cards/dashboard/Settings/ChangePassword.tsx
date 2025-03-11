@@ -1,11 +1,11 @@
-"use client";
+"use client"
 
-import { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import Link from "next/link";
+import React, { useState } from "react"
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
+import { Label } from "@/components/ui/label"
+import { Mail, Key, Loader } from "lucide-react"
 
 export function ChangePassword() {
   const [newPassword, setNewPassword] = useState("");
@@ -46,8 +46,9 @@ export function ChangePassword() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Change Email Password</CardTitle>
-        <CardDescription>Please note, this will <b>NOT</b> change your Authentik password. You can change that <Link href="">here</Link>.</CardDescription>
+        <CardTitle className="flex items-center"><Mail size={18} className="mr-1" /> Change Email Password</CardTitle>
+        <CardDescription>Please note, this will <b>NOT</b> change your Authentik password.</CardDescription>
+        {/* TODO: please tell me you added password resets to authentik by now */}
       </CardHeader>
       <CardContent>
         <form onSubmit={handlePasswordChange} className="space-y-4">
@@ -61,7 +62,7 @@ export function ChangePassword() {
             />
           </div>
           <Button type="submit" disabled={loading}>
-            {loading ? "Changing..." : "Change Password"}
+            {loading ? <><Loader className="animate-spin" /> Changing...</> : <><Key /> Change Password</>}
           </Button>
           {message && <p className="text-sm text-center">{message}</p>}
         </form>

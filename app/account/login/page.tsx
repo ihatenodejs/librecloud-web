@@ -1,9 +1,10 @@
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
 import { auth, signIn } from "@/auth"
 import { redirect } from "next/navigation";
 import { SiAuthentik } from "react-icons/si"
+import { UserPlus } from "lucide-react"
 
 export default async function Login() {
   const session = await auth()
@@ -16,8 +17,7 @@ export default async function Login() {
     <div className="flex h-screen items-center justify-center">
       <Card className="w-full max-w-md">
         <CardHeader>
-          <CardTitle>Log in to your account</CardTitle>
-          <CardDescription>If you still have a p0ntus mail account, select &#34;I don&apos;t have an account&#34;</CardDescription>
+          <CardTitle className="text-4xl text-center">LibreCloud</CardTitle>
         </CardHeader>
         <CardContent>
           <form
@@ -28,16 +28,20 @@ export default async function Login() {
             }}
           >
             <Button type="submit" className="w-full">
-              <SiAuthentik className="h-4 w-4" />
+              <SiAuthentik />
               Sign in with Authentik
             </Button>
-            <div className="text-center">
-              <Link href="/account/signup" className="text-sm underline">
-                I don&apos;t have an account
-              </Link>
-            </div>
+            <Link href="/account/signup" className="text-sm underline">
+              <Button variant="outline" className="w-full">
+                <UserPlus />
+                Create an Account
+              </Button>
+            </Link>
           </form>
         </CardContent>
+        <CardFooter className="text-center">
+          <p className="text-sm text-muted-foreground -mt-3">If you still have a p0ntus mail account, select &#34;Create an Account&#34;</p>
+        </CardFooter>
       </Card>
     </div>
   )
