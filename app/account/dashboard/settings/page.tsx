@@ -27,7 +27,7 @@ export default function Settings() {
     const fetchSettings = async () => {
       try {
         setLoading(true);
-        const response = await feth2ch('/api/users/settings');
+        const response = await fetch('/api/users/settings');
         if (response.ok) {
           const data = await response.json();
           setSettings(data);
