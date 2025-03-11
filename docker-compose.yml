@@ -3,7 +3,9 @@ services:
     build: .
     ports:
       - "3019:3000"
+    env_file: ".env"
+    volumes:
+      - ./prisma:/app/prisma
     environment:
       - NODE_ENV=production
     restart: unless-stopped
-
