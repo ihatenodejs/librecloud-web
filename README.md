@@ -1,6 +1,6 @@
 # web
 
-![Last Update](https://img.shields.io/badge/last_update-24_Feb_2024-blue)
+![Last Update](https://img.shields.io/badge/last_update-11_Mar_2025-blue)
 [![License: CC0-1.0](https://img.shields.io/badge/License-CC0_1.0-lightgrey.svg)](http://creativecommons.org/publicdomain/zero/1.0/)
 [![Build and Push Docker Image](https://github.com/ihatenodejs/librecloud-web/actions/workflows/docker.yml/badge.svg)](https://github.com/ihatenodejs/librecloud-web/actions/workflows/docker.yml)
 [![Bump Dependencies](https://github.com/ihatenodejs/librecloud-web/actions/workflows/bump.yml/badge.svg)](https://github.com/ihatenodejs/librecloud-web/actions/workflows/bump.yml)
@@ -186,9 +186,24 @@ We suggest starting by allowing Auth.js
 | AUTH_TRUST_HOST      | Required, should always be set to `true`          | `true`                                                                |
 | NEXTAUTH_URL         | The URL LibreCloud will be publicly accessible at | `http://localhost:3000` (testing), `https://example.com` (production) |
 
-## Database schema updates
+### Cloudflare
 
-In case of an update to `prisma/schema.prisma`, you should run the below command to migrate the old database.
+We use Cloudflare Turnstile for detecting bots and automated scripts attempting to abuse our services. We chose it because it's the perfect balance of security and convenience for users. It was also the most preferred option in the [poll we ran on my Telegram channel](https://t.me/pontushub/457).
+
+You can get the keys you need for Cloudflare Turnstile [here](https://www.cloudflare.com/application-services/products/turnstile/). It's very plug and play.
+
+If you would like to simply test or bypass Cloudflare Turnstile, you can use one of the site keys provided [here](https://developers.cloudflare.com/turnstile/troubleshooting/testing/) instead of your own.
+
+| Environment Variable   | Description                               | Example                               |
+|------------------------|-------------------------------------------|---------------------------------------|
+| NEXT_PUBLIC_CF_SITEKEY | Cloudflare Turnstile site key (public)    | `1x00000000000000000000AA`            |
+| CF_SECRETKEY           | Cloudflare Turnstile secret key (private) | `0xXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX` |
+
+## Troubleshooting
+
+### Performing a database migration
+
+In case of an update to `prisma/schema.prisma` in this repo, you should run the below command to migrate the old database.
 
 Each update to this file is guaranteed to work with the previous version of the file to ensure maximum compatibility. While every effort has been made to ensure compatibility, we are not responsible for any data loss.
 
