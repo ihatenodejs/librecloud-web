@@ -4,9 +4,10 @@ import { motion } from "framer-motion"
 import { SideMenu } from "@/components/pages/dashboard/SideMenu"
 import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
-import { Card } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { ChangePassword } from "@/components/cards/dashboard/Settings/ChangePassword"
-import { useState, useEffect } from "react";
+import { useState, useEffect } from "react"
+import { LayoutDashboard } from "lucide-react"
 
 const fadeIn = {
   initial: { opacity: 0, y: 20 },
@@ -26,7 +27,7 @@ export default function Settings() {
     const fetchSettings = async () => {
       try {
         setLoading(true);
-        const response = await fetch('/api/users/settings');
+        const response = await feth2ch('/api/users/settings');
         if (response.ok) {
           const data = await response.json();
           setSettings(data);
@@ -40,7 +41,7 @@ export default function Settings() {
       }
     };
 
-    fetchSettings();
+    fetchSettings()
   }, []);
 
   const updateSetting = async (settingName: string, value: boolean) => {
@@ -93,39 +94,47 @@ export default function Settings() {
             <h1 className="text-3xl font-bold mb-6 text-foreground">Settings</h1>
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               <ChangePassword />
-              <Card className="p-6">
-                <h2 className="text-xl font-semibold mb-4">UI Settings</h2>
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <Label htmlFor="hide-ai">Hide Generative AI</Label>
-                    <Switch
-                      id="hide-ai"
-                      checked={settings.hideGenAI}
-                      disabled={loading}
-                      onCheckedChange={(checked) => updateSetting('hideGenAI', checked)}
-                    />
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center">
+                    <LayoutDashboard size={15} className="mr-1" />
+                    UI Settings
+                  </CardTitle>
+                  <CardDescription>
+                    Modify your user experience here
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <Label htmlFor="hide-ai">Hide Generative AI</Label>
+                      <Switch
+                        id="hide-ai"
+                        checked={settings.hideGenAI}
+                        disabled={loading}
+                        onCheckedChange={(checked) => updateSetting('hideGenAI', checked)}
+                      />
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <Label htmlFor="hide-upgrades">Hide all upgrades/roles</Label>
+                      <Switch
+                        id="hide-upgrades"
+                        checked={settings.hideUpgrades}
+                        disabled={loading}
+                        onCheckedChange={(checked) => updateSetting('hideUpgrades', checked)}
+                      />
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <Label htmlFor="hide-crypto">Hide crypto exchange</Label>
+                      <Switch
+                        id="hide-crypto"
+                        checked={settings.hideCrypto}
+                        disabled={loading}
+                        onCheckedChange={(checked) => updateSetting('hideCrypto', checked)}
+                      />
+                    </div>
                   </div>
-
-                  <div className="flex items-center justify-between">
-                    <Label htmlFor="hide-upgrades">Hide all upgrades/roles</Label>
-                    <Switch
-                      id="hide-upgrades"
-                      checked={settings.hideUpgrades}
-                      disabled={loading}
-                      onCheckedChange={(checked) => updateSetting('hideUpgrades', checked)}
-                    />
-                  </div>
-
-                  <div className="flex items-center justify-between">
-                    <Label htmlFor="hide-crypto">Hide crypto exchange</Label>
-                    <Switch
-                      id="hide-crypto"
-                      checked={settings.hideCrypto}
-                      disabled={loading}
-                      onCheckedChange={(checked) => updateSetting('hideCrypto', checked)}
-                    />
-                  </div>
-                </div>
+                </CardContent>
               </Card>
             </div>
           </motion.div>

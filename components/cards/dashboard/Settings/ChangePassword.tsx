@@ -46,7 +46,7 @@ export function ChangePassword() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="flex items-center"><Mail size={18} className="mr-1" /> Change Email Password</CardTitle>
+        <CardTitle className="flex items-center"><Mail size={15} className="mr-1" /> Change Email Password</CardTitle>
         <CardDescription>Please note, this will <b>NOT</b> change your Authentik password.</CardDescription>
         {/* TODO: please tell me you added password resets to authentik by now */}
       </CardHeader>
@@ -59,6 +59,7 @@ export function ChangePassword() {
               type="password"
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
+              className="mt-1.5"
             />
           </div>
           <Button type="submit" disabled={loading}>
