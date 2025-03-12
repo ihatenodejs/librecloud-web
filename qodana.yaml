@@ -9,3 +9,4 @@ exclude:
     paths:
       - .github/workflows/bump.yml
       - components/ui
+      - prisma
