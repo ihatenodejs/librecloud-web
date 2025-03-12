@@ -149,7 +149,7 @@ export const SideMenu: React.FC = () => {
 
                 <SidebarMenuItem>
                   <SidebarMenuButton asChild>
-                    <Link href="mailto:support@librecloud.cc">
+                    <Link href="/account/dashboard/support">
                       <Headset />
                       <span>Support</span>
                     </Link>

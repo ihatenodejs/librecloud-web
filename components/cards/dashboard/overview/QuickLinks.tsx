@@ -14,7 +14,7 @@ export const QuickLinks = () => {
       </CardHeader>
       <CardContent>
         <Link
-          href="mailto:support@librecloud.cc"
+          href="/account/dashboard/support"
         >
           <Button
             className="w-full mb-2"
