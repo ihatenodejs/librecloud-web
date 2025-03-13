@@ -278,7 +278,7 @@ export default function Signup() {
                     handleSelectChange={handleSelectChange}
                   />
                   <p className="text-xs text-muted-foreground">
-                    A username for Authentik will be generated based on your email. <Link href="mailto:support@librecloud.cc" className="underline">Contact support</Link> if a username isn&apos;t available.
+                    A username for Authentik will be generated based on your email. <Link href={"mailto:" + (process.env.NEXT_PUBLIC_SUPPORT_EMAIL || "support@librecloud.cc")} className="underline">Contact support</Link> if a username isn&apos;t available.
                   </p>
                 </div>
                 <div className="space-y-2">
@@ -348,7 +348,7 @@ export default function Signup() {
                     handleSelectChange={handleSelectChange}
                   />
                   <p className="text-xs text-muted-foreground">
-                    A username for Authentik will be generated based on your email. <Link href="mailto:support@librecloud.cc" className="underline">Contact support</Link> if a username isn&apos;t available.
+                    A username for Authentik will be generated based on your email. <Link href={"mailto:" + (process.env.NEXT_PUBLIC_SUPPORT_EMAIL || "support@librecloud.cc")} className="underline">Contact support</Link> if a username isn&apos;t available.
                   </p>
                 </div>
                 <div className="space-y-2">

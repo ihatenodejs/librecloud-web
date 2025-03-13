@@ -1,4 +1,4 @@
-"use client";
+"use client"
 
 import { motion } from "framer-motion"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
@@ -63,14 +63,11 @@ const WelcomePage = () => {
           </motion.h1>
         </div>
       </div>
-
       <div className="w-full md:w-3/5 lg:w-4/5 p-4 md:p-8 h-full overflow-y-auto">
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8 }}>
           <BadgeCheck className="w-16 h-16 text-primary mx-auto" />
           <h2 className="text-2xl md:text-3xl font-semibold my-6 text-center">Your account was created</h2>
-
           <Separator className="my-8" />
-
           <h2 className="text-2xl md:text-3xl font-semibold my-6">You&apos;ve unlocked</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
             {services.map((service, index) => (
@@ -92,9 +89,7 @@ const WelcomePage = () => {
               </Card>
             ))}
           </div>
-
           <Separator className="my-8" />
-
           <h2 className="text-2xl md:text-3xl font-semibold my-6">Pay less, do more</h2>
           <div className="space-y-6">
             <motion.div
@@ -110,7 +105,6 @@ const WelcomePage = () => {
                 LibreCloud makes <b>ZERO</b> profit off upgrades, while doing the heavy lifting in the background to ensure a connected experience.
               </p>
             </motion.div>
-
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <motion.div
                 className="bg-primary/10 p-6 rounded-lg shadow-md"
@@ -134,9 +128,7 @@ const WelcomePage = () => {
               </motion.div>
             </div>
           </div>
-
           <Separator className="my-8" />
-
           <h2 className="text-2xl md:text-3xl font-semibold my-6">Now, we set you free</h2>
           <p>
             Now, it&apos;s your time to explore. All we ask is you use your services in a fair way. Account bans will be enforced for abuse of our services for spamming, scamming, and all that nasty stuff.
