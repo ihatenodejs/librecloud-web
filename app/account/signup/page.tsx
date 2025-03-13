@@ -12,10 +12,10 @@ import Link from "next/link"
 import { motion, AnimatePresence } from "framer-motion"
 import { UserPlus, UserCog, Heart, AlertCircle, CheckCircle2, Mail, Lock, User, Bot, Loader, ArrowLeft } from "lucide-react"
 import { useRouter } from "next/navigation"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Turnstile } from "next-turnstile"
 import { validateEmail, validatePassword } from "@/lib/utils"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import EmailField from "@/components/custom/signup/EmailField"
+import Turnstile from "@/components/custom/Turnstile"
 
 declare global {
   interface Window {
@@ -50,6 +50,11 @@ export default function Signup() {
     animate: { opacity: 1, y: 0 },
     exit: { opacity: 0, y: -20 },
     transition: { duration: 0.3 },
+  }
+
+  const handleSelectChange = (value: string) => {
+    setFormData((prev) => ({ ...prev, emailDomain: value }))
+    if (errorAlert) setErrorAlert(null)
   }
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -179,7 +184,7 @@ export default function Signup() {
       const token = formDataObj.get("cf-turnstile-response") as string
 
       if (!token) {
-        setErrorAlert("Security verification token is missing. Please refresh")
+        setErrorAlert("Cloudflare Turnstile token is missing. Please refresh")
         setIsSubmitting(false)
         setForceRefresh(true)
         return
@@ -202,7 +207,7 @@ export default function Signup() {
       const data = await response.json()
 
       if (!response.ok) {
-        console.error("API error:", response.status, data)
+        console.error("[!] API error:", response.status, data)
         setErrorAlert(data.message || `Error ${response.status}: Failed to create account`)
         setIsSubmitting(false)
         setForceRefresh(true)
@@ -215,7 +220,7 @@ export default function Signup() {
         setErrorAlert(data.message || "Failed to create account.")
       }
     } catch (error) {
-      console.error("Form submission error:", error)
+      console.error("[!] Form submission error:", error)
       setErrorAlert("An unexpected error occurred. Please try again later.")
     } finally {
       setIsSubmitting(false)
@@ -265,42 +270,16 @@ export default function Signup() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="email">Email</Label>
-                  <div className="flex items-center space-x-2">
-                    <Input
-                      id="emailUsername"
-                      name="emailUsername"
-                      type="text"
-                      placeholder="username"
-                      required
-                      value={formData.emailUsername}
-                      onChange={handleInputChange}
-                      className="grow"
-                    />
-                    <span className="text-muted-foreground">@</span>
-                    <Select
-                      name="emailDomain"
-                      value={formData.emailDomain}
-                      onValueChange={(value) => {
-                        setFormData((prev) => ({ ...prev, emailDomain: value }))
-                        if (errorAlert) setErrorAlert(null)
-                      }}
-                    >
-                      <SelectTrigger className="w-[180px]">
-                        <SelectValue placeholder="Select domain" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="librecloud.cc">librecloud.cc</SelectItem>
-                        <SelectItem value="pontusmail.org">pontusmail.org</SelectItem>
-                        <SelectItem value="p0ntus.com">p0ntus.com</SelectItem>
-                        <SelectItem value="ihate.college">ihate.college</SelectItem>
-                        <SelectItem value="pontus.pics">pontus.pics</SelectItem>
-                        <SelectItem value="dontbeevil.lol">dontbeevil.lol</SelectItem>
-                        <SelectItem value="dont-be-evil.lol">dont-be-evil.lol</SelectItem>
-                        <SelectItem value="strongintegrity.life">strongintegrity.life</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
+                  <EmailField
+                    formData={formData}
+                    errorAlert={errorAlert}
+                    setErrorAlert={setErrorAlert}
+                    handleInputChange={handleInputChange}
+                    handleSelectChange={handleSelectChange}
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    A username for Authentik will be generated based on your email. <Link href="mailto:support@librecloud.cc" className="underline">Contact support</Link> if a username isn&apos;t available.
+                  </p>
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="password">Password</Label>
@@ -341,27 +320,8 @@ export default function Signup() {
                 </div>
                 {!forceRefresh && (
                   <Turnstile
-                    siteKey={process.env.NEXT_PUBLIC_CF_SITEKEY!}
-                    retry="auto"
-                    refreshExpired="auto"
-                    onError={() => {
-                      setTurnstileStatus("error")
-                      setValidationMessage("Security check failed. Please try again.")
-                      console.error("[!] Turnstile error occurred")
-                    }}
-                    onExpire={() => {
-                      setTurnstileStatus("expired")
-                      setValidationMessage("Security check expired. Please verify again.")
-                      console.warn("[!] Turnstile token expired")
-                    }}
-                    onLoad={() => {
-                      setTurnstileStatus("required")
-                    }}
-                    onVerify={() => {
-                      setTurnstileStatus("success")
-                      console.log("[S] Turnstile verification successful")
-                    }}
-                    className="flex justify-center"
+                    setTurnstileStatus={setTurnstileStatus}
+                    setValidationMessage={setValidationMessage}
                   />
                 )}
               </motion.form>
@@ -380,42 +340,13 @@ export default function Signup() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="email">Email</Label>
-                  <div className="flex items-center space-x-2">
-                    <Input
-                      id="emailUsername"
-                      name="emailUsername"
-                      type="text"
-                      placeholder="username"
-                      required
-                      value={formData.emailUsername}
-                      onChange={handleInputChange}
-                      className="grow"
-                    />
-                    <span className="text-muted-foreground">@</span>
-                    <Select
-                      name="emailDomain"
-                      value={formData.emailDomain}
-                      onValueChange={(value) => {
-                        setFormData((prev) => ({ ...prev, emailDomain: value }))
-                        if (errorAlert) setErrorAlert(null)
-                      }}
-                    >
-                      <SelectTrigger className="w-[180px]">
-                        <SelectValue placeholder="Select domain" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="librecloud.cc">librecloud.cc</SelectItem>
-                        <SelectItem value="pontusmail.org">pontusmail.org</SelectItem>
-                        <SelectItem value="p0ntus.com">p0ntus.com</SelectItem>
-                        <SelectItem value="ihate.college">ihate.college</SelectItem>
-                        <SelectItem value="pontus.pics">pontus.pics</SelectItem>
-                        <SelectItem value="dontbeevil.lol">dontbeevil.lol</SelectItem>
-                        <SelectItem value="dont-be-evil.lol">dont-be-evil.lol</SelectItem>
-                        <SelectItem value="strongintegrity.life">strongintegrity.life</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
+                  <EmailField
+                    formData={formData}
+                    errorAlert={errorAlert}
+                    setErrorAlert={setErrorAlert}
+                    handleInputChange={handleInputChange}
+                    handleSelectChange={handleSelectChange}
+                  />
                   <p className="text-xs text-muted-foreground">
                     A username for Authentik will be generated based on your email. <Link href="mailto:support@librecloud.cc" className="underline">Contact support</Link> if a username isn&apos;t available.
                   </p>
@@ -459,27 +390,8 @@ export default function Signup() {
                 </div>
                 {!forceRefresh && (
                   <Turnstile
-                    siteKey={process.env.NEXT_PUBLIC_CF_SITEKEY!}
-                    retry="auto"
-                    refreshExpired="auto"
-                    onError={() => {
-                      setTurnstileStatus("error")
-                      setValidationMessage("Security check failed. Please try again.")
-                      console.error("[!] Turnstile error occurred")
-                    }}
-                    onExpire={() => {
-                      setTurnstileStatus("expired")
-                      setValidationMessage("Security check expired. Please verify again.")
-                      console.warn("[!] Turnstile token expired")
-                    }}
-                    onLoad={() => {
-                      setTurnstileStatus("required")
-                    }}
-                    onVerify={() => {
-                      setTurnstileStatus("success")
-                      console.log("[S] Turnstile verification successful")
-                    }}
-                    className="flex justify-center"
+                    setTurnstileStatus={setTurnstileStatus}
+                    setValidationMessage={setValidationMessage}
                   />
                 )}
               </motion.form>
