@@ -3,6 +3,7 @@ import FeatureCard from "@/components/pages/main/FeatureCard"
 import { Mail, Lock, Disc3, Headset } from "lucide-react"
 import { SiGitea, SiAuthentik } from "react-icons/si";
 import Navbar from "@/components/pages/main/Navbar"
+import Footer from "@/components/pages/main/Footer"
 import PoweredBySection from "@/components/pages/main/PoweredBySection"
 import Pricing from "@/components/pages/main/Pricing"
 
@@ -58,6 +59,7 @@ export default function Home() {
         <PoweredBySection />
         <Pricing />
       </main>
+      <Footer />
     </div>
   )
 }

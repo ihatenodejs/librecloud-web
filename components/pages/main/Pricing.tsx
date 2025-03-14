@@ -49,7 +49,7 @@ export default function Pricing() {
   }
 
   return (
-    <section id="love" className="py-24">
+    <section id="love" className="pt-24 pb-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-4xl font-extrabold text-white mb-4">Pricing You&#39;ll Love</h2>

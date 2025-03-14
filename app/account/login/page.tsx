@@ -39,8 +39,8 @@ export default async function Login() {
             </Link>
           </form>
         </CardContent>
-        <CardFooter className="text-center">
-          <p className="text-sm text-muted-foreground -mt-3">If you still have a p0ntus mail account, select &#34;Create an Account&#34;</p>
+        <CardFooter className="justify-center">
+          <p className="text-sm text-muted-foreground -mt-3">By continuing, you agree to our <Link href="/privacy" className="underline">Privacy Policy</Link>.</p>
         </CardFooter>
       </Card>
     </div>
