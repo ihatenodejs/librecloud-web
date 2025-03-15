@@ -6,7 +6,7 @@ import Link from "next/link"
 
 export default function Privacy() {
   return (
-    <div className="min-h-screen bg-linear-to-b from-gray-950 to-gray-900">
+    <div className="min-h-screen dark:bg-linear-to-b dark:from-gray-950 dark:to-gray-900">
       <Navbar />
       <main>
         <div className="pt-20 pb-10">

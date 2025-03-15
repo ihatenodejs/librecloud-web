@@ -9,7 +9,7 @@ const Hero = () => {
   const phrases = ["everyone", "developers", "students", "non-profits", "teachers", "workers", "friends"]
 
   return (
-    <div className="pt-20 pb-30 text-white">
+    <div className="pt-20 pb-30 text-foreground">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center">
           <h1 className="text-4xl tracking-tight font-extrabold sm:text-5xl md:text-6xl">
@@ -18,7 +18,7 @@ const Hero = () => {
               for <ReactTyped strings={phrases} typeSpeed={60} backSpeed={50} loop className="text-blue-400" />
             </span>
           </h1>
-          <p className="mt-6 max-w-md mx-auto text-xl text-gray-300 sm:max-w-3xl">
+          <p className="mt-6 max-w-md mx-auto text-xl text-muted-foreground sm:max-w-3xl">
             Experience FOSS at its best with LibreCloud, a free service provider built with everyone in mind.
           </p>
           <div className="mt-10 max-w-md mx-auto sm:flex sm:justify-center">

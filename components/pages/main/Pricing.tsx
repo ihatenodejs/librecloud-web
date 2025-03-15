@@ -49,10 +49,10 @@ export default function Pricing() {
   }
 
   return (
-    <section id="love" className="pt-24 pb-10">
+    <section id="pricing" className="pb-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="text-4xl font-extrabold text-white mb-4">Pricing You&#39;ll Love</h2>
+          <h2 className="text-4xl font-extrabold text-foreground mb-4">Pricing You&#39;ll Love</h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Simple, transparent pricing with zero additional fees.
           </p>
@@ -60,7 +60,7 @@ export default function Pricing() {
 
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
           <motion.div
-            className={`relative overflow-hidden rounded-xl border bg-gray-800 text-card-foreground shadow transition-all duration-300 ${hoveredCard === 0 ? "border-gray-700" : "border-border"}`}
+            className={`relative overflow-hidden rounded-xl border bg-slate-200 dark:bg-gray-800 text-card-foreground shadow transition-all duration-300 ${hoveredCard === 0 ? "border-gray-700" : "border-border"} text-background`}
             variants={cardVariants}
             initial="default"
             animate={hoveredCard === 0 ? "hover" : "default"}
@@ -70,7 +70,7 @@ export default function Pricing() {
             <div className="p-6">
               <div className="mb-4 flex items-center justify-between">
                 <h3 className="text-2xl font-bold">Everything</h3>
-                <Badge variant="outline" className="text-xs font-medium bg-gray-900">
+                <Badge variant="outline" className="text-xs font-medium bg-background">
                   Most Popular
                 </Badge>
               </div>
@@ -78,8 +78,8 @@ export default function Pricing() {
                 <span className="text-6xl font-bold">$0.00</span>
                 <span className="text-muted-foreground ml-2">/mo</span>
               </div>
-              <p className="text-sm text-muted-foreground mb-6">
-                All the essential services you need, completely free.
+              <p className="text-sm text-secondary-foreground mb-6">
+                All the services we offer, completely free.
               </p>
               <Link href="/account/login">
                 <Button className="w-full" size="lg">
@@ -87,7 +87,8 @@ export default function Pricing() {
                 </Button>
               </Link>
             </div>
-            <Separator />
+            {/* TODO: this seperator be improved in the future, i can't find a good color for this */}
+            <Separator className="bg-gray-700" />
             <div className="p-6 space-y-4">
               <h4 className="text-sm font-medium">What&#39;s included:</h4>
               <div>
@@ -149,7 +150,7 @@ export default function Pricing() {
                 <span className="text-6xl font-bold">$0.00</span>
                 <span className="text-muted-foreground ml-2">/M tokens</span>
               </div>
-              <p className="text-sm text-muted-foreground mb-6">Access powerful AI models at cost price.</p>
+              <p className="text-sm text-muted-foreground mb-6">Access powerful AI models at the best price.</p>
               <Button className="w-full" size="lg" variant="outline" disabled>
                 <Clock /> Coming Soon
               </Button>

@@ -8,12 +8,12 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false)
 
   return (
-    <nav className="bg-gray-950/70 sticky top-0 z-50">
+    <nav className="bg-gray-300 dark:bg-gray-950/70 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="relative flex items-center justify-between h-16">
           <div className="shrink-0 flex items-center">
             <Link href="/" className="flex items-center">
-              <span className="text-white text-xl font-bold">LibreCloud</span>
+              <span className="text-xl font-bold">LibreCloud</span>
             </Link>
           </div>
           <div className="hidden md:block">
@@ -80,7 +80,7 @@ interface NavLinkProps {
 const NavLink: React.FC<NavLinkProps> = ({ href, icon: Icon, children }) => (
   <Link
     href={href}
-    className="flex items-center text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200"
+    className="flex items-center  hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200"
   >
     <Icon className="mr-2 h-5 w-5" /> {children}
   </Link>
@@ -95,7 +95,7 @@ interface MobileNavLinkProps {
 const MobileNavLink: React.FC<MobileNavLinkProps> = ({ href, icon: Icon, children }) => (
   <Link
     href={href}
-    className="flex items-center text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-base font-medium"
+    className="flex items-center  hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-base font-medium"
   >
     <Icon className="mr-2 h-5 w-5" /> {children}
   </Link>

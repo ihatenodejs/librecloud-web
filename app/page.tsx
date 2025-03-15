@@ -42,13 +42,13 @@ export default function Home() {
   ]
 
   return (
-    <div className="min-h-screen bg-linear-to-b from-gray-950 to-gray-900">
+    <div className="min-h-screen dark:bg-linear-to-b dark:from-gray-950 dark:to-gray-900">
       <Navbar />
       <main>
         <Hero />
         <section id="services">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 className="text-4xl font-extrabold text-center mb-12 text-white">Our Services</h2>
+            <h2 className="text-4xl font-extrabold text-center mb-12 text-foreground">Our Services</h2>
             <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
               {features.map((feature, index) => (
                 <FeatureCard key={index} {...feature} />
