@@ -61,17 +61,21 @@ A Docker setup requires both Docker *and* Docker Compose.
    bunx prisma migrate dev --name init
    ```
 
-6. **Bring the container up**
+6. **Setup environment variables**
+
+   Now is the time to go to the "Environment Variables" section and configure them in your `.env.local` file.
+
+7. **Bring the container up**
 
    ```bash
-   docker compose up -d
+   docker compose up -d --build
    ```
 
    Please note: `sudo` may be required.
 
    You may customize the container with the included `docker-compose.yml` file if needed. Your server will start on port `3019` by default. We suggest using a reverse proxy to serve the site on a domain.
 
-7. **Complete Setup**
+8. **Complete Setup**
 
    If you would like to host the entire LibreCloud frontend and backend,
    you will also need to set up the following repositories and edit this project to work with *your* setup.
