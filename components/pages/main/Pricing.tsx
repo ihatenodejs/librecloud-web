@@ -6,7 +6,7 @@ import { Separator } from "@/components/ui/separator"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
-import { motion, HTMLMotionProps } from "framer-motion"
+import { motion } from "motion/react"
 
 interface PricingFeatures {
   everything: string[]

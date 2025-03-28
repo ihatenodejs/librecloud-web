@@ -2,7 +2,7 @@
 
 import React from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { motion } from "framer-motion"
+import { motion } from "motion/react"
 import AnimatedIcon from "./AnimatedIcon"
 
 interface FeatureCardProps {

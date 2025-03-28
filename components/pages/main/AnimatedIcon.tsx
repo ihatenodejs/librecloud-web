@@ -1,7 +1,7 @@
 "use client"
 
-import { motion } from "framer-motion"
 import React from "react"
+import { motion } from "motion/react"
 import { Mail, Lock, Disc3, Headset } from "lucide-react"
 import { SiGitea, SiAuthentik } from "react-icons/si"
 
