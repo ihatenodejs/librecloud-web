@@ -52,5 +52,5 @@ bun.lock
 bun.lockb
 
 # prisma
-prisma/dev.db
+prisma/dev.db*
 prisma/migrations/
