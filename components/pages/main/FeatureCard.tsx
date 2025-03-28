@@ -1,28 +1,44 @@
+"use client"
+
 import React from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { motion } from "framer-motion"
+import AnimatedIcon from "./AnimatedIcon"
 
 interface FeatureCardProps {
   title: string
   description: string
-  icon: React.ElementType
+  iconName: Parameters<typeof AnimatedIcon>[0]["iconName"]
 }
 
-/* TODO: I plan to add a better animation in the future, hover effects are not
-         good here, in my opinion. */
-
-const FeatureCard = ({ title, description, icon: Icon }: FeatureCardProps) => {
+const FeatureCard = ({ title, description, iconName }: FeatureCardProps) => {
   return (
-    <Card className="bg-background border-accent transition-colors duration-300">
-      <CardHeader>
-        <CardTitle className="flex items-center">
-          <Icon className="h-6 w-6 mr-2 text-blue-400" />
-          <span className="text-xl">{title}</span>
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        <CardDescription>{description}</CardDescription>
-      </CardContent>
-    </Card>
+    <motion.div
+      whileHover={{ 
+        scale: 1.01, 
+        y: -2,
+        transition: { 
+          type: "spring", 
+          stiffness: 400, 
+          damping: 25 
+        }
+      }}
+    >
+      <Card className="bg-card text-card-foreground border-border hover:bg-accent/5 relative group transition-colors duration-300">
+        <CardHeader>
+          <CardTitle className="flex items-center">
+            <AnimatedIcon
+              iconName={iconName}
+              className="h-6 w-6 mr-2 text-primary group-hover:text-primary/80 transition-colors duration-300"
+            />
+            <span className="text-xl text-foreground group-hover:text-foreground/90 transition-colors duration-300">{title}</span>
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <CardDescription className="text-muted-foreground group-hover:text-muted-foreground/90 transition-colors duration-300">{description}</CardDescription>
+        </CardContent>
+      </Card>
+    </motion.div>
   )
 }
 

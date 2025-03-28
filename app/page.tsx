@@ -1,7 +1,5 @@
 import Hero from "@/components/pages/main/Hero"
 import FeatureCard from "@/components/pages/main/FeatureCard"
-import { Mail, Lock, Disc3, Headset } from "lucide-react"
-import { SiGitea, SiAuthentik } from "react-icons/si";
 import Navbar from "@/components/pages/main/Navbar"
 import Footer from "@/components/pages/main/Footer"
 import PoweredBySection from "@/components/pages/main/PoweredBySection"
@@ -12,34 +10,34 @@ export default function Home() {
     {
       title: "Email",
       description: "Free email service with webmail and antispam, powered by a custom docker-mailserver setup.",
-      icon: Mail,
+      iconName: "Mail",
     },
     {
       title: "Password Manager",
       description: "Securely store and manage your passwords across devices with Vaultwarden.",
-      icon: Lock,
+      iconName: "Lock",
     },
     {
       title: "Git",
       description: "Host your repositories and run actions free of charge on our Gitea instance.",
-      icon: SiGitea,
+      iconName: "SiGitea",
     },
     {
       title: "Authentik",
       description: "A secure single-sign-on service for easy login to your other services.",
-      icon: SiAuthentik,
+      iconName: "SiAuthentik",
     },
     {
       title: "Music",
       description: "Coming soon. Host your music on our community server and stream it everywhere",
-      icon: Disc3,
+      iconName: "Disc3",
     },
     {
       title: "Support",
       description: "Administrators are standing by most of the day via our various support channels.",
-      icon: Headset,
+      iconName: "Headset",
     },
-  ]
+  ] as const
 
   return (
     <div className="min-h-screen dark:bg-linear-to-b dark:from-gray-950 dark:to-gray-900">

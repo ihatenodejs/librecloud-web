@@ -218,6 +218,6 @@ npx prisma migrate deploy # Deploy
 
 ## To-Do
 
-* [X] Add documentation on .env
+* [ ] Add theme switcher to home page
 * [ ] Implement security scans
 * [ ] Rate-limiting on API
