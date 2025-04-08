@@ -4,6 +4,15 @@ At the time of writing, LibreCloud is not in the state of perfection,
 and as such we are expecting that you have a setup exact to ours.
 While this will change in the future, we still suggest that provide all the listed environment variables.
 
+## Primary
+
+These are the environment variables which handle how `librecloud/web` functions.
+With these variables, you can disable entire parts of the dashboard, such as registration.
+
+| Environment Variable | Description                                               | Expected Value                         |
+|----------------------|-----------------------------------------------------------|----------------------------------------|
+| SIGNUP_ENABLED       | Controls if the signup page and APIs are enabled/disabled | `true` (Enabled) or `false` (Disabled) |
+
 ## Authentik
 
 We use [Auth.js](https://authjs.dev) to provide authentication for users through Authentik.
