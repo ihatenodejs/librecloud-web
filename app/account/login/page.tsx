@@ -31,12 +31,19 @@ export default async function Login() {
               <SiAuthentik />
               Sign in with Authentik
             </Button>
-            <Link href="/account/signup" className="text-sm underline">
-              <Button variant="outline" className="w-full">
+            {process.env.SIGNUP_ENABLED === "true" ? (
+              <Link href="/account/signup">
+                <Button variant="outline" className="w-full">
+                  <UserPlus />
+                  Create an Account
+                </Button>
+              </Link>
+            ) : (
+              <Button variant="outline" className="w-full cursor-not-allowed" disabled>
                 <UserPlus />
-                Create an Account
+                Registration is Closed
               </Button>
-            </Link>
+            )}
           </form>
         </CardContent>
         <CardFooter className="justify-center">

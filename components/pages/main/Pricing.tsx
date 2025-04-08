@@ -1,7 +1,7 @@
 "use client"
 
 import type React from "react"
-import { Check, ChevronRight, Clock } from "lucide-react"
+import { Check, ChevronRight, Clock, XCircle } from "lucide-react"
 import { Separator } from "@/components/ui/separator"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -145,6 +145,21 @@ const PricingCard: React.FC<PricingCardProps> = ({
           )}
         </div>
         <div>
+          {title !== "Everything" ? (
+            <motion.span 
+              variants={textVariants}
+              className="text-sm text-muted-foreground block mb-1 group-hover:text-muted-foreground/90 transition-colors duration-300"
+            >
+              Starting at
+            </motion.span>
+          ) : (
+            <motion.span 
+              variants={textVariants}
+              className="text-sm text-muted-foreground italic block mb-1 group-hover:text-muted-foreground/90 transition-colors duration-300"
+            >
+              Always
+            </motion.span>
+          )}
           <motion.span 
             variants={textVariants}
             className="text-6xl font-bold text-foreground group-hover:text-foreground/90 transition-colors duration-300"
@@ -166,15 +181,22 @@ const PricingCard: React.FC<PricingCardProps> = ({
         </motion.p>
         {isComingSoon ? (
           <Button className="w-full" size="lg" variant="outline" disabled>
-            <Clock className="mr-2" /> Coming Soon
+            <Clock /> Coming Soon
           </Button>
         ) : buttonText ? (
-          <Link href="/account/login" className="block">
-            <Button className="w-full group" size="lg">
-              {buttonText}
-              {buttonIcon}
+          process.env.SIGNUP_ENABLED === "true" ? (
+            <Link href="/account/login" className="block">
+              <Button className="w-full group" size="lg">
+                {buttonText}
+                {buttonIcon}
+              </Button>
+            </Link>
+          ) : (
+            <Button className="w-full" size="lg" variant="outline" disabled>
+              <XCircle className="h-5 w-5" />
+              Registration Closed
             </Button>
-          </Link>
+          )
         ) : null}
       </div>
       <Separator className="bg-border" />
@@ -215,7 +237,7 @@ export default function Pricing(): React.ReactElement {
             features={features.everything}
             badge="Most Popular"
             buttonText="Get Started"
-            buttonIcon={<ChevronRight className="ml-2 h-4 w-4" />}
+            buttonIcon={<ChevronRight className="h-4 w-4" />}
           />
 
           <PricingCard

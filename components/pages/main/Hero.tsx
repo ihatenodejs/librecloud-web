@@ -1,7 +1,7 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import { ArrowRight } from "lucide-react"
+import { ArrowRight, XCircle } from "lucide-react"
 import { ReactTyped } from "react-typed"
 import Link from "next/link";
 
@@ -23,12 +23,19 @@ const Hero = () => {
           </p>
           <div className="mt-10 max-w-md mx-auto sm:flex sm:justify-center">
             <div className="rounded-md shadow-sm">
-              <Link href="/account/login">
-                <Button className="py-6 px-8">
-                  Get started
-                  <ArrowRight className="ml-2 h-5 w-5" />
+              {process.env.SIGNUP_ENABLED === "true" ? (
+                <Link href="/account/login">
+                  <Button className="py-6 px-8">
+                    Get Started
+                    <ArrowRight className="ml-2 h-5 w-5" />
+                  </Button>
+                </Link>
+              ) : (
+                <Button className="py-6 px-8 cursor-not-allowed" disabled>
+                  <XCircle className="mr-2 h-5 w-5" />
+                  Registration Closed
                 </Button>
-              </Link>
+              )}
             </div>
           </div>
         </div>
