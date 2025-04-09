@@ -59,7 +59,7 @@ export const LinkedAccounts = () => {
     <Card className="col-span-full md:col-span-1">
       <CardHeader>
         <CardTitle>Linked Accounts</CardTitle>
-        <CardDescription>LibreCloud-connected services you've linked to your account.</CardDescription>
+        <CardDescription>LibreCloud-connected services you&apos;ve linked to your account.</CardDescription>
       </CardHeader>
       <CardContent>
         <ul className="space-y-2">
