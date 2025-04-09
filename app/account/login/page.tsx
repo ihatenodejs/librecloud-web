@@ -2,9 +2,10 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
 import { auth, signIn } from "@/auth"
-import { redirect } from "next/navigation";
+import { redirect } from "next/navigation"
 import { SiAuthentik } from "react-icons/si"
 import { UserPlus } from "lucide-react"
+import * as motion from "motion/react-client"
 
 export default async function Login() {
   const session = await auth()
@@ -27,22 +28,43 @@ export default async function Login() {
               await signIn("authentik", { redirectTo: "/account/dashboard" })
             }}
           >
-            <Button type="submit" className="w-full">
-              <SiAuthentik />
-              Sign in with Authentik
-            </Button>
+            <motion.div
+              initial={{ scale: 0.95 }}
+              animate={{ scale: 1 }}
+              whileTap={{ scale: 0.95 }}
+              transition={{ duration: 0.2 }}
+            >
+              <Button type="submit" className="w-full cursor-pointer">
+                <SiAuthentik />
+                Sign in with Authentik
+              </Button>
+            </motion.div>
             {process.env.SIGNUP_ENABLED === "true" ? (
               <Link href="/account/signup">
-                <Button variant="outline" className="w-full">
-                  <UserPlus />
-                  Create an Account
-                </Button>
+                <motion.div
+                  initial={{ scale: 0.95 }}
+                  animate={{ scale: 1 }}
+                  whileTap={{ scale: 0.95 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <Button variant="outline" className="w-full cursor-pointer">
+                    <UserPlus />
+                    Create an Account
+                  </Button>
+                </motion.div>
               </Link>
             ) : (
-              <Button variant="outline" className="w-full cursor-not-allowed" disabled>
-                <UserPlus />
-                Registration is Closed
-              </Button>
+              <motion.div
+                initial={{ scale: 0.95 }}
+                animate={{ scale: 1 }}
+                whileTap={{ scale: 0.95 }}
+                transition={{ duration: 0.2 }}
+              >
+                <Button variant="outline" className="w-full cursor-not-allowed" disabled>
+                  <UserPlus />
+                  Registration is Closed
+                </Button>
+              </motion.div>
             )}
           </form>
         </CardContent>

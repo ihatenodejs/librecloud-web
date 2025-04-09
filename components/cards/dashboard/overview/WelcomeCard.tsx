@@ -36,7 +36,7 @@ export const WelcomeCard = () => {
         <p className="text-sm mt-4">That’s all, have a great day!</p>
       </CardContent>
       <CardFooter>
-        <Button className="w-full" onClick={handleMarkAsRead}>
+        <Button className="w-full cursor-pointer" onClick={handleMarkAsRead}>
           <Check /> Mark as Read
         </Button>
       </CardFooter>

@@ -9,9 +9,10 @@ While this will change in the future, we still suggest that provide all the list
 These are the environment variables which handle how `librecloud/web` functions.
 With these variables, you can disable entire parts of the dashboard, such as registration.
 
-| Environment Variable | Description                                               | Expected Value                         |
-|----------------------|-----------------------------------------------------------|----------------------------------------|
-| SIGNUP_ENABLED       | Controls if the signup page and APIs are enabled/disabled | `true` (Enabled) or `false` (Disabled) |
+| Environment Variable   | Description                                               | Expected Value                         |
+|------------------------|-----------------------------------------------------------|----------------------------------------|
+| SIGNUP_ENABLED         | Controls if the signup page and APIs are enabled/disabled | `true` (Enabled) or `false` (Disabled) |
+| NEXT_PUBLIC_DONATE_URL | Changes the universal donation link for buttons/links     | String - `https://...`                 |
 
 ## Authentik
 

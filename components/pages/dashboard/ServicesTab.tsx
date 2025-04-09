@@ -1,7 +1,7 @@
 import Link from "next/link"
 import { Mail, Key, ExternalLink } from "lucide-react"
 import { SiGitea, SiAuthentik } from "react-icons/si";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardFooter, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 
 export const ServicesTab = () => (
@@ -13,16 +13,16 @@ export const ServicesTab = () => (
           <Mail className="mr-2 h-4 w-4" />
           Webmail
         </CardTitle>
-        <CardDescription className="pt-4">Send, read, and manage your email account from a web browser!</CardDescription>
+        <CardDescription className="pt-4">Send, read, and manage your email account from a web browser! Powered by Roundcube and LibreCloud Mail.</CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardFooter>
         <Button>
           <ExternalLink className="h-4 w-4" />
           <Link href="https://mail.librecloud.cc/">
             Open App
           </Link>
         </Button>
-      </CardContent>
+      </CardFooter>
     </Card>
 
     <Card>
@@ -31,16 +31,16 @@ export const ServicesTab = () => (
           <SiGitea className="mr-2 h-4 w-4" />
           Git
         </CardTitle>
-        <CardDescription className="pt-4">Host your repositories and run Actions on a fair usage policy.</CardDescription>
+        <CardDescription className="pt-4">Host unlimited repositories and run Actions on our Git server, powered by Gitea.</CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardFooter>
         <Button>
           <ExternalLink className="h-4 w-4" />
           <Link href="https://git.pontusmail.org/">
             Open App
           </Link>
         </Button>
-      </CardContent>
+      </CardFooter>
     </Card>
 
     <Card>
@@ -49,16 +49,16 @@ export const ServicesTab = () => (
           <Key className="mr-2 h-4 w-4" />
           Pass
         </CardTitle>
-        <CardDescription className="pt-4">Securely store your passwords, notes, and 2FA codes with Vaultwarden.</CardDescription>
+        <CardDescription className="pt-4">Securely store your passwords, notes, and 2FA codes with Vaultwarden. Data is encrypted at rest.</CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardFooter>
         <Button>
           <ExternalLink className="h-4 w-4" />
-          <Link href="https://vaultwarden.p0ntus.com/">
+          <Link href="https://pass.librecloud.cc/">
             Open App
           </Link>
         </Button>
-      </CardContent>
+      </CardFooter>
     </Card>
 
     <Card>
@@ -69,14 +69,14 @@ export const ServicesTab = () => (
         </CardTitle>
         <CardDescription className="pt-4">Manage your single-sign-on account for all LibreCloud services.</CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardFooter>
         <Button>
           <ExternalLink className="h-4 w-4" />
           <Link href="https://auth.librecloud.cc/">
             Open App
           </Link>
         </Button>
-      </CardContent>
+      </CardFooter>
     </Card>
   </div>
 )

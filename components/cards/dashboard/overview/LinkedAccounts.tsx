@@ -1,13 +1,25 @@
-import { useState, useEffect } from "react";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Loader2 } from "lucide-react";
+"use client"
+
+import { useState, useEffect } from "react"
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { Loader2 } from "lucide-react"
+import { useSession } from "next-auth/react"
 
 export const LinkedAccounts = () => {
   const [gitStatus, setGitStatus] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [isAdmin, setIsAdmin] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [authStatus, setAuthStatus] = useState(false)
+
+  const { data: session } = useSession()
+
+  useEffect(() => {
+    if (session?.user?.email) {
+      setAuthStatus(true)
+    }
+  }, [session])
 
   useEffect(() => {
     const fetchGitStatus = async () => {
@@ -40,17 +52,32 @@ export const LinkedAccounts = () => {
       }
     };
 
-    fetchGitStatus().then(r => r)
+    fetchGitStatus()
   }, []);
 
   return (
     <Card className="col-span-full md:col-span-1">
       <CardHeader>
         <CardTitle>Linked Accounts</CardTitle>
-        <CardDescription>LibreCloud-connected services</CardDescription>
+        <CardDescription>LibreCloud-connected services you've linked to your account.</CardDescription>
       </CardHeader>
       <CardContent>
         <ul className="space-y-2">
+          {authStatus ? (
+            <li className="flex items-center">
+              <span className="w-2 h-2 rounded-full bg-green-500 mr-2"></span>
+              <span>LibreCloud Auth</span>
+            </li>
+          ) : (
+            <li className="flex items-center">
+              <span className="w-2 h-2 rounded-full bg-red-500 mr-2"></span>
+              <span>LibreCloud Auth</span>
+            </li>
+          )}
+          <li className="flex items-center">
+            <span className="w-2 h-2 rounded-full bg-green-500 mr-2"></span>
+            <span>LibreCloud Mail</span>
+          </li>
           <li className="flex items-center">
             {isLoading ? (
               <Loader2 className="w-4 h-4 mr-2 animate-spin" />
@@ -73,10 +100,6 @@ export const LinkedAccounts = () => {
             ) : (
               <span>LibreCloud Git</span>
             )}
-          </li>
-          <li className="flex items-center">
-            <span className="w-2 h-2 rounded-full bg-green-500 mr-2"></span>
-            <span>p0ntus mail</span>
           </li>
         </ul>
         <div className="mt-4">

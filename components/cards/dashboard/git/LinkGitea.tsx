@@ -178,7 +178,7 @@ export function LinkGitea({ linked }: { linked: boolean }) {
             </Alert>
           )}
           <p className="text-sm mb-4">
-            Unlinking your Gitea account will not delete your Gitea account. You can delete your Gitea account <Link href="https://try.gitea.com/user/sign_up" target="_blank" className="text-blue-500">here</Link>.
+            Unlinking your Gitea account will not delete your Gitea account. You can delete your Gitea account <Link href="https://try.gitea.com/user/sign_up" target="_blank" className="underline hover:text-muted-foreground">here</Link>.
           </p>
           {unlinkLoading ? (
             <Button variant="destructive" disabled>
