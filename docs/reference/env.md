@@ -9,10 +9,13 @@ While this will change in the future, we still suggest that provide all the list
 These are the environment variables which handle how `librecloud/web` functions.
 With these variables, you can disable entire parts of the dashboard, such as registration.
 
-| Environment Variable   | Description                                               | Expected Value                         |
-|------------------------|-----------------------------------------------------------|----------------------------------------|
-| SIGNUP_ENABLED         | Controls if the signup page and APIs are enabled/disabled | `true` (Enabled) or `false` (Disabled) |
-| NEXT_PUBLIC_DONATE_URL | Changes the universal donation link for buttons/links     | String - `https://...`                 |
+| Environment Variable             | Description                                               | Expected Value                         |
+|----------------------------------|-----------------------------------------------------------|----------------------------------------|
+| SIGNUP_ENABLED                   | Controls if the signup page and APIs are enabled/disabled | `true` (Enabled) or `false` (Disabled) |
+| NEXT_PUBLIC_DONATE_URL           | Changes the universal donation link for buttons/links     | String - `https://...`                 |
+| NEXT_PUBLIC_SUPPORT_EMAIL        | Email displayed in the "Support" tab of dashboard         | String - `example@example.com`         |
+| NEXT_PUBLIC_TELEGRAM_CHANNEL_URL | Changes the default Telegram channel link in Support dash | String - `https://t.me/...`            |
+| NEXT_PUBLIC_TELEGRAM_GROUP_URL   | Changes the default Telegram group link in Support dash   | String - `https://t.me/...`            |
 
 ## Authentik
 
