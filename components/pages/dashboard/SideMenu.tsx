@@ -20,19 +20,37 @@ import {
   SidebarGroupLabel,
   SidebarMenuItem,
   SidebarMenuSkeleton,
+  useSidebar,
 } from "@/components/ui/sidebar"
 import LogoutMenuItem from "@/components/custom/LogoutMenuItem"
 import type React from "react"
 import Link from "next/link"
 import { useState, useEffect } from "react"
 
-export const SideMenu: React.FC = () => {
-  const [hideGenAI, setHideGenAI] = useState(true)
-  const [hideUpgrades, setHideUpgrades] = useState(true)
-  const [hideCrypto, setHideCrypto] = useState(true)
-  const [isLoading, setIsLoading] = useState(true)
+interface UserSettings {
+  hideGenAI: boolean
+  hideUpgrades: boolean
+  hideCrypto: boolean
+}
+
+interface SideMenuProps {
+  initialSettings?: UserSettings
+}
+
+export const SideMenu: React.FC<SideMenuProps> = ({ initialSettings }) => {
+  const [hideGenAI, setHideGenAI] = useState(initialSettings?.hideGenAI ?? true)
+  const [hideUpgrades, setHideUpgrades] = useState(initialSettings?.hideUpgrades ?? true)
+  const [hideCrypto, setHideCrypto] = useState(initialSettings?.hideCrypto ?? true)
+  const [isLoading, setIsLoading] = useState(!initialSettings)
+  const { setOpenMobile } = useSidebar()
 
   useEffect(() => {
+    // Only fetch settings if they weren't provided by the server
+    if (initialSettings) {
+      setIsLoading(false)
+      return
+    }
+
     fetch("/api/users/settings")
       .then((res) => res.json())
       .then((data) => {
@@ -45,133 +63,141 @@ export const SideMenu: React.FC = () => {
         console.error("Failed to fetch user settings:", error)
         setIsLoading(false)
       })
-  }, [])
+  }, [initialSettings])
+
+  // Handler to close mobile sidebar when a link is clicked
+  const handleLinkClick = () => {
+    setOpenMobile(false)
+  }
 
   return (
-    <div className="fixed left-0 top-16 h-[calc(100vh-4rem)] w-64 border-r bg-background z-10 hidden lg:block">
-      <Sidebar className="h-full pt-16">
-        <SidebarContent className="h-full bg-background">
-          <SidebarGroup>
-            <SidebarGroupLabel>Services</SidebarGroupLabel>
-            <SidebarGroupContent>
-              <SidebarMenu>
-                <SidebarMenuItem>
-                  <SidebarMenuButton asChild>
-                    <Link href="/account/dashboard">
-                      <LayoutDashboard />
-                      <span>Dashboard</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
+    <Sidebar className="h-full">
+      <SidebarContent className="h-full bg-background">
+        <div className="flex items-center justify-center pt-6">
+          <h3 className="text-2xl font-bold text-primary">
+            LibreCloud
+          </h3>
+        </div>
+        <SidebarGroup>
+          <SidebarGroupLabel>Services</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <Link href="/account/dashboard" onClick={handleLinkClick}>
+                    <LayoutDashboard />
+                    <span>Dashboard</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
 
-                {isLoading ? (
+              {isLoading ? (
+                <SidebarMenuItem>
+                  <SidebarMenuSkeleton showIcon />
+                </SidebarMenuItem>
+              ) : (
+                !hideGenAI && (
                   <SidebarMenuItem>
-                    <SidebarMenuSkeleton showIcon />
+                    <SidebarMenuButton asChild>
+                      <Link href="/account/dashboard/ai" onClick={handleLinkClick}>
+                        <Sparkle />
+                        <span>Generative AI</span>
+                      </Link>
+                    </SidebarMenuButton>
                   </SidebarMenuItem>
-                ) : (
-                  !hideGenAI && (
-                    <SidebarMenuItem>
-                      <SidebarMenuButton asChild>
-                        <Link href="/account/dashboard/ai">
-                          <Sparkle />
-                          <span>Generative AI</span>
-                        </Link>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                  )
-                )}
+                )
+              )}
 
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <Link href="/account/dashboard/downloads" onClick={handleLinkClick}>
+                    <HardDriveDownload />
+                    <span>Download Center</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        <SidebarGroup>
+          <SidebarGroupLabel>Tools</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {isLoading ? (
                 <SidebarMenuItem>
-                  <SidebarMenuButton asChild>
-                    <Link href="/account/dashboard/downloads">
-                      <HardDriveDownload />
-                      <span>Download Center</span>
-                    </Link>
-                  </SidebarMenuButton>
+                  <SidebarMenuSkeleton showIcon />
                 </SidebarMenuItem>
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
-
-          <SidebarGroup>
-            <SidebarGroupLabel>Tools</SidebarGroupLabel>
-            <SidebarGroupContent>
-              <SidebarMenu>
-                {isLoading ? (
+              ) : (
+                !hideCrypto && (
                   <SidebarMenuItem>
-                    <SidebarMenuSkeleton showIcon />
+                    <SidebarMenuButton asChild>
+                      <Link href="/account/dashboard/exchange" onClick={handleLinkClick}>
+                        <Bitcoin />
+                        <span>Exchange Crypto</span>
+                      </Link>
+                    </SidebarMenuButton>
                   </SidebarMenuItem>
-                ) : (
-                  !hideCrypto && (
-                    <SidebarMenuItem>
-                      <SidebarMenuButton asChild>
-                        <Link href="/account/dashboard/exchange">
-                          <Bitcoin />
-                          <span>Exchange Crypto</span>
-                        </Link>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                  )
-                )}
+                )
+              )}
 
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <Link href="/account/dashboard/statistics" onClick={handleLinkClick}>
+                    <BarChartIcon />
+                    <span>Statistics</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        <SidebarGroup>
+          <SidebarGroupLabel>Account</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {isLoading ? (
                 <SidebarMenuItem>
-                  <SidebarMenuButton asChild>
-                    <Link href="/account/dashboard/statistics">
-                      <BarChartIcon />
-                      <span>Statistics</span>
-                    </Link>
-                  </SidebarMenuButton>
+                  <SidebarMenuSkeleton showIcon />
                 </SidebarMenuItem>
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
-
-          <SidebarGroup>
-            <SidebarGroupLabel>Account</SidebarGroupLabel>
-            <SidebarGroupContent>
-              <SidebarMenu>
-                {isLoading ? (
+              ) : (
+                !hideUpgrades && (
                   <SidebarMenuItem>
-                    <SidebarMenuSkeleton showIcon />
+                    <SidebarMenuButton asChild>
+                      <Link href="/account/dashboard/upgrades" onClick={handleLinkClick}>
+                        <Crown />
+                        <span>Upgrades</span>
+                      </Link>
+                    </SidebarMenuButton>
                   </SidebarMenuItem>
-                ) : (
-                  !hideUpgrades && (
-                    <SidebarMenuItem>
-                      <SidebarMenuButton asChild>
-                        <Link href="/account/dashboard/upgrades">
-                          <Crown />
-                          <span>Upgrades</span>
-                        </Link>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                  )
-                )}
+                )
+              )}
 
-                <SidebarMenuItem>
-                  <SidebarMenuButton asChild>
-                    <Link href="/account/dashboard/support">
-                      <Headset />
-                      <span>Support</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <Link href="/account/dashboard/support" onClick={handleLinkClick}>
+                    <Headset />
+                    <span>Support</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
 
-                <SidebarMenuItem>
-                  <SidebarMenuButton asChild>
-                    <Link href="/account/dashboard/settings">
-                      <Settings />
-                      <span>Settings</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <Link href="/account/dashboard/settings" onClick={handleLinkClick}>
+                    <Settings />
+                    <span>Settings</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
 
-                <LogoutMenuItem />
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
-        </SidebarContent>
-      </Sidebar>
-    </div>
+              <LogoutMenuItem />
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+      </SidebarContent>
+    </Sidebar>
   )
 }
 

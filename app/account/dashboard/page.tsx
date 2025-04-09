@@ -7,7 +7,6 @@ import { OverviewTab } from "@/components/pages/dashboard/OverviewTab"
 import { SecurityTab } from "@/components/pages/dashboard/SecurityTab"
 import { ServicesTab } from "@/components/pages/dashboard/ServicesTab"
 import { GitTab } from "@/components/pages/dashboard/GitTab"
-import { SideMenu } from "@/components/pages/dashboard/SideMenu"
 
 const fadeIn = {
   initial: { opacity: 0, y: 20 },
@@ -46,10 +45,22 @@ export default function Dashboard() {
             gitEmail: data.email || "",
           }))
         } else {
-          throw new Error("Failed to fetch Gitea account details");
+          setDashboardState((prev) => ({
+            ...prev,
+            gitUser: "Unlinked",
+            gitAvatar: "",
+            gitLastLogin: "Never",
+          }))
+          throw new Error("Failed to fetch Gitea account details")
         }
       } catch (error) {
         console.error("Error fetching your Gitea user data:", error);
+        setDashboardState((prev) => ({
+          ...prev,
+          gitUser: "Unlinked",
+          gitAvatar: "",
+          gitLastLogin: "Never",
+        }))
       }
     }
 
@@ -57,36 +68,29 @@ export default function Dashboard() {
   }, [])
 
   return (
-    <div className="flex flex-1 overflow-hidden">
-      <SideMenu />
-      <main className="flex-1 w-full overflow-y-auto pl-0 lg:pl-64">
-        <div className="container mx-auto px-4 py-6 w-full">
-          <motion.div {...fadeIn}>
-            <h1 className="text-3xl font-bold mb-6 text-foreground">Dashboard</h1>
-            <Tabs defaultValue="overview" className="w-full">
-              <TabsList className="mb-4 flex flex-wrap">
-                <TabsTrigger value="overview">Overview</TabsTrigger>
-                <TabsTrigger value="security">Security</TabsTrigger>
-                <TabsTrigger value="services">Services</TabsTrigger>
-                <TabsTrigger value="git">Git</TabsTrigger>
-              </TabsList>
-              <TabsContent value="overview">
-                <OverviewTab />
-              </TabsContent>
-              <TabsContent value="security">
-                <SecurityTab />
-              </TabsContent>
-              <TabsContent value="services">
-                <ServicesTab />
-              </TabsContent>
-              <TabsContent value="git">
-                <GitTab dashboardState={dashboardState} />
-              </TabsContent>
-            </Tabs>
-          </motion.div>
-        </div>
-      </main>
-    </div>
+    <motion.div {...fadeIn}>
+      <h1 className="text-3xl font-bold mb-6 text-foreground">Dashboard</h1>
+      <Tabs defaultValue="overview" className="w-full">
+        <TabsList className="mb-4 flex flex-wrap">
+          <TabsTrigger value="overview" className="cursor-pointer">Overview</TabsTrigger>
+          <TabsTrigger value="security" className="cursor-pointer">Security</TabsTrigger>
+          <TabsTrigger value="services" className="cursor-pointer">Services</TabsTrigger>
+          <TabsTrigger value="git" className="cursor-pointer">Git</TabsTrigger>
+        </TabsList>
+        <TabsContent value="overview">
+          <OverviewTab />
+        </TabsContent>
+        <TabsContent value="security">
+          <SecurityTab />
+        </TabsContent>
+        <TabsContent value="services">
+          <ServicesTab />
+        </TabsContent>
+        <TabsContent value="git">
+          <GitTab dashboardState={dashboardState} />
+        </TabsContent>
+      </Tabs>
+    </motion.div>
   )
 }
 

@@ -17,3 +17,7 @@ You will need to setup the following services with Docker, and route them proper
 ## Get Started
 
 For the best experience, we suggest you use a [Docker setup](getstarted/docker.md) in production, and a [Dev environment](getstarted/dev.md) while testing/making changes.
+
+## Donations
+
+A lot of time and resources are put into operating LibreCloud. Consider donating to support our work with [Stripe](https://donate.stripe.com/6oE8yxaPk6yXbpS145).

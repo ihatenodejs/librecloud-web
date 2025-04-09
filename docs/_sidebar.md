@@ -12,3 +12,7 @@
     * [Environment Variables](reference/env.md)
     * [Database Migration Guide](reference/db-migration.md)
     * [Editing Documentation](reference/editing-docs.md)
+
+* Updates
+
+    * [v1.2.0](updates/1.2.0.md)

@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
-import { Mail, Key, Loader } from "lucide-react"
+import { Mail, Key, Loader2 } from "lucide-react"
 
 export function ChangePassword() {
   const [newPassword, setNewPassword] = useState("");
@@ -62,8 +62,9 @@ export function ChangePassword() {
               className="mt-1.5"
             />
           </div>
-          <Button type="submit" disabled={loading}>
-            {loading ? <><Loader className="animate-spin" /> Changing...</> : <><Key /> Change Password</>}
+          <Button type="submit" disabled={loading || newPassword.length < 8}>
+            {/* TODO: this should have the usual error message style */
+            loading ? <><Loader2 className="animate-spin" /> Changing...</> : <><Key /> Change Password</>}
           </Button>
           {message && <p className="text-sm text-center">{message}</p>}
         </form>

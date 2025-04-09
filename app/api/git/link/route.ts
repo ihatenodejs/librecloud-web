@@ -24,7 +24,7 @@ export async function POST(request: Request) {
     })
 
     if (!response.ok) {
-      return NextResponse.json({ error: "Failed to fetch Git user data" }, { status: response.status })
+      return NextResponse.json({ error: "Failed to fetch Git user data" }, { status: 403 })
     }
 
     const userData = await response.json()

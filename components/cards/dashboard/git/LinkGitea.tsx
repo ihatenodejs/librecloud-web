@@ -9,7 +9,9 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { SiGitea } from "react-icons/si"
-import { Loader } from "lucide-react"
+import { AlertCircle, Loader2 } from "lucide-react"
+import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert"
+import Link from "next/link"
 
 const giteaFormSchema = z.object({
   username: z
@@ -28,6 +30,9 @@ type GiteaFormValues = z.infer<typeof giteaFormSchema>
 
 export function LinkGitea({ linked }: { linked: boolean }) {
   const [loading, setLoading] = useState(false)
+  const [unlinkLoading, setUnlinkLoading] = useState(false)
+  const [linkError, setLinkError] = useState("")
+  const [unlinkError, setUnlinkError] = useState("")
 
   const form = useForm<GiteaFormValues>({
     resolver: zodResolver(giteaFormSchema),
@@ -47,25 +52,45 @@ export function LinkGitea({ linked }: { linked: boolean }) {
         body: JSON.stringify({ username: data.username }),
       })
 
-      if (!response.ok) {
-        throw new Error("Failed to link Gitea account")
-      }
-
       const responseData = await response.json()
       if (responseData.success) {
         console.log("Gitea account linked:", responseData)
         location.reload()
       } else if (responseData.error) {
-        form.setError("username", { message: responseData.error })
+        setLinkError(responseData.error)
         setLoading(false)
       } else {
-        form.setError("username", { message: "Failed to link" })
+        setLinkError("Failed to link")
         setLoading(false)
         throw new Error("Failed to link Gitea account")
       }
     } catch (error) {
       setLoading(false)
+      setLinkError("Failed to link")
       console.error("Error linking Gitea account:", error)
+    }
+  }
+
+  const onUnlink = async () => {
+    setUnlinkLoading(true)
+    try {
+      const response = await fetch("/api/git/unlink", {
+        method: "POST",
+      })
+
+      const responseData = await response.json()
+      if (responseData.success) {
+        console.log("Gitea account unlinked")
+        location.reload()
+      } else {
+        setUnlinkError(responseData.error)
+        console.error("Failed to unlink:", responseData.error)
+        setUnlinkLoading(false)
+      }
+    } catch (error) {
+      setUnlinkLoading(false)
+      setUnlinkError("Failed to unlink")
+      console.error("Error unlinking Gitea account:", error)
     }
   }
 
@@ -82,6 +107,13 @@ export function LinkGitea({ linked }: { linked: boolean }) {
         </CardHeader>
         <CardContent>
           <div>
+          {linkError && (
+            <Alert variant="destructive" className="text-red-500 mb-4">
+              <AlertCircle color={"#EF4444"} size={18} />
+              <AlertTitle className="text-lg font-bold">Oops! Something went wrong.</AlertTitle>
+              <AlertDescription>{linkError}</AlertDescription>
+            </Alert>
+          )}
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                 <FormField
@@ -90,7 +122,7 @@ export function LinkGitea({ linked }: { linked: boolean }) {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Gitea Username</FormLabel>
-                      <FormControl>
+                      <FormControl className="mt-1">
                         <Input {...field} />
                       </FormControl>
                       <FormMessage />
@@ -98,15 +130,29 @@ export function LinkGitea({ linked }: { linked: boolean }) {
                   )}
                 />
                 {loading ? (
-                  <Button disabled>
-                    <Loader className="animate-spin" />
-                    Linking...
-                  </Button>
+                  <div className="flex gap-2">
+                    <Button className="w-full" disabled>
+                      <Loader2 className="animate-spin" />
+                      Linking...
+                    </Button>
+                    <Button variant="outline" className="w-full" disabled>
+                      <SiGitea />
+                      Create Account
+                    </Button>
+                  </div>
                 ) : (
-                  <Button type="submit">
-                    <SiGitea />
-                    Link with Gitea
-                  </Button>
+                  <div className="flex gap-2">
+                    <Button type="submit" className="w-1/2 cursor-pointer">
+                      <SiGitea />
+                      Link with Gitea
+                    </Button>
+                    <a href="https://try.gitea.com" target="_blank" className="w-1/2">
+                      <Button type="button" variant="outline" className="w-full cursor-pointer">
+                        <SiGitea />
+                        Create Account
+                      </Button>
+                    </a>
+                  </div>
                 )}
               </form>
             </Form>
@@ -115,7 +161,39 @@ export function LinkGitea({ linked }: { linked: boolean }) {
       </Card>
     )
   } else {
-    return null
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle>Git Link</CardTitle>
+          <CardDescription>
+            Your Gitea account is currently linked to your LibreCloud account.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          {unlinkError && (
+            <Alert variant="destructive" className="text-red-500 mb-4">
+              <AlertCircle color={"#EF4444"} size={18} />
+              <AlertTitle className="text-lg font-bold">Oops! Something went wrong.</AlertTitle>
+              <AlertDescription>{unlinkError}</AlertDescription>
+            </Alert>
+          )}
+          <p className="text-sm mb-4">
+            Unlinking your Gitea account will not delete your Gitea account. You can delete your Gitea account <Link href="https://try.gitea.com/user/sign_up" target="_blank" className="text-blue-500">here</Link>.
+          </p>
+          {unlinkLoading ? (
+            <Button variant="destructive" disabled>
+              <Loader2 className="animate-spin" />
+              Unlinking...
+            </Button>
+          ) : (
+            <Button variant="destructive" onClick={onUnlink}>
+              <SiGitea />
+              Unlink Gitea Account
+            </Button>
+          )}
+        </CardContent>
+      </Card>
+    )
   }
 }
 

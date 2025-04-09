@@ -24,7 +24,7 @@ export const Header = async () => {
   ]
 
   return (
-    <header className="sticky top-0 h-16 z-20 bg-background border-b p-4 flex items-center justify-between">
+    <header className="sticky top-0 h-16 z-30 bg-background border-b p-4 flex items-center justify-between">
       <div className="flex items-center space-x-4">
         <Avatar>
           {session.user.image || isNaN(Number(session.user.image)) ? (
