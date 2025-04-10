@@ -69,7 +69,7 @@ export default async function Login() {
           </form>
         </CardContent>
         <CardFooter className="justify-center">
-          <p className="text-sm text-muted-foreground -mt-3">By continuing, you agree to our <Link href="/privacy" className="underline">Privacy Policy</Link>.</p>
+          <p className="text-sm text-muted-foreground -mt-3">By continuing, you agree to our <Link href="/legal/privacy" className="underline">Privacy Policy</Link>.</p>
         </CardFooter>
       </Card>
     </div>

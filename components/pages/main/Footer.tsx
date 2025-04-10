@@ -28,7 +28,13 @@ export default function Footer() {
           </div>
           <div className="flex items-center justify-center space-x-6">
             <Link
-              href="/privacy"
+              href="/legal"
+              className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
+            >
+              Legal
+            </Link>
+            <Link
+              href="/legal/privacy"
               className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
             >
               Privacy Policy
