@@ -8,9 +8,9 @@ import { validateToken } from "@/lib/utils"
 
 async function createEmail(email: string, password: string, migrate: boolean) {
   // Signup status check
-  if (process.env.SIGNUP_ENABLED === "false") {
+  if (process.env.NEXT_PUBLIC_SIGNUP_ENABLED === "false") {
     return { success: false, message: "Signups are disabled" }
-  } else if (process.env.SIGNUP_ENABLED === "true") {
+  } else if (process.env.NEXT_PUBLIC_SIGNUP_ENABLED === "true") {
     try {
       if (!process.env.MAIL_CONNECT_API_URL) {
         console.error("[!] Missing MAIL_CONNECT_API_URL environment variable")
@@ -49,7 +49,7 @@ async function createEmail(email: string, password: string, migrate: boolean) {
 }
 
 export async function POST(request: Request) {
-  if (process.env.SIGNUP_ENABLED === "true") {
+  if (process.env.NEXT_PUBLIC_SIGNUP_ENABLED === "true") {
     try {
       const body = await request.json()
       const { name, email, password, migrate, token } = body
@@ -176,7 +176,7 @@ export async function POST(request: Request) {
       console.error("[!] Unhandled error while creating user:", error)
       return NextResponse.json({ success: false, message: "An unexpected error occurred" }, { status: 500 })
     }
-  } else if (process.env.SIGNUP_ENABLED === "false") {
+  } else if (process.env.NEXT_PUBLIC_SIGNUP_ENABLED === "false") {
     return NextResponse.json({ success: false, message: "Signups are disabled" }, { status: 403 })
   } else {
     return NextResponse.json({ success: false, message: "Account signup is not configured in your environment variables!" }, { status: 500 })

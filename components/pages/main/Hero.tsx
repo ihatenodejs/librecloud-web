@@ -23,9 +23,9 @@ const Hero = () => {
           </p>
           <div className="mt-10 max-w-md mx-auto sm:flex sm:justify-center">
             <div className="rounded-md shadow-sm">
-              {process.env.SIGNUP_ENABLED === "true" ? (
+              {process.env.NEXT_PUBLIC_SIGNUP_ENABLED === "true" ? (
                 <Link href="/account/login">
-                  <Button className="py-6 px-8">
+                  <Button className="py-6 px-8 cursor-pointer">
                     Get Started
                     <ArrowRight className="ml-2 h-5 w-5" />
                   </Button>

@@ -184,9 +184,9 @@ const PricingCard: React.FC<PricingCardProps> = ({
             <Clock /> Coming Soon
           </Button>
         ) : buttonText ? (
-          process.env.SIGNUP_ENABLED === "true" ? (
+          process.env.NEXT_PUBLIC_SIGNUP_ENABLED === "true" ? (
             <Link href="/account/login" className="block">
-              <Button className="w-full group" size="lg">
+              <Button className="w-full group cursor-pointer" size="lg">
                 {buttonText}
                 {buttonIcon}
               </Button>
