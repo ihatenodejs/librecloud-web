@@ -3,7 +3,8 @@ import { Button } from "@/components/ui/button"
 import {
   Mail,
   Headset,
-  Heart
+  Heart,
+  Scale
 } from "lucide-react"
 import Link from "next/link"
 
@@ -26,6 +27,7 @@ export const QuickLinks = () => {
           </Button>
         </Link>
         <Link
+          target="_blank"
           href="https://mail.librecloud.cc"
         >
           <Button
@@ -37,6 +39,7 @@ export const QuickLinks = () => {
           </Button>
         </Link>
         <Link
+          target="_blank"
           href={process.env.NEXT_PUBLIC_DONATE_URL || "https://donate.stripe.com/6oE8yxaPk6yXbpS145"}
         >
           <Button
@@ -45,6 +48,18 @@ export const QuickLinks = () => {
           >
             <Heart />
             Donate
+          </Button>
+        </Link>
+        <Link
+          target="_blank"
+          href="/legal"
+        >
+          <Button
+            variant="secondary"
+            className="w-full mb-2 cursor-pointer"
+          >
+            <Scale />
+            Legal
           </Button>
         </Link>
       </CardContent>

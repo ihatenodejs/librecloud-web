@@ -98,8 +98,9 @@ export function LinkGitea({ linked }: { linked: boolean }) {
     return (
       <Card>
         <CardHeader>
-          <CardTitle>
-            Link Gitea Account
+          <CardTitle className="flex items-center text-2xl">
+            <SiGitea className="mr-2" />
+            Gitea Link
           </CardTitle>
           <CardDescription>
             To link your Gitea account to your LibreCloud account, add your p0ntus mail account to your Gitea account, then click the button.
@@ -164,7 +165,10 @@ export function LinkGitea({ linked }: { linked: boolean }) {
     return (
       <Card>
         <CardHeader>
-          <CardTitle>Git Link</CardTitle>
+          <CardTitle className="flex items-center text-2xl">
+            <SiGitea className="mr-2" />
+            Gitea Link
+          </CardTitle>
           <CardDescription>
             Your Gitea account is currently linked to your LibreCloud account.
           </CardDescription>
@@ -178,7 +182,12 @@ export function LinkGitea({ linked }: { linked: boolean }) {
             </Alert>
           )}
           <p className="text-sm mb-4">
-            Unlinking your Gitea account will not delete your Gitea account. You can delete your Gitea account <Link href="https://try.gitea.com/user/sign_up" target="_blank" className="underline hover:text-muted-foreground">here</Link>.
+            Unlinking your Gitea account will not delete your Gitea account. You can delete your Gitea account
+            <Link
+              href="https://git.pontusmail.org/user/settings/account"
+              target="_blank"
+              className="underline hover:text-muted-foreground transition-all ml-1"
+            >here</Link>.
           </p>
           {unlinkLoading ? (
             <Button variant="destructive" disabled>
