@@ -82,7 +82,7 @@ export function ChangePassword() {
               <DialogTitle>Change Your Password</DialogTitle>
               <DialogDescription>
                 <span className="font-bold mr-1">This only applies to your Authentik account.</span>
-                Make sure it's secure, and consider using
+                Make sure it&apos;s secure, and consider using
                 <Link
                   href="https://pass.librecloud.cc"
                   target="_blank"
