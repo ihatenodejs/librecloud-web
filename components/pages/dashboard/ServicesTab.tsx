@@ -1,12 +1,11 @@
 import Link from "next/link"
 import { Mail, Key, ExternalLink } from "lucide-react"
-import { SiGitea, SiAuthentik } from "react-icons/si";
+import { SiGitea, SiAuthentik, SiNextcloud } from "react-icons/si";
 import { Card, CardFooter, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 
 export const ServicesTab = () => (
   <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-    {/* TODO: move to component */}
     <Card>
       <CardHeader>
         <CardTitle className="flex items-center">
@@ -73,6 +72,24 @@ export const ServicesTab = () => (
         <Button>
           <ExternalLink className="h-4 w-4" />
           <Link href="https://auth.librecloud.cc/">
+            Open App
+          </Link>
+        </Button>
+      </CardFooter>
+    </Card>
+
+    <Card>
+      <CardHeader>
+        <CardTitle className="flex items-center">
+          <SiNextcloud className="mr-2 h-4 w-4" />
+          Files
+        </CardTitle>
+        <CardDescription className="pt-4">Store, share, edit, and synchronize files with Nextcloud.</CardDescription>
+      </CardHeader>
+      <CardFooter>
+        <Button>
+          <ExternalLink className="h-4 w-4" />
+          <Link href="https://files.librecloud.cc/">
             Open App
           </Link>
         </Button>

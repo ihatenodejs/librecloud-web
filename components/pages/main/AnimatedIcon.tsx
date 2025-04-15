@@ -2,14 +2,14 @@
 
 import React from "react"
 import { motion } from "motion/react"
-import { Mail, Lock, Disc3, Headset } from "lucide-react"
-import { SiGitea, SiAuthentik } from "react-icons/si"
+import { Mail, Lock, Disc3 } from "lucide-react"
+import { SiGitea, SiAuthentik, SiNextcloud } from "react-icons/si"
 
 const iconMap = {
   Mail,
   Lock,
   Disc3,
-  Headset,
+  SiNextcloud,
   SiGitea,
   SiAuthentik,
 } as const

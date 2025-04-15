@@ -29,13 +29,13 @@ export default function Home() {
     },
     {
       title: "Music",
-      description: "Coming soon. Host your music on our community server and stream it everywhere",
+      description: "Coming soon. Host your music on our community server and stream it everywhere.",
       iconName: "Disc3",
     },
     {
-      title: "Support",
-      description: "Administrators are standing by most of the day via our various support channels.",
-      iconName: "Headset",
+      title: "Files",
+      description: "Store, share, edit, and synchronize files with our private Nextcloud instance.",
+      iconName: "SiNextcloud",
     },
   ] as const
 
