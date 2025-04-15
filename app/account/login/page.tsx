@@ -39,7 +39,7 @@ export default async function Login() {
                 Sign in with Authentik
               </Button>
             </motion.div>
-            {process.env.SIGNUP_ENABLED === "true" ? (
+            {process.env.NEXT_PUBLIC_SIGNUP_ENABLED === "true" ? (
               <Link href="/account/signup">
                 <motion.div
                   initial={{ scale: 0.95 }}
