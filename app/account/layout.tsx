@@ -1,4 +1,5 @@
-import React from "react";
+import React from "react"
+import { Toaster } from "@/components/ui/sonner"
 
 export default function AccountLayout({
   children,
@@ -6,7 +7,12 @@ export default function AccountLayout({
   children: React.ReactNode
 }) {
   return (
-    <div className="min-h-screen bg-background">{children}</div>
+    <>
+      <div className="min-h-screen bg-background">
+        {children}
+      </div>
+      <Toaster />
+    </>
   )
 }
 
