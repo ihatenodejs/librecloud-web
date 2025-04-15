@@ -1,18 +1,11 @@
 "use client"
 
-import { motion } from "motion/react"
 import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
-import { ChangePassword } from "@/components/cards/dashboard/Settings/ChangePassword"
+import MyAccount from "@/components/cards/dashboard/Settings/MyAccount"
 import { useState, useEffect } from "react"
 import { LayoutDashboard } from "lucide-react"
-
-const fadeIn = {
-  initial: { opacity: 0, y: 20 },
-  animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.4 },
-}
 
 export default function Settings() {
   const [settings, setSettings] = useState({
@@ -85,10 +78,10 @@ export default function Settings() {
   };
 
   return (
-    <motion.div {...fadeIn}>
-      <h1 className="text-3xl font-bold mb-6 text-foreground">Settings</h1>
+    <>
+      <h1 className="text-2xl xl:text-3xl font-bold mb-6 text-foreground">Settings</h1>
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        <ChangePassword />
+        <MyAccount />
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center">
@@ -130,7 +123,7 @@ export default function Settings() {
           </CardContent>
         </Card>
       </div>
-    </motion.div>
+    </>
   )
 }
 
