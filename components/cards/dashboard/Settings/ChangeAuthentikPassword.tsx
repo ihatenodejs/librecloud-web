@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState, useRef, useEffect } from "react"
+import React, { useState, useRef, useEffect, useCallback } from "react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
@@ -139,7 +139,7 @@ export function ChangeAuthentikPassword() {
     }, 1000)
   }
 
-  const handleHoldEnd = () => {
+  const handleHoldEnd = useCallback(() => {
     if (holdTimeoutRef.current) {
       clearTimeout(holdTimeoutRef.current)
       holdTimeoutRef.current = null
@@ -154,7 +154,7 @@ export function ChangeAuthentikPassword() {
         intervalRef.current = null
       }
     }
-  }
+  }, [isHolding, controls])
 
   useEffect(() => {
     return () => {
@@ -173,7 +173,7 @@ export function ChangeAuthentikPassword() {
       setLoading(false)
       setNewPassword("")
     }
-  }, [open])
+  }, [open, handleHoldEnd])
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>

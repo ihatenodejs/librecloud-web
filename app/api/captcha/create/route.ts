@@ -17,6 +17,6 @@ async function getChallenge() {
   return NextResponse.json(challenge)
 }
 
-export async function GET(request: Request) {
+export async function GET() {
   return getChallenge()
 }
