@@ -36,11 +36,20 @@ A Docker setup requires both Docker *and* Docker Compose.
    bunx auth secret
    ```
 
-4. **Configure environment variables**
+4. **Generate Altcha token**
+
+   If you plan to use the signup forms, you will need to use Altcha, a private proof-of-work CAPTCHA. All you need to do is execute the script below, and it will be written to your `.env` or `.env.local`.
+
+   ```bash
+   $ bun tools/hmac.ts
+   Successfully wrote ALTCHA_SECRETKEY to .env.local
+   ```
+
+5. **Configure environment variables**
 
    Following the environment variables section of this README, update your newly created `.env.local` file with your configuration.
 
-5. **Initialize Prisma**
+6. **Initialize Prisma**
 
    Because `web` uses a database for storing Git link statuses (and other things to come),
    you will need to initialize the SQLite database.
@@ -52,11 +61,11 @@ A Docker setup requires both Docker *and* Docker Compose.
    bunx prisma migrate dev --name init
    ```
 
-6. **Setup environment variables**
+7. **Setup environment variables**
 
    Now is the time to go to the "Environment Variables" section and configure them in your `.env.local` file.
 
-7. **Bring the container up**
+8. **Bring the container up**
 
    ```bash
    docker compose up -d --build
@@ -66,7 +75,7 @@ A Docker setup requires both Docker *and* Docker Compose.
 
    You may customize the container with the included `docker-compose.yml` file if needed. Your server will start on port `3019` by default. We suggest using a reverse proxy to serve the site on a domain.
 
-8. **Complete Setup**
+9. **Complete Setup**
 
    If you would like to host the entire LibreCloud frontend and backend,
    you will also need to set up the following repositories and edit this project to work with *your* setup.
