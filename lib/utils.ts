@@ -1,6 +1,6 @@
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
-import { validateTurnstileToken } from "next-turnstile"
+import { verifySolution } from "altcha-lib"
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -9,29 +9,25 @@ export function cn(...inputs: ClassValue[]) {
 export async function validateToken(token: string) {
   try {
     if (!token) {
-      console.error("Validation failed: No token provided")
+      console.error("Altcha error: No token provided")
       return { success: false, error: "No token provided" }
     }
 
-    if (!process.env.CF_SECRETKEY) {
-      console.error("Validation failed: Missing CF_SECRETKEY environment variable")
+    if (!process.env.ALTCHA_SECRETKEY) {
+      console.error("Altcha error: Missing ALTCHA_SECRETKEY environment variable")
       return { success: false, error: "Server configuration error" }
     }
 
-    const result = await validateTurnstileToken({
-      token,
-      secretKey: process.env.CF_SECRETKEY,
-    })
-
-    if (result.success) {
+    const ok = await verifySolution(token, process.env.ALTCHA_SECRETKEY)
+    if (ok) {
       return { success: true }
     } else {
-      console.error("Validation failed:", result)
+      console.error("Altcha error: Invalid token")
       return { success: false, error: "Invalid token" }
     }
   } catch (error) {
-    console.error("Turnstile validation error:", error)
-    return { success: false, error: "Validation service error" }
+    console.error("Altcha error:", error)
+    return { success: false, error: "An error occurred with Altcha" }
   }
 }
 

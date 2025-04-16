@@ -61,7 +61,7 @@ export async function POST(request: Request) {
 
       const tokenValidation = await validateToken(token)
       if (!tokenValidation.success) {
-        console.error("Turnstile validation failed:", tokenValidation.error)
+        console.error("Altcha validation failed:", tokenValidation.error)
         return NextResponse.json({ success: false, message: "Robot check failed, try refreshing" }, { status: 400 })
       }
 

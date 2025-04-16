@@ -29,11 +29,20 @@
    bunx auth secret
    ```
 
-5. **Configure environment variables**
+5. **Generate Altcha token**
+
+   If you plan to use the signup forms, you will need to use Altcha, a private proof-of-work CAPTCHA. All you need to do is execute the script below, and it will be written to your `.env` or `.env.local`.
+
+   ```bash
+   $ bun tools/hmac.ts
+   Successfully wrote ALTCHA_SECRETKEY to .env.local
+   ```
+
+6. **Configure environment variables**
 
    Following the environment variables section of this README, update your newly created `.env.local` file with your configuration.
 
-6. **Initialize Prisma**
+7. **Initialize Prisma**
 
    Because `web` uses a database for storing Git link statuses (and other things to come), you will need to initialize the SQLite database.
 
@@ -45,7 +54,7 @@
    bunx prisma migrate dev --name init
    ```
 
-7. **Start dev server**
+8. **Start dev server**
 
    ```bash
    bun dev

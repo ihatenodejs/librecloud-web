@@ -35,18 +35,18 @@ export default function EmailField({ formData, handleInputChange, handleSelectCh
           value={formData.emailDomain}
           onValueChange={handleSelectChange}
         >
-          <SelectTrigger className="w-[180px]">
+          <SelectTrigger className="w-[180px] cursor-pointer">
             <SelectValue placeholder="Select domain" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="librecloud.cc">librecloud.cc</SelectItem>
-            <SelectItem value="pontusmail.org">pontusmail.org</SelectItem>
-            <SelectItem value="p0ntus.com">p0ntus.com</SelectItem>
-            <SelectItem value="ihate.college">ihate.college</SelectItem>
-            <SelectItem value="pontus.pics">pontus.pics</SelectItem>
-            <SelectItem value="dontbeevil.lol">dontbeevil.lol</SelectItem>
-            <SelectItem value="dont-be-evil.lol">dont-be-evil.lol</SelectItem>
-            <SelectItem value="strongintegrity.life">strongintegrity.life</SelectItem>
+            <SelectItem value="librecloud.cc" className="cursor-pointer">librecloud.cc</SelectItem>
+            <SelectItem value="pontusmail.org" className="cursor-pointer">pontusmail.org</SelectItem>
+            <SelectItem value="p0ntus.com" className="cursor-pointer">p0ntus.com</SelectItem>
+            <SelectItem value="ihate.college" className="cursor-pointer">ihate.college</SelectItem>
+            <SelectItem value="pontus.pics" className="cursor-pointer">pontus.pics</SelectItem>
+            <SelectItem value="dontbeevil.lol" className="cursor-pointer">dontbeevil.lol</SelectItem>
+            <SelectItem value="dont-be-evil.lol" className="cursor-pointer">dont-be-evil.lol</SelectItem>
+            <SelectItem value="strongintegrity.life" className="cursor-pointer">strongintegrity.life</SelectItem>
           </SelectContent>
         </Select>
       </div>

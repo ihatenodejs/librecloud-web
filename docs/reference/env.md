@@ -17,6 +17,23 @@ With these variables, you can disable entire parts of the dashboard, such as reg
 | NEXT_PUBLIC_TELEGRAM_CHANNEL_URL | Changes the default Telegram channel link in Support dash | String - `https://t.me/...`            |
 | NEXT_PUBLIC_TELEGRAM_GROUP_URL   | Changes the default Telegram group link in Support dash   | String - `https://t.me/...`            |
 
+## Altcha
+
+Altcha is a privacy-friendly CAPTCHA alternative we use for bot traffic mitigation and anti-spam.
+It requires a secret key for generating and verifying challenges. The rest is handled by the API.
+
+| Environment Variable | Description                                               | Example                                |
+|----------------------|-----------------------------------------------------------|----------------------------------------|
+| ALTCHA_SECRETKEY     | Secret key for generating and verifying Altcha challenges | N/A                                    |
+
+### Automatic Secret Key Setup
+
+We've included an automatic setup script for your Altcha secret key. It generates and writes a secure token to your `.env` or `.env.local` file. You can execute this script like so:
+
+```bash
+bun tools/hmac.ts
+```
+
 ## Authentik
 
 We use [Auth.js](https://authjs.dev) to provide authentication for users through Authentik.
