@@ -15,14 +15,7 @@ import { useRouter } from "next/navigation"
 import { validateEmail, validatePassword } from "@/lib/utils"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import EmailField from "@/components/custom/signup/EmailField"
-import Turnstile from "@/components/custom/Turnstile"
-
-declare global {
-  interface Window {
-    onTurnstileSuccess?: (token: string) => void
-    onloadTurnstileCallback?: () => void
-  }
-}
+import Altcha from "@/components/custom/Altcha"
 
 export default function Signup() {
   const router = useRouter()
@@ -40,10 +33,11 @@ export default function Signup() {
   const [isValid, setIsValid] = useState(false)
   const [validationMessage, setValidationMessage] = useState("")
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [turnstileStatus, setTurnstileStatus] = useState<"success" | "error" | "expired" | "required">("required")
+  const [altchaStatus, setAltchaStatus] = useState<"success" | "error" | "expired" | "required">("required")
   const formRef = useRef<HTMLFormElement>(null)
   const [errorAlert, setErrorAlert] = useState<string | null>(null)
   const [forceRefresh, setForceRefresh] = useState(false)
+  const [altchaToken, setAltchaToken] = useState<string | null>(null)
 
   const fadeInOut = {
     initial: { opacity: 0, y: 20 },
@@ -69,17 +63,15 @@ export default function Signup() {
     }
   }
 
-  const turnstileCallback = () => {
-    console.log("[i] Turnstile token received")
-  }
-
-  useEffect(() => {
-    window.onTurnstileSuccess = turnstileCallback
-
-    return () => {
-      delete window.onTurnstileSuccess
+  const handleAltchaStateChange = (e: Event | CustomEvent) => {
+    if ('detail' in e && e.detail?.payload) {
+      setAltchaToken(e.detail.payload)
+      setAltchaStatus("success")
+    } else {
+      setAltchaToken(null)
+      setAltchaStatus("required")
     }
-  }, [])
+  }
 
   useEffect(() => {
     if (formType === "create") {
@@ -110,7 +102,7 @@ export default function Signup() {
         return
       }
 
-      if (turnstileStatus !== "success") {
+      if (altchaStatus !== "success") {
         setIsValid(false)
         setValidationMessage("Please verify you are not a robot")
         return
@@ -146,7 +138,7 @@ export default function Signup() {
         return
       }
 
-      if (turnstileStatus !== "success") {
+      if (altchaStatus !== "success") {
         setIsValid(false)
         setValidationMessage("Please verify you are not a robot")
         return
@@ -155,7 +147,7 @@ export default function Signup() {
       setIsValid(true)
       setValidationMessage("Migrate Account")
     }
-  }, [formData, formType, turnstileStatus])
+  }, [formData, formType, altchaStatus])
 
   const getButtonIcon = () => {
     if (isValid) return <CheckCircle2 size={30} />
@@ -173,7 +165,7 @@ export default function Signup() {
     setErrorAlert(null)
 
     try {
-      if (turnstileStatus !== "success") {
+      if (altchaStatus !== "success") {
         setValidationMessage("Please verify you are not a robot")
         setIsSubmitting(false)
         return
@@ -181,10 +173,10 @@ export default function Signup() {
 
       const email = `${formData.emailUsername}@${formData.emailDomain}`
       const formDataObj = new FormData(formRef.current as HTMLFormElement)
-      const token = formDataObj.get("cf-turnstile-response") as string
+      const token = formDataObj.get("altcha-token") as string
 
       if (!token) {
-        setErrorAlert("Cloudflare Turnstile token is missing. Please refresh")
+        setErrorAlert("Altcha token is missing. Please refresh")
         setIsSubmitting(false)
         setForceRefresh(true)
         return
@@ -246,11 +238,11 @@ export default function Signup() {
           <AnimatePresence mode="wait">
             {formType === "initial" && (
               <motion.div key="initial" {...fadeInOut} className="space-y-4">
-                <Button onClick={() => setFormType("create")} className="w-full h-16 text-lg">
+                <Button onClick={() => setFormType("create")} className="w-full h-16 text-lg cursor-pointer">
                   <UserPlus className="mr-2" />
                   Create New Account
                 </Button>
-                <Button onClick={() => setFormType("migrate")} className="w-full h-16 text-lg">
+                <Button onClick={() => setFormType("migrate")} className="w-full h-16 text-lg cursor-pointer">
                   <UserCog className="mr-2" />
                   Migrate p0ntus mail Account
                 </Button>
@@ -319,10 +311,17 @@ export default function Signup() {
                   </Label>
                 </div>
                 {!forceRefresh && (
-                  <Turnstile
-                    setTurnstileStatus={setTurnstileStatus}
-                    setValidationMessage={setValidationMessage}
-                  />
+                  <input type="hidden" name="altcha-token" value={altchaToken ?? ""} />
+                )}
+                {!forceRefresh && (
+                  <>
+                    <div id="altcha-description" className="sr-only">
+                      A CAPTCHA box. You must solve the challenge to make an account.
+                    </div>
+                    <Altcha
+                      onStateChange={handleAltchaStateChange}
+                    />
+                  </>
                 )}
               </motion.form>
             )}
@@ -389,10 +388,17 @@ export default function Signup() {
                   </Label>
                 </div>
                 {!forceRefresh && (
-                  <Turnstile
-                    setTurnstileStatus={setTurnstileStatus}
-                    setValidationMessage={setValidationMessage}
-                  />
+                  <input type="hidden" name="altcha-token" value={altchaToken ?? ""} />
+                )}
+                {!forceRefresh && (
+                  <>
+                    <div id="altcha-description" className="sr-only">
+                      A CAPTCHA box. You must solve the challenge to make an account.
+                    </div>
+                    <Altcha
+                      onStateChange={handleAltchaStateChange}
+                    />
+                  </>
                 )}
               </motion.form>
             )}
@@ -405,7 +411,7 @@ export default function Signup() {
                 <motion.div key="buttons" {...fadeInOut} className="w-full space-y-2">
                   <Button
                     type="submit"
-                    className="w-full mb-4"
+                    className="w-full mb-4 cursor-pointer"
                     disabled={!isValid || isSubmitting}
                     onClick={handleSubmit}
                   >
@@ -416,7 +422,7 @@ export default function Signup() {
                     )}
                     {isSubmitting ? "Submitting..." : validationMessage}
                   </Button>
-                  <Button variant="outline" className="w-full" onClick={() => setFormType("initial")}>
+                  <Button variant="outline" className="w-full cursor-pointer" onClick={() => setFormType("initial")}>
                     Back
                   </Button>
                 </motion.div>
@@ -428,7 +434,7 @@ export default function Signup() {
               )
             ) : (
               <motion.div key="buttons" {...fadeInOut} className="w-full space-y-2">
-                <Button className="w-full" onClick={() => { setFormType("initial"); setForceRefresh(false); setErrorAlert(null) }}>
+                <Button className="w-full cursor-pointer" onClick={() => { setFormType("initial"); setForceRefresh(false); setErrorAlert(null) }}>
                   <ArrowLeft size={30} />
                   Back
                 </Button>
