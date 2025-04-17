@@ -1,5 +1,4 @@
-import { User, Bell } from "lucide-react"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Bell } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
   Popover,
@@ -9,6 +8,7 @@ import {
 import { Separator } from "@/components/ui/separator"
 import { auth } from "@/auth"
 import { ThemeToggle } from "@/components/custom/ThemeToggle"
+import { SidebarTrigger } from "@/components/ui/sidebar"
 
 export const Header = async () => {
   const session = await auth()
@@ -26,24 +26,7 @@ export const Header = async () => {
   return (
     <header className="sticky top-0 h-16 z-30 bg-background border-b p-4 flex items-center justify-between">
       <div className="flex items-center space-x-4">
-        <Avatar>
-          {session.user.image || isNaN(Number(session.user.image)) ? (
-            <AvatarFallback>
-              <User/>
-            </AvatarFallback>
-          ) : (
-            <div>
-              <AvatarImage src={session.user.image || "https://i.pravatar.cc/"}/>
-              <AvatarFallback>
-                <User/>
-              </AvatarFallback>
-            </div>
-          )}
-        </Avatar>
-        <div className="hidden sm:block">
-          <h2 className="font-semibold">{session.user.name}</h2>
-          <p className="text-sm text-muted-foreground">LibreCloud User</p>
-        </div>
+        <SidebarTrigger variant="outline" className="p-4 cursor-pointer" />
       </div>
       <div className="flex items-center space-x-2">
         <ThemeToggle />
@@ -52,6 +35,7 @@ export const Header = async () => {
             <Button
               size="icon"
               variant="outline"
+              className="cursor-pointer"
             >
               <Bell className="h-5 w-5"/>
             </Button>
@@ -60,7 +44,7 @@ export const Header = async () => {
             <div className="p-4">
               <div className="flex items-center justify-between">
                 <h4 className="font-semibold">Notifications</h4>
-                <Button variant="ghost" size="sm" className="text-xs">
+                <Button variant="ghost" size="sm" className="text-xs cursor-pointer">
                   Mark all as read
                 </Button>
               </div>
@@ -92,7 +76,7 @@ export const Header = async () => {
             </div>
             <Separator/>
             <div className="p-2">
-              <Button variant="ghost" className="w-full text-sm">
+              <Button variant="ghost" className="w-full text-sm cursor-pointer">
                 View all notifications
               </Button>
             </div>
