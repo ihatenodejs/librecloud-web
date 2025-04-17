@@ -17,14 +17,14 @@ You might want to serve the docs you've edited to see how they'll look on [docs.
 
 Do this with the `docsify-cli`, which can be installed like so:
 
-**Bun**
+### Bun
 
 ```bash
 # This will be installed globally
 bun i docsify-cli -g
 ```
 
-**NPM**
+### NPM
 
 ```bash
 # This will be installed globally
