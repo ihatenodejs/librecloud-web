@@ -131,7 +131,7 @@ export function LinkGitea({ linked }: { linked: boolean }) {
                   )}
                 />
                 {loading ? (
-                  <div className="flex gap-2">
+                  <div className="flex flex-col sm:flex-row gap-2">
                     <Button className="w-full" disabled>
                       <Loader2 className="animate-spin" />
                       Linking...
@@ -142,12 +142,12 @@ export function LinkGitea({ linked }: { linked: boolean }) {
                     </Button>
                   </div>
                 ) : (
-                  <div className="flex gap-2">
-                    <Button type="submit" className="w-1/2 cursor-pointer">
+                  <div className="flex flex-col sm:flex-row gap-2">
+                    <Button type="submit" className="w-full sm:w-1/2 cursor-pointer">
                       <SiGitea />
                       Link with Gitea
                     </Button>
-                    <a href="https://try.gitea.com" target="_blank" className="w-1/2">
+                    <a href={`${process.env.NEXT_PUBLIC_GITEA_URL}/user/sign_up`} target="_blank" className="w-full sm:w-1/2">
                       <Button type="button" variant="outline" className="w-full cursor-pointer">
                         <SiGitea />
                         Create Account

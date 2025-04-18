@@ -56,11 +56,11 @@ Create a new access token in your Gitea user settings (),
 and input the key you receive, as well as the URL of your instance, and the API URL.
 You can find a link to the API and its endpoint URL on the footer.
 
-| Environment Variable | Description                                   | Example                                    |
-|----------------------|-----------------------------------------------|--------------------------------------------|
-| GITEA_API_URL        | Your Gitea instance API endpoint (see footer) | `http://gitea.local/api/v1`                |
-| GITEA_API_KEY        | Access Token created in user settings         | `0000000000000000000000000000000000000000` |
-| GITEA_URL            | Your Gitea instance URL                       | `http://gitea.local`                       |
+| Environment Variable  | Description                                   | Example                                    |
+|-----------------------|-----------------------------------------------|--------------------------------------------|
+| GITEA_API_URL         | Your Gitea instance API endpoint (see footer) | `http://gitea.local/api/v1`                |
+| GITEA_API_KEY         | Access Token created in user settings         | `0000000000000000000000000000000000000000` |
+| NEXT_PUBLIC_GITEA_URL | Your Gitea instance URL                       | `http://gitea.local`                       |
 
 ## mail-connect
 

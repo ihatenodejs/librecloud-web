@@ -17,20 +17,18 @@ interface DashboardState {
 
 export const GitTab = ({ dashboardState }: { dashboardState: DashboardState }) => {
   return (
-    <div>
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {(dashboardState.gitUser && dashboardState.gitUser !== "Unlinked") && (
-          <GiteaProfileCard dashboardState={dashboardState} />
-        )}
-        <LinkGitea linked={!!dashboardState.gitUser && dashboardState.gitUser !== "Unlinked"} />
-        {/*
-        ~-~-~-~-~-~-~-~-~-~-~-~DISABLED FOR NOW~-~-~-~-~-~-~-~-~-~-~-~
-        <ChangeUsername gitUser={dashboardState.gitUser} />
-        <ChangePassword />
-        <ChangeEmail gitEmail={dashboardState.gitEmail || ""} />
-        <CreateRepo />
-        */}
-      </div>
+    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      {(dashboardState.gitUser && dashboardState.gitUser !== "Unlinked") && (
+        <GiteaProfileCard dashboardState={dashboardState} />
+      )}
+      <LinkGitea linked={!!dashboardState.gitUser && dashboardState.gitUser !== "Unlinked"} />
+      {/*
+      ~-~-~-~-~-~-~-~-~-~-~-~DISABLED FOR NOW~-~-~-~-~-~-~-~-~-~-~-~
+      <ChangeUsername gitUser={dashboardState.gitUser} />
+      <ChangePassword />
+      <ChangeEmail gitEmail={dashboardState.gitEmail || ""} />
+      <CreateRepo />
+      */}
     </div>
   )
 }
