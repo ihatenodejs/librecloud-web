@@ -4,7 +4,7 @@ import React, { useState, useRef, useEffect, useCallback } from "react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
-import { CheckCircleIcon, Key, Loader2, XCircleIcon } from "lucide-react"
+import { CheckCircleIcon, Key, Loader2, XCircleIcon, AlertCircle } from "lucide-react"
 import Link from "next/link"
 import { 
   Dialog, 
@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/dialog"
 import { toast } from "sonner"
 import { motion, useAnimationControls } from "framer-motion"
+import { validatePassword } from "@/lib/utils"
 
 export function ChangeEmailPassword() {
   const [newPassword, setNewPassword] = useState("")
@@ -28,6 +29,7 @@ export function ChangeEmailPassword() {
   const [isHolding, setIsHolding] = useState(false)
   const holdDuration = 10
   const [remainingTime, setRemainingTime] = useState(holdDuration)
+  const [passwordError, setPasswordError] = useState<string | null>(null)
 
   const submitPasswordChange = async () => {
     setLoading(true)
@@ -86,17 +88,16 @@ export function ChangeEmailPassword() {
         },
       })
       controls.set({ "--progress": "0%" })
-    } finally {
-      setLoading(false)
-      setIsHolding(false)
-      if (holdTimeoutRef.current) {
-        clearTimeout(holdTimeoutRef.current)
-        holdTimeoutRef.current = null
-      }
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current)
-        intervalRef.current = null
-      }
+    }
+    setLoading(false)
+    setIsHolding(false)
+    if (holdTimeoutRef.current) {
+      clearTimeout(holdTimeoutRef.current)
+      holdTimeoutRef.current = null
+    }
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current)
+      intervalRef.current = null
     }
   }
 
@@ -104,10 +105,23 @@ export function ChangeEmailPassword() {
     e.preventDefault()
   }
 
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value
+    setNewPassword(value)
+    
+    // Validate password
+    const validation = validatePassword(value)
+    if (!validation.valid) {
+      setPasswordError(validation.message)
+    } else {
+      setPasswordError(null)
+    }
+  }
+
   const holdDurationMs = holdDuration * 1000
 
   const handleHoldStart = () => {
-    if (loading || newPassword.length < 8) return
+    if (loading || newPassword.length < 8 || passwordError) return
 
     setIsHolding(true)
     controls.set({ "--progress": "0%" })
@@ -205,12 +219,19 @@ export function ChangeEmailPassword() {
               id="new-password"
               type="password"
               value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
+              onChange={handlePasswordChange}
               className="mt-1.5"
             />
-            <p className="text-xs text-muted-foreground">
-              Password must be at least 8 characters long.
-            </p>
+            {passwordError ? (
+              <p className="text-xs text-red-500 flex items-center gap-1">
+                <AlertCircle size={14} />
+                {passwordError}
+              </p>
+            ) : (
+              <p className="text-xs text-muted-foreground">
+                Password must be 8-128 characters long, include letters and digits, and not contain spaces.
+              </p>
+            )}
           </div>
           <DialogFooter>
             <motion.div
@@ -218,7 +239,7 @@ export function ChangeEmailPassword() {
               style={{ "--progress": "0%", "--progress-color": "hsl(var(--primary) / 0.5)" } as React.CSSProperties}
             >
               <Button
-                disabled={loading || newPassword.length < 8}
+                disabled={loading || newPassword.length < 8 || !!passwordError}
                 onMouseDown={handleHoldStart}
                 onMouseUp={handleHoldEnd}
                 onMouseLeave={handleHoldEnd}

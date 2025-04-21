@@ -140,7 +140,7 @@ const WelcomePage = () => {
             From here, you can proceed to sign in to your newly created account with Authentik. It will handle all the sign-ins for your account except for Pass (Vaultwarden).
           </p>
           <Link href="/account/login">
-            <Button className="mt-8"><CircleArrowRight /> Login</Button>
+            <Button className="mt-8 cursor-pointer"><CircleArrowRight /> Login</Button>
           </Link>
         </motion.div>
       </div>
