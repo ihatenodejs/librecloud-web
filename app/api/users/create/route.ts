@@ -1,6 +1,7 @@
 import axios from "axios"
 import { NextResponse } from "next/server"
-import { validateToken } from "@/lib/utils"
+import { validateToken, validateName, validateEmail } from "@/lib/utils"
+import { auth } from "@/auth"
 
 // This endpoint has two functions:
 // (1) Create a new LibreCloud user (Authentik, Email)
@@ -68,13 +69,31 @@ export async function POST(request: Request) {
     let atkCreated = false
     let userID = ""
 
+    const session = await auth()
+    if (session) {
+      return NextResponse.json({ success: false, message: "You are already logged in" }, { status: 403 })
+    }
+
     try {
       const body = await request.json()
       const { name, email, password, migrate, token } = body
 
-      // Validate fields
+      // Make sure all fields are present
       if (!name || !email || !password) {
         return NextResponse.json({ success: false, message: "The form you submitted is incomplete" }, { status: 400 })
+      }
+
+      // Validate name again
+      const nameValidation = validateName(name)
+      if (!nameValidation.valid) {
+        return NextResponse.json({ success: false, message: nameValidation.message }, { status: 400 })
+      }
+
+      // and email
+      const [emailUsername, emailDomain] = email.split('@')
+      const emailValidation = validateEmail(emailUsername, emailDomain)
+      if (!emailValidation.valid) {
+        return NextResponse.json({ success: false, message: emailValidation.message }, { status: 400 })
       }
 
       const tokenValidation = await validateToken(token)

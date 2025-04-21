@@ -10,12 +10,13 @@ import { Button } from "@/components/ui/button"
 import { Switch } from "@/components/ui/switch"
 import Link from "next/link"
 import { motion, AnimatePresence } from "motion/react"
-import { UserPlus, UserCog, Heart, AlertCircle, CheckCircle2, Mail, Lock, User, Bot, Loader, ArrowLeft } from "lucide-react"
+import { UserPlus, UserCog, Heart, AlertCircle, CheckCircle2, Mail, Lock, User, Bot, Loader2, ArrowLeft } from "lucide-react"
 import { useRouter } from "next/navigation"
-import { validateEmail, validatePassword } from "@/lib/utils"
+import { validateEmail, validatePassword, validateName } from "@/lib/utils"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import EmailField from "@/components/custom/signup/EmailField"
 import Altcha from "@/components/custom/Altcha"
+import { useSession } from "next-auth/react"
 
 export default function Signup() {
   const router = useRouter()
@@ -76,9 +77,11 @@ export default function Signup() {
   useEffect(() => {
     if (formType === "create") {
       const { name, emailUsername, emailDomain, password, terms } = formData
-      if (name.length < 2) {
+      
+      const nameValidation = validateName(name)
+      if (!nameValidation.valid) {
         setIsValid(false)
-        setValidationMessage("Enter your name")
+        setValidationMessage(nameValidation.message)
         return
       }
 
@@ -112,9 +115,11 @@ export default function Signup() {
       setValidationMessage("Create Account")
     } else if (formType === "migrate") {
       const { emailUsername, emailDomain, migratePassword, migrateTerms, migrateName } = formData
-      if (migrateName.length < 2) {
+      
+      const nameValidation = validateName(migrateName)
+      if (!nameValidation.valid) {
         setIsValid(false)
-        setValidationMessage("Enter your name")
+        setValidationMessage(nameValidation.message)
         return
       }
 
@@ -151,11 +156,12 @@ export default function Signup() {
 
   const getButtonIcon = () => {
     if (isValid) return <CheckCircle2 size={30} />
-    if (validationMessage.includes("name")) return <User size={30} />
+    if (validationMessage.includes("name") || validationMessage.includes("Name")) return <User size={30} />
     if (validationMessage.includes("Email") || validationMessage.includes("email")) return <Mail size={30} />
     if (validationMessage.includes("Password") || validationMessage.includes("password")) return <Lock size={30} />
     if (validationMessage.includes("terms")) return <AlertCircle size={30} />
     if (validationMessage.includes("robot") || validationMessage.includes("Security")) return <Bot size={30} />
+    if (validationMessage.includes("special characters")) return <AlertCircle size={30} />
     return null
   }
 
@@ -219,12 +225,54 @@ export default function Signup() {
     }
   }
 
+  const { data: session } = useSession()
+  
+  useEffect(() => {
+    if (session) {
+      router.push("/account/dashboard")
+    }
+  }, [session, router])
+
   return (
     <div className="flex h-screen items-center justify-center p-4">
       <Card className="w-full max-w-md overflow-hidden">
         <CardHeader>
-          <CardTitle className="text-2xl">Account Setup</CardTitle>
-          <CardDescription>Create a new account or migrate an existing one.</CardDescription>
+          <AnimatePresence mode="wait">
+            {formType === "initial" ? (
+              <motion.div
+                key="initial-header"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.3 }}
+              >
+                <CardTitle className="text-2xl">Account Setup</CardTitle>
+                <CardDescription>Create a new account or migrate an existing one.</CardDescription>
+              </motion.div>
+            ) : formType === "create" ? (
+              <motion.div
+                key="create-header"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.3 }}
+              >
+                <CardTitle className="text-2xl">Create New Account</CardTitle>
+                <CardDescription>Set up your new LibreCloud account.</CardDescription>
+              </motion.div>
+            ) : (
+              <motion.div
+                key="migrate-header"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.3 }}
+              >
+                <CardTitle className="text-2xl">Migrate Account</CardTitle>
+                <CardDescription>Transfer your p0ntus mail account to LibreCloud.</CardDescription>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </CardHeader>
         <CardContent>
           {errorAlert && (
@@ -301,11 +349,11 @@ export default function Signup() {
                   />
                   <Label htmlFor="terms" className="text-sm">
                     I agree to the{" "}
-                    <Link href="/terms" className="underline">
+                    <Link href="/legal/terms" className="underline">
                       Terms of Service
                     </Link>{" "}
                     and{" "}
-                    <Link href="/privacy" className="underline">
+                    <Link href="/legal/privacy" className="underline">
                       Privacy Policy
                     </Link>
                   </Label>
@@ -378,11 +426,11 @@ export default function Signup() {
                   />
                   <Label htmlFor="migrateTerms" className="text-sm">
                     I agree to the{" "}
-                    <Link href="/terms" className="underline">
+                    <Link href="/legal/terms" className="underline">
                       Terms of Service
                     </Link>{" "}
                     and{" "}
-                    <Link href="/privacy" className="underline">
+                    <Link href="/legal/privacy" className="underline">
                       Privacy Policy
                     </Link>
                   </Label>
@@ -416,7 +464,7 @@ export default function Signup() {
                     onClick={handleSubmit}
                   >
                     {isSubmitting ? (
-                      <Loader size={30} className="animate-spin" />
+                      <Loader2 size={30} className="animate-spin" />
                     ) : (
                       getButtonIcon()
                     )}
@@ -446,4 +494,3 @@ export default function Signup() {
     </div>
   )
 }
-

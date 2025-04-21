@@ -37,11 +37,38 @@ export function validateEmail(username: string, domain: string) {
     return { valid: false, message: "Email is required" }
   }
 
+  const specialCharsRegex = /[<>()[\]\\,;:{}"']/
+  if (specialCharsRegex.test(username)) {
+    return { valid: false, message: "Email contains special characters" }
+  }
+
   const email = `${username}@${domain}`
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
   if (!emailRegex.test(email)) {
     return { valid: false, message: "Invalid email format" }
+  }
+
+  return { valid: true, message: "" }
+}
+
+// name validation
+export function validateName(name: string) {
+  if (!name) {
+    return { valid: false, message: "Name is required" }
+  }
+
+  if (name.length < 2) {
+    return { valid: false, message: "Name must be at least 2 characters" }
+  }
+
+  if (name.length > 64) {
+    return { valid: false, message: "Name must be less than 64 characters" }
+  }
+
+  const specialCharsRegex = /[<>()[\]\\,;:{}"']/
+  if (specialCharsRegex.test(name)) {
+    return { valid: false, message: "Name contains special characters" }
   }
 
   return { valid: true, message: "" }
