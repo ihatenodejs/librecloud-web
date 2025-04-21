@@ -48,8 +48,26 @@ async function createEmail(email: string, password: string, migrate: boolean) {
   }
 }
 
+async function deleteAuthentikUser(id: string) {
+  const response = await axios.delete(`${process.env.AUTHENTIK_API_URL}/core/users/${id}/`, {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${process.env.AUTHENTIK_API_KEY}`,
+    },
+  })
+
+  if (response.status === 204) {
+    return true
+  } else {
+    return false
+  }
+}
+
 export async function POST(request: Request) {
   if (process.env.NEXT_PUBLIC_SIGNUP_ENABLED === "true") {
+    let atkCreated = false
+    let userID = ""
+
     try {
       const body = await request.json()
       const { name, email, password, migrate, token } = body
@@ -111,8 +129,10 @@ export async function POST(request: Request) {
         return NextResponse.json({ success: false, message: "Failed to create user account" }, { status: 500 })
       }
 
+      atkCreated = true
+
       // User created successfully, now set password
-      const userID = response.data.pk
+      userID = response.data.pk
       const updData = {
         password,
       }
@@ -133,6 +153,7 @@ export async function POST(request: Request) {
 
       if (updCfg.data?.detail) {
         console.error("[!] Password setting issue:", updCfg.data.detail)
+        return NextResponse.json({ success: false, message: "Invalid setting account password, contact support" }, { status: 400 })
       }
 
       if (updCfg.status === 204) {
@@ -140,15 +161,21 @@ export async function POST(request: Request) {
         console.log("[i] Creating email account for:", email)
         const emailRes = await createEmail(email, password, migrate)
 
-        if (emailRes.success) {
+        if (emailRes.success) { 
           console.log("[S] Account creation successful for:", email)
+          return NextResponse.json(emailRes, { status: 200 })
         } else {
           console.error("[!] Email creation failed for:", email, emailRes.message)
+          if (atkCreated) {
+            const delRes = await deleteAuthentikUser(userID)
+            if (delRes) {
+              console.log("[i] Authentik user deleted successfully")
+            } else {
+              console.error("[!] Failed to delete Authentik user")
+            }
+          }
+          return NextResponse.json({ success: false, message: "Failed to create email account" }, { status: 500 })
         }
-
-        return NextResponse.json(emailRes, {
-          status: emailRes.success ? 200 : 500,
-        })
       } else if (updCfg.status === 400) {
         console.error("[!] Failed to set password:", updCfg.data)
         return NextResponse.json({ success: false, message: "Invalid password format" }, { status: 400 })
@@ -160,12 +187,36 @@ export async function POST(request: Request) {
       if (axios.isAxiosError(error)) {
         if (error.response?.data?.detail) {
           console.error("[!] Request error with detail:", error.response.data.detail)
+          if (atkCreated) {
+            const delRes = await deleteAuthentikUser(userID)
+            if (delRes) {
+              console.log("[i] Authentik user deleted successfully")
+            } else {
+              console.error("[!] Failed to delete Authentik user")
+            }
+          }
           return NextResponse.json({ success: false, message: "Server error - Failed to create user" }, { status: 500 })
         } else if (error.response?.data?.error) {
           console.error("[!] Request error (passed from Authentik):", error.response.data.error)
+          if (atkCreated) {
+            const delRes = await deleteAuthentikUser(userID)
+            if (delRes) {
+              console.log("[i] Authentik user deleted successfully")
+            } else {
+              console.error("[!] Failed to delete Authentik user")
+            }
+          }
           return NextResponse.json({ success: false, message: error.response.data.error }, { status: 500 })
         } else if (error.code === "ECONNREFUSED" || error.code === "ENOTFOUND") {
           console.error("[!] Connection error:", error.message)
+          if (atkCreated) {
+            const delRes = await deleteAuthentikUser(userID)
+            if (delRes) {
+              console.log("[i] Authentik user deleted successfully")
+            } else {
+              console.error("[!] Failed to delete Authentik user")
+            }
+          }
           return NextResponse.json(
             { success: false, message: "Failed to connect to authentication service" },
             { status: 503 },
@@ -174,6 +225,14 @@ export async function POST(request: Request) {
       }
 
       console.error("[!] Unhandled error while creating user:", error)
+      if (atkCreated) {
+        const delRes = await deleteAuthentikUser(userID)
+        if (delRes) {
+          console.log("[i] Authentik user deleted successfully")
+        } else {
+          console.error("[!] Failed to delete Authentik user")
+        }
+      }
       return NextResponse.json({ success: false, message: "An unexpected error occurred" }, { status: 500 })
     }
   } else if (process.env.NEXT_PUBLIC_SIGNUP_ENABLED === "false") {
