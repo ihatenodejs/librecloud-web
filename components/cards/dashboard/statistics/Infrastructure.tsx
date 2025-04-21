@@ -19,26 +19,26 @@ export default function Infrastructure() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <div>
+      <div>
           <p className="flex items-center">
             <Server className="w-4 h-4 mr-1" />
-            <span className="font-bold">librecloud.cc</span>
+            <span className="font-bold">user.pontusmail.org</span>
           </p>
           <p className="text-sm text-muted-foreground">
             <span className="font-bold">Location:</span>
-            <span className="ml-1">Madison, Wisconsin, USA</span>
+            <span className="ml-1">Ravenna, Italy</span>
           </p>
           <p className="text-sm text-muted-foreground">
             <span className="font-bold">CPU:</span>
-            <span className="ml-1">Intel® Xeon® E5-2680 v4</span>
+            <span className="ml-1">Intel® Xeon® E3-1270 v3</span>
           </p>
           <p className="text-sm text-muted-foreground">
             <span className="font-bold">RAM:</span>
-            <span className="ml-1">64GB DDR4</span>
+            <span className="ml-1">16GB DDR4</span>
           </p>
           <p className="text-sm text-muted-foreground">
             <span className="font-bold">Storage:</span>
-            <span className="ml-1">2TB SSD</span>
+            <span className="ml-1">2x 500GB SSD (RAID0)</span>
           </p>
           <p className="text-sm text-muted-foreground">
             <span className="font-bold">Uplink:</span>
@@ -46,7 +46,37 @@ export default function Infrastructure() {
           </p>
           <p className="text-sm text-muted-foreground">
             <span className="font-bold">Provider:</span>
-            <span className="ml-1">Felware</span>
+            <span className="ml-1">server.it</span>
+          </p>
+        </div>
+        <div className="mt-4">
+          <p className="flex items-center">
+            <Server className="w-4 h-4 mr-1" />
+            <span className="font-bold">librecloud.cc</span>
+          </p>
+          <p className="text-sm text-muted-foreground">
+            <span className="font-bold">Location:</span>
+            <span className="ml-1">Ravenna, Italy</span>
+          </p>
+          <p className="text-sm text-muted-foreground">
+            <span className="font-bold">CPU:</span>
+            <span className="ml-1">Intel® Xeon® E3-1270 v3</span>
+          </p>
+          <p className="text-sm text-muted-foreground">
+            <span className="font-bold">RAM:</span>
+            <span className="ml-1">16GB DDR4</span>
+          </p>
+          <p className="text-sm text-muted-foreground">
+            <span className="font-bold">Storage:</span>
+            <span className="ml-1">2x 250GB SSD (RAID1)</span>
+          </p>
+          <p className="text-sm text-muted-foreground">
+            <span className="font-bold">Uplink:</span>
+            <span className="ml-1">1Gbps</span>
+          </p>
+          <p className="text-sm text-muted-foreground">
+            <span className="font-bold">Provider:</span>
+            <span className="ml-1">server.it</span>
           </p>
         </div>
         <div className="mt-4">
