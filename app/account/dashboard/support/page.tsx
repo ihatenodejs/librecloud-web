@@ -56,12 +56,7 @@ export default function Support() {
             <CardDescription>Get support and updates via Telegram</CardDescription>
           </CardHeader>
           <CardContent>
-            <span className="text-sm">
-              <b>Channel</b> - Get updates and news about LibreCloud.
-              <br />
-              <b>Group</b> - Get support and help from the community.
-            </span>
-            <div className="flex items-center mt-6">
+            <div className="">
               <Button
                 className="cursor-pointer"
                 onClick={() => window.open(process.env.NEXT_PUBLIC_TELEGRAM_CHANNEL_URL || "https://t.me/pontushub", "_blank")}
@@ -69,13 +64,21 @@ export default function Support() {
                 <RiTelegram2Fill />
                 Join Channel
               </Button>
+              <p className="text-sm mt-1">
+                Get updates and news about LibreCloud.
+              </p>
+            </div>
+            <div className="mt-4">
               <Button
-                className="cursor-pointer ml-4"
+                className="cursor-pointer"
                 onClick={() => window.open(process.env.NEXT_PUBLIC_TELEGRAM_GROUP_URL || "https://t.me/pontushubchat", "_blank")}
               >
                 <RiTelegram2Fill />
                 Join Chat Group
               </Button>
+              <p className="text-sm mt-1">
+                Get support and help from the community.
+              </p>
             </div>
           </CardContent>
         </Card>
