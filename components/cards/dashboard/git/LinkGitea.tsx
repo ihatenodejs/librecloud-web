@@ -98,8 +98,8 @@ export function LinkGitea({ linked }: { linked: boolean }) {
     return (
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center text-xl">
-            <SiGitea size={20} className="mr-2" />
+          <CardTitle className="flex items-center text-xl gap-2">
+            <SiGitea size={20} />
             Gitea Link
           </CardTitle>
           <CardDescription>
@@ -165,8 +165,8 @@ export function LinkGitea({ linked }: { linked: boolean }) {
     return (
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center text-xl">
-            <SiGitea size={20} className="mr-2" />
+          <CardTitle className="flex items-center text-xl gap-2">
+            <SiGitea size={20} />
             Gitea Link
           </CardTitle>
           <CardDescription>

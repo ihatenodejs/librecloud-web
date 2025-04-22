@@ -13,7 +13,10 @@ export default function Infrastructure() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Infrastructure</CardTitle>
+        <CardTitle className="flex items-center text-xl gap-2">
+          <Server size={20} />
+          Infrastructure
+        </CardTitle>
         <CardDescription>
           Our portfolio of servers and services
         </CardDescription>

@@ -7,8 +7,8 @@ export default function MyAccount() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="flex items-center text-2xl">
-          <User className="mr-1" />
+        <CardTitle className="flex items-center text-xl gap-2">
+          <User size={20} />
           My Account
         </CardTitle>
         <CardDescription>LibreCloud makes it easy to manage your account</CardDescription>

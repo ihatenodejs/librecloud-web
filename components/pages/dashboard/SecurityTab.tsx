@@ -77,7 +77,7 @@ export const SecurityTab = () => {
     <div className="grid gap-6 grid-cols-1 md:grid-cols-2">
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-1">
+          <CardTitle className="flex items-center gap-2">
             <ShieldCheck size={18} />
             <span className="text-xl">Account Security Scan</span>
           </CardTitle>
@@ -161,7 +161,7 @@ export const SecurityTab = () => {
       </Card>
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-1">
+          <CardTitle className="flex items-center gap-2">
             <Lightbulb size={18} />
             <span className="text-xl">Recommendations</span>
           </CardTitle>

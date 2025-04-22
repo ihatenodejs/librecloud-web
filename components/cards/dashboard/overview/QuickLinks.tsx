@@ -4,6 +4,7 @@ import {
   Mail,
   Headset,
   Heart,
+  Link as LinkIcon,
   Scale
 } from "lucide-react"
 import Link from "next/link"
@@ -12,7 +13,10 @@ export const QuickLinks = () => {
   return (
     <Card className="col-span-full md:col-span-1">
       <CardHeader>
-        <CardTitle>Quick Links</CardTitle>
+        <CardTitle className="flex items-center text-xl gap-2">
+          <LinkIcon size={20} />
+          Quick Links
+        </CardTitle>
       </CardHeader>
       <CardContent>
         <Link

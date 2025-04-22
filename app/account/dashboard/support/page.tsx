@@ -20,8 +20,8 @@ export default function Support() {
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         <Card className="col-span-full md:col-span-1">
           <CardHeader>
-            <CardTitle className="flex items-center text-2xl">
-              <Mail size={24} className="mr-1.5" />
+            <CardTitle className="flex items-center text-xl gap-2">
+              <Mail size={20} />
               Email
             </CardTitle>
             <CardDescription>Create a ticket by sending an email</CardDescription>
@@ -49,8 +49,8 @@ export default function Support() {
         </Card>
         <Card className="col-span-full md:col-span-1">
           <CardHeader>
-            <CardTitle className="flex items-center text-2xl">
-              <RiTelegram2Line size={24} className="mr-1.5" />
+            <CardTitle className="flex items-center text-xl gap-2">
+              <RiTelegram2Line size={20} />
               Telegram
             </CardTitle>
             <CardDescription>Get support and updates via Telegram</CardDescription>

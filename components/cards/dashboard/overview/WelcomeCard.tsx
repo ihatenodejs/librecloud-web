@@ -25,11 +25,11 @@ export const WelcomeCard = () => {
   return (
     <Card className="col-span-full md:col-span-1">
       <CardHeader>
-        <CardTitle>Welcome to your dashboard</CardTitle>
+        <CardTitle className="text-xl">Welcome to <span className="italic mr-0.5">your</span> dashboard!</CardTitle>
       </CardHeader>
       <CardContent>
         <p className="text-sm">
-          Thanks for logging in! Here you can manage your account and the services available to you.
+          Thank you for signing up! Here you can manage your account and the services available to you.
         </p>
         <p className="text-sm mt-4">
           We’re thrilled to have you on board, and if you need <i>anything</i>, don’t hesitate to <Link href="/account/dashboard/support" className="underline hover:text-muted-foreground transition-all" target="_blank">contact our support team</Link>!

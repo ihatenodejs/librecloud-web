@@ -6,12 +6,16 @@ import {
   CardContent,
 } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
+import { CreditCard } from "lucide-react"
 
 export default function OperationalCosts() {
   return (
     <Card className="col-span-full md:col-span-1">
       <CardHeader>
-        <CardTitle>Operational Costs</CardTitle>
+        <CardTitle className="flex items-center text-xl gap-2">
+          <CreditCard size={20} />
+          Operational Costs
+        </CardTitle>
         <CardDescription>How much it costs us to run LibreCloud each month</CardDescription>
       </CardHeader>
       <CardContent>

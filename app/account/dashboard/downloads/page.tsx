@@ -19,10 +19,10 @@ export default function DownloadCenter() {
       <h1 className="text-3xl font-bold mb-6 text-foreground">Download Center</h1>
       <Tabs defaultValue="home" className="w-full">
         <TabsList className="mb-4 flex flex-wrap">
-          <TabsTrigger value="home">Home</TabsTrigger>
-          <TabsTrigger value="email">Email</TabsTrigger>
-          <TabsTrigger value="pass">Pass</TabsTrigger>
-          <TabsTrigger value="git">Git</TabsTrigger>
+          <TabsTrigger value="home" className="cursor-pointer">Home</TabsTrigger>
+          <TabsTrigger value="email" className="cursor-pointer">Email</TabsTrigger>
+          <TabsTrigger value="pass" className="cursor-pointer">Pass</TabsTrigger>
+          <TabsTrigger value="git" className="cursor-pointer">Git</TabsTrigger>
         </TabsList>
         <TabsContent value="home">
           <HomeTab />

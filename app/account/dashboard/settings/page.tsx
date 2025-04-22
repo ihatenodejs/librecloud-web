@@ -84,8 +84,8 @@ export default function Settings() {
         <MyAccount />
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center">
-              <LayoutDashboard size={15} className="mr-1" />
+            <CardTitle className="flex items-center text-xl gap-2">
+              <LayoutDashboard size={20} />
               Dashboard Settings
             </CardTitle>
             <CardDescription>Customize your dashboard experience</CardDescription>

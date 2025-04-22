@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Loader2 } from "lucide-react"
+import { Loader2, Link } from "lucide-react"
 import { useSession } from "next-auth/react"
 
 export const LinkedAccounts = () => {
@@ -58,44 +58,43 @@ export const LinkedAccounts = () => {
   return (
     <Card className="col-span-full md:col-span-1">
       <CardHeader>
-        <CardTitle>Linked Accounts</CardTitle>
+        <CardTitle className="flex items-center text-xl gap-2">
+          <Link size={20} />
+          Linked Accounts
+        </CardTitle>
         <CardDescription>LibreCloud-connected services you&apos;ve linked to your account.</CardDescription>
       </CardHeader>
       <CardContent>
         <ul className="space-y-2">
           {authStatus ? (
-            <li className="flex items-center">
-              <span className="w-2 h-2 rounded-full bg-green-500 mr-2"></span>
+            <li className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-green-500"></span>
               <span>LibreCloud Auth</span>
             </li>
           ) : (
-            <li className="flex items-center">
-              <span className="w-2 h-2 rounded-full bg-red-500 mr-2"></span>
+            <li className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-red-500"></span>
               <span>LibreCloud Auth</span>
             </li>
           )}
-          <li className="flex items-center">
-            <span className="w-2 h-2 rounded-full bg-green-500 mr-2"></span>
+          <li className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-green-500"></span>
             <span>LibreCloud Mail</span>
           </li>
-          <li className="flex items-center">
+          <li className="flex items-center gap-2">
             {isLoading ? (
-              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+              <Loader2 className="w-4 h-4 animate-spin" />
             ) : (
               <span
-                className={`w-2 h-2 rounded-full mr-2 ${
+                className={`w-2 h-2 rounded-full ${
                   gitStatus ? "bg-green-500" : "bg-red-500"
                 }`}
               ></span>
             )}
             {isAdmin ? (
-              <div>
+              <div className="flex items-center gap-2">
                 <span>LibreCloud Git</span>
-                <Badge
-                  className="ml-2"
-                >
-                  Admin
-                </Badge>
+                <Badge>Admin</Badge>
               </div>
             ) : (
               <span>LibreCloud Git</span>
