@@ -98,8 +98,8 @@ export function LinkGitea({ linked }: { linked: boolean }) {
     return (
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center text-2xl">
-            <SiGitea className="mr-2" />
+          <CardTitle className="flex items-center text-xl">
+            <SiGitea size={20} className="mr-2" />
             Gitea Link
           </CardTitle>
           <CardDescription>
@@ -136,7 +136,7 @@ export function LinkGitea({ linked }: { linked: boolean }) {
                       <Loader2 className="animate-spin" />
                       Linking...
                     </Button>
-                    <Button variant="outline" className="w-full" disabled>
+                    <Button variant="outline" className="w-full cursor-pointer" disabled>
                       <SiGitea />
                       Create Account
                     </Button>
@@ -165,8 +165,8 @@ export function LinkGitea({ linked }: { linked: boolean }) {
     return (
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center text-2xl">
-            <SiGitea className="mr-2" />
+          <CardTitle className="flex items-center text-xl">
+            <SiGitea size={20} className="mr-2" />
             Gitea Link
           </CardTitle>
           <CardDescription>
@@ -195,7 +195,7 @@ export function LinkGitea({ linked }: { linked: boolean }) {
               Unlinking...
             </Button>
           ) : (
-            <Button variant="destructive" onClick={onUnlink} className="w-full">
+            <Button variant="destructive" onClick={onUnlink} className="w-full cursor-pointer">
               <SiGitea />
               Unlink Gitea Account
             </Button>
