@@ -1,14 +1,22 @@
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { AlertCircle, CheckCircleIcon, XCircleIcon, Loader2, ShieldCheck, Search, Lightbulb } from "lucide-react"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { SiAuthentik } from "react-icons/si"
 import { type SecurityResults } from "@/app/api/users/security/route"
+
+interface CategoryChecks {
+  passed: number
+  failed: number
+  total: number
+}
 
 export const SecurityTab = () => {
   const [scanning, setScanning] = useState(false)
   const [scanResults, setScanResults] = useState<SecurityResults | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const [authentikChecks, setAuthentikChecks] = useState<CategoryChecks>({ passed: 0, failed: 0, total: 0 })
+  const [overallChecks, setOverallChecks] = useState<CategoryChecks>({ passed: 0, failed: 0, total: 0 })
 
   const scanAcc = async () => {
     setScanning(true)
@@ -29,6 +37,41 @@ export const SecurityTab = () => {
 
   // If user has no 2FA methods setup, this will be true
   const insufficient2FA = scanResults?.authentik?.authenticators.length === 0
+
+  useEffect(() => {
+    if (scanResults) {
+      const authentik: CategoryChecks = {
+        passed: 0,
+        failed: 0,
+        total: 0
+      }
+
+      // Password age
+      authentik.total++
+      if (!shouldResetPass) {
+        authentik.passed++
+      } else {
+        authentik.failed++
+      }
+
+      // 2FA
+      authentik.total++
+      if (!insufficient2FA) {
+        authentik.passed++
+      } else {
+        authentik.failed++
+      }
+
+      setAuthentikChecks(authentik)
+
+      setOverallChecks(authentik)
+    }
+  }, [scanResults, shouldResetPass, insufficient2FA])
+
+  const calculatePercentage = (passed: number, total: number) => {
+    if (total === 0) return 0
+    return Math.round((passed / total) * 100)
+  }
 
   return (
     <div className="grid gap-6 grid-cols-1 md:grid-cols-2">
@@ -51,9 +94,16 @@ export const SecurityTab = () => {
             </div>
           ) : scanResults ? (
             <>
-              <div className="flex items-center gap-2">
-                <SiAuthentik size={20} />
-                <h3 className="text-xl">Authentik</h3>
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-2">
+                  <SiAuthentik size={20} />
+                  <h3 className="text-xl">Authentik</h3>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-medium">
+                    {authentikChecks.passed}/{authentikChecks.total} checks passed
+                  </span>
+                </div>
               </div>
 
               {shouldResetPass ? (
@@ -79,6 +129,20 @@ export const SecurityTab = () => {
                   <p className="text-sm"><span className="font-bold">{scanResults?.authentik?.authenticators.length}</span> two-factor authentication methods setup</p>
                 </div>
               )}
+
+              <div className="mt-6 pt-4 border-t">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium">Results</span>
+                  <div className="flex flex-col items-end">
+                    <span className="text-2xl font-bold">
+                      {calculatePercentage(overallChecks.passed, overallChecks.total)}%
+                    </span>
+                    <span className="text-sm text-muted-foreground">
+                      {overallChecks.passed}/{overallChecks.total} checks passed
+                    </span>
+                  </div>
+                </div>
+              </div>
             </>
           ) : (
             <>

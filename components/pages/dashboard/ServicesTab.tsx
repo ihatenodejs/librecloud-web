@@ -15,9 +15,9 @@ export const ServicesTab = () => (
         <CardDescription className="pt-4">Send, read, and manage your email account from a web browser! Powered by Roundcube and LibreCloud Mail.</CardDescription>
       </CardHeader>
       <CardFooter>
-        <Button>
+        <Button className="cursor-pointer">
           <ExternalLink className="h-4 w-4" />
-          <Link href="https://mail.librecloud.cc/">
+          <Link href="https://mail.librecloud.cc/" target="_blank">
             Open App
           </Link>
         </Button>
@@ -33,9 +33,9 @@ export const ServicesTab = () => (
         <CardDescription className="pt-4">Host unlimited repositories and run Actions on our Git server, powered by Gitea.</CardDescription>
       </CardHeader>
       <CardFooter>
-        <Button>
+        <Button className="cursor-pointer">
           <ExternalLink className="h-4 w-4" />
-          <Link href="https://git.pontusmail.org/">
+          <Link href="https://git.pontusmail.org/" target="_blank">
             Open App
           </Link>
         </Button>
@@ -51,9 +51,9 @@ export const ServicesTab = () => (
         <CardDescription className="pt-4">Securely store your passwords, notes, and 2FA codes with Vaultwarden. Data is encrypted at rest.</CardDescription>
       </CardHeader>
       <CardFooter>
-        <Button>
+        <Button className="cursor-pointer">
           <ExternalLink className="h-4 w-4" />
-          <Link href="https://pass.librecloud.cc/">
+          <Link href="https://pass.librecloud.cc/" target="_blank">
             Open App
           </Link>
         </Button>
@@ -69,9 +69,9 @@ export const ServicesTab = () => (
         <CardDescription className="pt-4">Manage your single-sign-on account for all LibreCloud services.</CardDescription>
       </CardHeader>
       <CardFooter>
-        <Button>
+        <Button className="cursor-pointer">
           <ExternalLink className="h-4 w-4" />
-          <Link href="https://auth.librecloud.cc/">
+          <Link href="https://auth.librecloud.cc/" target="_blank">
             Open App
           </Link>
         </Button>
@@ -87,9 +87,9 @@ export const ServicesTab = () => (
         <CardDescription className="pt-4">Store, share, edit, and synchronize files with Nextcloud.</CardDescription>
       </CardHeader>
       <CardFooter>
-        <Button>
+        <Button className="cursor-pointer">
           <ExternalLink className="h-4 w-4" />
-          <Link href="https://files.librecloud.cc/">
+          <Link href="https://files.librecloud.cc/" target="_blank">
             Open App
           </Link>
         </Button>

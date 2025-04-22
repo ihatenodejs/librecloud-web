@@ -27,11 +27,11 @@ export function Footer() {
           </p>
         </div>
         {renderTime !== null ? (
-          <p className="text-sm">
+          <p className="hidden md:block text-sm">
             Page rendered in {renderTime.toFixed(2)} ms
           </p>
         ) : (
-          <p className="text-sm">
+          <p className="hidden md:block text-sm">
             Calculating render time...
           </p>
         )}

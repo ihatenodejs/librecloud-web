@@ -190,12 +190,12 @@ export function LinkGitea({ linked }: { linked: boolean }) {
             >here</Link>.
           </p>
           {unlinkLoading ? (
-            <Button variant="destructive" disabled>
+            <Button variant="destructive" disabled className="w-full">
               <Loader2 className="animate-spin" />
               Unlinking...
             </Button>
           ) : (
-            <Button variant="destructive" onClick={onUnlink}>
+            <Button variant="destructive" onClick={onUnlink} className="w-full">
               <SiGitea />
               Unlink Gitea Account
             </Button>
