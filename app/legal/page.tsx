@@ -30,6 +30,9 @@ export default function Legal() {
                 <li className="mb-1">
                   <Link href="/legal/privacy" className="underline">Privacy Policy</Link>
                 </li>
+                <li className="mb-1">
+                  <Link href="/legal/terms" className="underline">Terms of Service</Link>
+                </li>
               </ul>
             </div>
             <div className="my-8">

@@ -8,12 +8,37 @@ datasource db {
 }
 
 model User {
-  id           String   @id @default(cuid())
-  email        String   @unique
-  username     String?  @unique
-  hideGenAI    Boolean  @default(false)
-  hideUpgrades Boolean  @default(false)
-  hideCrypto   Boolean  @default(false)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  id            String      @id @default(cuid())
+  email         String      @unique
+  username      String?     @unique
+  nextcloudId   String?     @unique
+  hideGenAI     Boolean     @default(false)
+  hideUpgrades  Boolean     @default(false)
+  hideCrypto    Boolean     @default(false)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  otps          OTP[]
+  otpRequests   OTPRequest[]
+}
+
+model OTP {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  code      String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  used      Boolean  @default(false)
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+model OTPRequest {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@index([userId])
 }

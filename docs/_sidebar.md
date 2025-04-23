@@ -16,4 +16,5 @@
 
 * Updates
 
+  * [v1.3.0](updates/1.3.0.md)
   * [v1.2.0](updates/1.2.0.md)

@@ -1,5 +1,8 @@
 export { auth as middleware } from "@/auth"
 
 export const config = {
-  matcher: "/account/dashboard/:path*",
+  matcher: [
+    "/account/dashboard/:path*",
+    "/api/users/otp",
+  ],
 };

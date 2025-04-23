@@ -49,6 +49,30 @@ If you need more help doing this, there is a fantastic guide [on Authentik's wik
 | AUTHENTIK_API_KEY     | API key for authenticating with Authentik's API         | N/A                                             |
 | AUTHENTIK_API_URL     | Authentik's API endpoint URL                            | `http://authentik.local/api/v3`                 |
 
+## Email 2FA
+
+For deleting user accounts, two-factor authentication via email is enforced. Thus, you must set your mailserver information:
+
+| Environment Variable | Description                            | Example               |
+|----------------------|----------------------------------------|-----------------------|
+| EMAIL_HOST           | Hostname of your email server          | `mail.example.com`    |
+| EMAIL_PORT           | The port to use for sending            | `465`                 |
+| EMAIL_SSL            | Whether SSL should be used for sending | `true` / `false`      |
+| NOREPLY_EMAIL        | Email account to send from             | `noreply@example.com` |
+| NOREPLY_PASSWORD     | Password for the account given         | Your password         |
+
+## Nextcloud
+
+The Nextcloud integration requires an admin or service account credentials for the OCS API.
+
+It is highly recommended that you create a service account.
+
+| Environment Variable     | Description                                            | Example                       |
+|--------------------------|--------------------------------------------------------|-------------------------------|
+| NEXTCLOUD_URL            | The URL of your Nextcloud instance (no trailing slash) | `https://files.librecloud.cc` |
+| NEXTCLOUD_ADMIN_USERNAME | Admin/service account username                         | `service-account`             |
+| NEXTCLOUD_ADMIN_PASSWORD | Corresponding password to given admin/service account  | Password                      |
+
 ## Gitea
 
 Next, you will need to configure `web` with your Gitea instance.
