@@ -11,7 +11,8 @@ COPY . .
 RUN bunx prisma generate
 RUN bunx prisma migrate deploy
 
+ENV NODE_ENV=production
 RUN bun run build
 EXPOSE 3000
-CMD ["bun", "start"]
 
+CMD ["bun", "start"]
