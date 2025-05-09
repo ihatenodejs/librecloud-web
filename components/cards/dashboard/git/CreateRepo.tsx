@@ -32,7 +32,8 @@ import {
   ChevronDown,
   ChevronsUpDown,
   Check,
-  CheckCircle
+  CheckCircle,
+  XCircle
 } from "lucide-react"
 import {
   Popover,
@@ -233,17 +234,7 @@ function CreateRepoForm({ onSubmitSuccess, isLoading, gitUser, setCurrentRepoNam
             </FormItem>
           )}
         />
-        <p>DEBUG</p>
-        <p>Git User: {gitUser}</p>
-        <p>Repo Name: {currentRepoName}</p>
-        <p>Valid: {form.formState.isValid ? "true" : "false"}</p>
-        <p>Dirty: {form.formState.isDirty ? "true" : "false"}</p>
-        <p>Loading: {isLoading ? "true" : "false"}</p>
-        <p>Is Name Filled: {form.watch("name") ? "true" : "false"}</p>
-        <p>Is Description Filled: {form.watch("description") ? "true" : "false"}</p>
-        <p>Is License Filled: {form.watch("license") ? "true" : "false"}</p>
-        <p>Is Readme Filled: {form.watch("readme") ? "true" : "false"}</p>
-        <p>Is Private Filled: {form.watch("pvt") ? "true" : "false"}</p>
+
         <div className="flex items-center justify-between gap-4">
           <DialogClose asChild>
             <Button type="button" variant="outline" className="w-full mt-4 cursor-pointer" disabled={isLoading}>
@@ -269,6 +260,8 @@ export function CreateRepo({ gitUser }: { gitUser: string }) {
   const [loading, setLoading] = useState(false)
   const [wasCreated, setWasCreated] = useState(false)
   const [currentRepoName, setCurrentRepoName] = useState("")
+  const [error, setError] = useState(false)
+  const [errorMessage, setErrorMessage] = useState("")
 
   const handleFormSubmit = async (values: z.infer<typeof formSchema>) => {
     setLoading(true)
@@ -283,17 +276,27 @@ export function CreateRepo({ gitUser }: { gitUser: string }) {
     if (!response.ok) {
       setLoading(false)
       setWasCreated(false)
-    } else {
-      console.log("[i] Response:", data)
+      setError(true)
+      setErrorMessage(response.statusText)
+    } else if (data.error) {
+      console.log("[! createRepo] Error:", data)
       setLoading(false)
-      setWasCreated(data.success)
+      setError(true)
+      setErrorMessage(data.error)
+    } else {
+      setLoading(false)
+      setWasCreated(true)
     }
   }
 
   return (
-    <Dialog>
+    <Dialog onOpenChange={() => {
+      setWasCreated(false)
+      setError(false)
+      setErrorMessage("")
+    }}>
       <DialogTrigger asChild>
-        <Button>Create New Repository</Button>
+        <Button className="cursor-pointer">Create New Repository</Button>
       </DialogTrigger>
       <DialogContent
         closeClassName="absolute right-6.5 top-6.5"
@@ -317,6 +320,17 @@ export function CreateRepo({ gitUser }: { gitUser: string }) {
                 Go to Repository
               </p>
             </Button>
+          </div>
+        ) : error ? (
+          <div className="flex flex-col items-center">
+            <div className="flex items-center justify-center gap-2 mb-4">
+              <XCircle className="h-10 w-10 text-red-500" />
+              <h2 className="text-2xl font-bold">Error</h2>
+            </div>
+            <div className="flex flex-col items-center gap-2 mt-2">
+              <p className="text-sm px-auto text-center">Your repository could not be created. Please try again later.</p>
+              <p className="text-sm px-auto text-center">{errorMessage}</p>
+            </div>
           </div>
         ) : (
           <CreateRepoForm
