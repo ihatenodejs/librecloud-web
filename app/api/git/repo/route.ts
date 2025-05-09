@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { formSchema } from "@/components/cards/dashboard/git/CreateRepo"
 import { z } from "zod"
+import { auth } from "@/auth"
 
 interface BodyPayload {
   auto_init: boolean
@@ -8,22 +9,74 @@ interface BodyPayload {
   default_branch: string
   description?: string
   private?: boolean
-  readme?: boolean
+  readme?: string
   license?: string
+}
+
+interface GiteaEmailResponse {
+  email: string
+  primary: boolean
+  user_id: number
+  username: string
+  verified: boolean
 }
 
 export async function POST(request: NextRequest) {
   const { name, description, pvt, readme, license, gitUser }: z.infer<typeof formSchema> = await request.json()
+  const session = await auth()
 
+  if (!session) {
+    console.log("[! createRepo] Sent err to client: Unauthorized")
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+  }
+
+  const clientEmail = session.user?.email
+  
   if (!name) {
     console.log("[! createRepo] Sent err to client: Name is required")
     return NextResponse.json({ error: "Name is required" }, { status: 400 })
   } else if (!gitUser) {
     console.log("[! createRepo] Sent err to client: Git user is required")
     return NextResponse.json({ error: "Git user is required" }, { status: 400 })
+  } else if (!clientEmail) {
+    console.log("[! createRepo] Sent err to client: Session does not contain email address")
+    return NextResponse.json({ error: "Session does not contain an email address" }, { status: 400 })
   }
 
-  // prepare the payload
+  // several pre-auth checks
+  const giteaPreAuthUrl = `${process.env.GITEA_API_URL}/admin/emails/search?q=${clientEmail}`
+  const giteaPreAuthResponse = await fetch(giteaPreAuthUrl, {
+    method: "GET",
+    headers: {
+      "Authorization": `token ${process.env.GITEA_API_KEY}`,
+    },
+  })
+
+  if (!giteaPreAuthResponse.ok) {
+    console.log("[! createRepo] Sent err to client: API error while fetching authentication")
+    console.log("[! createRepo]", giteaPreAuthResponse.statusText)
+    return NextResponse.json({ error: "API error while fetching authentication" }, { status: 400 })
+  }
+
+  const giteaPreAuthData = await giteaPreAuthResponse.json()
+  const giteaPreAuthEmail = giteaPreAuthData.find((email: GiteaEmailResponse) => email.email === clientEmail)
+
+  console.log("[i] createRepo] Does email match:", giteaPreAuthEmail ? "true" : "false")
+  console.log("[i] createRepo] Is email verified:", giteaPreAuthEmail?.verified ? "true" : "false")
+  console.log("[i] createRepo] Does git user match:", giteaPreAuthEmail?.username === gitUser ? "true" : "false")
+
+  if (!giteaPreAuthEmail) {
+    console.log("[! createRepo] Sent err to client: Email does not match in Gitea")
+    return NextResponse.json({ error: "Email does not match in Gitea" }, { status: 400 })
+  } else if (!giteaPreAuthEmail.verified) {
+    console.log("[! createRepo] Sent err to client: Email not verified")
+    return NextResponse.json({ error: "Email not verified" }, { status: 400 })
+  } else if (giteaPreAuthEmail.username !== gitUser) {
+    console.log("[! createRepo] Sent err to client: Git user does not match in Gitea")
+    return NextResponse.json({ error: "Git user does not match in Gitea" }, { status: 400 })
+  }
+
+  // now, prepare the payload
   const bodyPayload: BodyPayload = {
     name: name,
     auto_init: false,
@@ -38,7 +91,6 @@ export async function POST(request: NextRequest) {
     bodyPayload.private = pvt
   }
   if (readme) {
-    bodyPayload.readme = readme
     bodyPayload.auto_init = true
   }
   if (license) {
@@ -60,7 +112,7 @@ export async function POST(request: NextRequest) {
   // start processing the response
   if (!response.ok) {
     console.log("[! createRepo] Sent err to client: Failed to create repository")
-    console.log("[! createRepo] Response:", response)
+    console.log("[! createRepo]", response.statusText)
     return NextResponse.json({ error: "API Error" }, { status: response.status })
   }
 
