@@ -296,7 +296,12 @@ export function CreateRepo({ gitUser }: { gitUser: string }) {
       setErrorMessage("")
     }}>
       <DialogTrigger asChild>
-        <Button className="cursor-pointer">Create New Repository</Button>
+        <Button className="cursor-pointer" size="sm">
+          <Plus className="h-4 w-4" />
+          <p className="text-sm">
+            New
+          </p>
+        </Button>
       </DialogTrigger>
       <DialogContent
         closeClassName="absolute right-6.5 top-6.5"

@@ -1,4 +1,4 @@
-import { GitTools } from "@/components/cards/dashboard/git/GitTools"
+import { MyRepos } from "@/components/cards/dashboard/git/MyRepos"
 import { GiteaProfileCard } from "@/components/cards/dashboard/git/GiteaProfileCard"
 import { LinkGitea } from "@/components/cards/dashboard/git/LinkGitea"
 //import { ChangeUsername } from "@/components/cards/dashboard/git/ChangeUsername"
@@ -6,13 +6,13 @@ import { LinkGitea } from "@/components/cards/dashboard/git/LinkGitea"
 //import { ChangeEmail } from "@/components/cards/dashboard/git/ChangeEmail"
 
 export interface DashboardState {
-  gitUser: string;
-  gitAvatar?: string;
-  gitLastLogin?: string;
-  gitFollowerCt: number;
-  gitFollowingCt: number;
-  gitIsAdmin: boolean;
-  gitEmail?: string;
+  gitUser: string
+  gitAvatar?: string
+  gitLastLogin?: string
+  gitFollowerCt: number
+  gitFollowingCt: number
+  gitIsAdmin: boolean
+  gitEmail?: string
 }
 
 export const GitTab = ({ dashboardState }: { dashboardState: DashboardState }) => {
@@ -22,7 +22,7 @@ export const GitTab = ({ dashboardState }: { dashboardState: DashboardState }) =
         {(dashboardState.gitUser && dashboardState.gitUser !== "Unlinked") && (
           <>
             <GiteaProfileCard dashboardState={dashboardState} />
-            <GitTools gitUser={dashboardState.gitUser} />
+            <MyRepos gitUser={dashboardState.gitUser} />
           </>
         )}
         <LinkGitea linked={!!dashboardState.gitUser && dashboardState.gitUser !== "Unlinked"} />
