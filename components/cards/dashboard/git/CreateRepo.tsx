@@ -55,20 +55,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { cn } from "@/lib/utils"
 import { SiGitea } from "react-icons/si"
-
-const licenses = [
-  { label: "MIT", value: "MIT" },
-  { label: "Apache 2.0", value: "Apache 2.0" },
-  { label: "GPL 3.0", value: "GPL 3.0" },
-  { label: "BSD 3-Clause", value: "BSD 3-Clause" },
-  { label: "LGPL 2.1", value: "LGPL 2.1" },
-  { label: "LGPL 3.0", value: "LGPL 3.0" },
-  { label: "AGPL 3.0", value: "AGPL 3.0" },
-  { label: "MPL 2.0", value: "MPL 2.0" },
-  { label: "EPL 1.0", value: "EPL 1.0" },
-  { label: "WTFPL", value: "WTFPL" },
-  { label: "Unlicense", value: "Unlicense" },
-] as const
+import { licenses } from "@/app/config/Licenses"
 
 export const formSchema = z.object({
   name: z.string().nonempty({ message: "Name is required" }).max(100, { message: "Name must be less than 100 characters" }).regex(/^[^ ]+$/, { message: "Repo name may not contain spaces" }),
@@ -76,12 +63,13 @@ export const formSchema = z.object({
   pvt: z.boolean(),
   readme: z.boolean(),
   license: z.string().max(50, { message: "Invalid license name" }),
+  gitUser: z.string().nonempty({ message: "Your Gitea username is missing from your account" }),
 })
 
 function CreateRepoForm({ onSubmitSuccess, isLoading, gitUser, setCurrentRepoName }: { onSubmitSuccess: (values: z.infer<typeof formSchema>) => void, isLoading: boolean, gitUser: string, setCurrentRepoName: (name: string) => void }) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    mode: 'onBlur',
+    mode: 'all',
     shouldFocusError: false,
     defaultValues: {
       name: "",
@@ -89,6 +77,7 @@ function CreateRepoForm({ onSubmitSuccess, isLoading, gitUser, setCurrentRepoNam
       pvt: false,
       readme: true,
       license: "",
+      gitUser: gitUser,
     },
   })
   
@@ -167,8 +156,9 @@ function CreateRepoForm({ onSubmitSuccess, isLoading, gitUser, setCurrentRepoNam
           name="license"
           render={({ field }) => (
             <FormItem className="flex flex-col">
-              <Popover>
+              <Popover modal>
                 <div className="flex items-center justify-between gap-2">
+                  {/* TODO: implement lazy loading? */}
                   <Label htmlFor="license">License</Label>
                   <PopoverTrigger asChild>
                     <FormControl>
@@ -243,6 +233,17 @@ function CreateRepoForm({ onSubmitSuccess, isLoading, gitUser, setCurrentRepoNam
             </FormItem>
           )}
         />
+        <p>DEBUG</p>
+        <p>Git User: {gitUser}</p>
+        <p>Repo Name: {currentRepoName}</p>
+        <p>Valid: {form.formState.isValid ? "true" : "false"}</p>
+        <p>Dirty: {form.formState.isDirty ? "true" : "false"}</p>
+        <p>Loading: {isLoading ? "true" : "false"}</p>
+        <p>Is Name Filled: {form.watch("name") ? "true" : "false"}</p>
+        <p>Is Description Filled: {form.watch("description") ? "true" : "false"}</p>
+        <p>Is License Filled: {form.watch("license") ? "true" : "false"}</p>
+        <p>Is Readme Filled: {form.watch("readme") ? "true" : "false"}</p>
+        <p>Is Private Filled: {form.watch("pvt") ? "true" : "false"}</p>
         <div className="flex items-center justify-between gap-4">
           <DialogClose asChild>
             <Button type="button" variant="outline" className="w-full mt-4 cursor-pointer" disabled={isLoading}>
@@ -271,10 +272,22 @@ export function CreateRepo({ gitUser }: { gitUser: string }) {
 
   const handleFormSubmit = async (values: z.infer<typeof formSchema>) => {
     setLoading(true)
-    console.log("[i] Form submit:", values, gitUser)
-    await new Promise((resolve) => setTimeout(resolve, 2000))
-    setLoading(false)
-    setWasCreated(true)
+    console.log("[i] createRepo form submitted, sending to API")
+
+    const response = await fetch("/api/git/repo", {
+      method: "POST",
+      body: JSON.stringify(values),
+    })
+    const data = await response.json()
+
+    if (!response.ok) {
+      setLoading(false)
+      setWasCreated(false)
+    } else {
+      console.log("[i] Response:", data)
+      setLoading(false)
+      setWasCreated(data.success)
+    }
   }
 
   return (
