@@ -125,7 +125,7 @@ function CreateRepoForm({ onSubmitSuccess, isLoading, gitUser, setCurrentRepoNam
             </FormItem>
           )}
         />
-        <h2 className="text-sm font-bold">Initialization</h2>
+        <h2 className="text-xl font-bold">Additional Options</h2>
         <FormField
           control={form.control}
           name="pvt"
@@ -135,7 +135,7 @@ function CreateRepoForm({ onSubmitSuccess, isLoading, gitUser, setCurrentRepoNam
                 <div className="flex items-center justify-between gap-2 mt-4">
                   <Label htmlFor="private">Visibility</Label>
                   <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
+                    <DropdownMenuTrigger className="cursor-pointer" asChild>
                       <Button variant="outline">
                         <Label htmlFor="private">{field.value ? "Private" : "Public"}</Label>
                         <ChevronDown className="ml-2 h-4 w-4" />
@@ -161,7 +161,7 @@ function CreateRepoForm({ onSubmitSuccess, isLoading, gitUser, setCurrentRepoNam
                 <div className="flex items-center justify-between gap-2">
                   {/* TODO: implement lazy loading? */}
                   <Label htmlFor="license">License</Label>
-                  <PopoverTrigger asChild>
+                  <PopoverTrigger className="cursor-pointer" asChild>
                     <FormControl>
                       <Button
                         variant="outline"
@@ -171,11 +171,11 @@ function CreateRepoForm({ onSubmitSuccess, isLoading, gitUser, setCurrentRepoNam
                           !field.value && "text-muted-foreground"
                         )}
                       >
-                        {field.value
+                        {(field.value
                           ? licenses.find(
                               (license) => license.value === field.value
                             )?.label
-                          : "Select license"}
+                          : "Select license")?.slice(0, 20)}
                         <ChevronsUpDown className="opacity-50" />
                       </Button>
                     </FormControl>
