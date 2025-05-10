@@ -2,6 +2,7 @@ import { auth } from "@/auth"
 import { prisma } from "@/lib/prisma"
 import { NextResponse } from "next/server"
 import { Repo, ReposResponse } from "@/components/cards/dashboard/git/MyRepos"
+import { getGiteaUid, GiteaUidResponse } from "@/util/git"
 
 interface GiteaRepoResponse {
   ok: boolean
@@ -37,61 +38,24 @@ export async function GET(request: Request) {
     }
 
     console.log("[i getRepos] Matched user in db")
+    if (!user.username) {
+      console.log("[! getRepos] Failed to find username in db, sending: Unauthorized")
+      return NextResponse.json({ error: "Unauthorized" } as ReposResponse, { status: 401 })
+    }
     username = user.username
   }
 
-  // try to get uid from db
-  let uid: number = 0
-  const dbUid = await prisma.user.findUnique({
-    where: {
-      username: username as string,
-    },
-    select: {
-      giteaUid: true,
-    },
-  })
+  const giteaUidRes: GiteaUidResponse = await getGiteaUid(username)
 
-  if (!dbUid?.giteaUid) {
-    console.log("[i getRepos] Failed to find Gitea uid in db, starting update")
-    // try to fetch and save uid
-    const emailSearchRes = await fetch(`${process.env.GITEA_API_URL}/admin/emails/search?q=${username}`, {
-      headers: {
-        Authorization: `token ${process.env.GITEA_API_KEY}`,
-      },
-    })
-
-    if (!emailSearchRes.ok) {
-      console.log("[! getRepos] Error while fetching email:", emailSearchRes.statusText)
-      return NextResponse.json({ error: "API error" } as ReposResponse, { status: emailSearchRes.status })
-    }
-
-    const emailSearchData = await emailSearchRes.json()
-
-    if (emailSearchData.length === 0) {
-      console.log("[! getRepos] No email found, sending: Unauthorized")
-      return NextResponse.json({ error: "Unauthorized" } as ReposResponse, { status: 401 })
-    } else if (emailSearchData.length > 1) {
-      console.log("[! getRepos] Multiple emails found, dropping request")
-      return NextResponse.json({ error: "Multiple accounts are associated with this email. We do not provide support for multiple accounts." } as ReposResponse, { status: 401 })
-    }
-
-    const newUid: number = emailSearchData[0].user_id
-
-    await prisma.user.update({
-      where: {
-        username: username as string,
-      },
-      data: { giteaUid: newUid },
-    })
-
-    uid = newUid
-
-    console.log("[i getRepos] Updated Gitea uid in db")
-  } else {
-    uid = dbUid.giteaUid
+  if (giteaUidRes.error) {
+    console.log("[! getRepos] Error while fetching uid:", giteaUidRes.error)
+    return NextResponse.json({ error: giteaUidRes.error } as ReposResponse, { status: giteaUidRes.code })
+  } else if (!giteaUidRes.uid) {
+    console.log("[! getRepos] Failed to fetch uid, sending error to client")
+    return NextResponse.json({ error: "Failed to fetch uid" } as ReposResponse, { status: 500 })
   }
 
-  const reposResponse = await fetch(`${process.env.GITEA_API_URL}/repos/search?uid=${uid}`, {
+  const reposResponse = await fetch(`${process.env.GITEA_API_URL}/repos/search?uid=${giteaUidRes.uid}`, {
     headers: {
       Authorization: `token ${process.env.GITEA_API_KEY}`,
     },

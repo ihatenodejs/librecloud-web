@@ -1,9 +1,8 @@
 import { MyRepos } from "@/components/cards/dashboard/git/MyRepos"
 import { GiteaProfileCard } from "@/components/cards/dashboard/git/GiteaProfileCard"
 import { LinkGitea } from "@/components/cards/dashboard/git/LinkGitea"
+import { AccountManagement } from "@/components/cards/dashboard/git/AccountManagement"
 //import { ChangeUsername } from "@/components/cards/dashboard/git/ChangeUsername"
-//import { ChangePassword } from "@/components/cards/dashboard/git/ChangePassword"
-//import { ChangeEmail } from "@/components/cards/dashboard/git/ChangeEmail"
 
 export interface DashboardState {
   gitUser: string
@@ -20,19 +19,22 @@ export const GitTab = ({ dashboardState }: { dashboardState: DashboardState }) =
     <div className="flex flex-col gap-4">
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {(dashboardState.gitUser && dashboardState.gitUser !== "Unlinked") && (
-          <GiteaProfileCard dashboardState={dashboardState} />
+          <>
+            <GiteaProfileCard dashboardState={dashboardState} />
+            <AccountManagement dashboardState={dashboardState} />
+          </>
         )}
         <LinkGitea linked={!!dashboardState.gitUser && dashboardState.gitUser !== "Unlinked"} />
         {/*
         ~-~-~-~-~-~-~-~-~-~-~-~DISABLED FOR NOW~-~-~-~-~-~-~-~-~-~-~-~
         <ChangeUsername gitUser={dashboardState.gitUser} />
-        <ChangePassword />
-        <ChangeEmail gitEmail={dashboardState.gitEmail || ""} />
         */}
       </div>
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        <MyRepos gitUser={dashboardState.gitUser} />
-      </div>
+      {(dashboardState.gitUser && dashboardState.gitUser !== "Unlinked") && (
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          <MyRepos gitUser={dashboardState.gitUser} />
+        </div>
+      )}
     </div>
   )
 }
