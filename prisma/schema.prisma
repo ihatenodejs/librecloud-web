@@ -12,6 +12,7 @@ model User {
   email         String      @unique
   username      String?     @unique
   nextcloudId   String?     @unique
+  giteaUid      Int?        @unique
   hideGenAI     Boolean     @default(false)
   hideUpgrades  Boolean     @default(false)
   hideCrypto    Boolean     @default(false)

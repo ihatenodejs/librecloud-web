@@ -13,7 +13,7 @@ interface BodyPayload {
   license?: string
 }
 
-interface GiteaEmailResponse {
+export interface GiteaEmailResponse {
   email: string
   primary: boolean
   user_id: number

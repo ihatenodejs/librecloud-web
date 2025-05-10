@@ -18,7 +18,7 @@ export async function POST(request: Request) {
 
     const response = await fetch(`${process.env.GITEA_API_URL}/users/${username}`, {
       headers: {
-        Authorization: `Bearer ${process.env.GITEA_API_KEY}`,
+        Authorization: `token ${process.env.GITEA_API_KEY}`,
         "Content-Type": "application/json",
       },// don't forget to smile today :)
     })

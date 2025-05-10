@@ -24,7 +24,7 @@ export async function GET() {
 
     const response = await fetch(`${process.env.GITEA_API_URL}/users/${dbUser.username}`, {
       headers: {
-        Authorization: `Bearer ${process.env.GITEA_API_KEY}`,
+        Authorization: `token ${process.env.GITEA_API_KEY}`,
         "Content-Type": "application/json",
       },// don't forget to smile today :)
     })
