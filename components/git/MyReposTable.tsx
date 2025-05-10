@@ -1,9 +1,16 @@
-import { Table, TableHeader, TableBody, TableRow, TableCell, TableHead } from "../ui/table"
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableCell,
+  TableHead,
+} from "@/components/ui/table"
 import Link from "next/link"
 import { ExternalLink } from "lucide-react"
 import { Repo } from "@/components/cards/dashboard/git/MyRepos"
 
-export function MyReposTable({ repos }: { repos: Repo[] }) {
+export function MyReposTable({ repos, showAll }: { repos: Repo[], showAll: boolean }) {
   return (
     <Table>
       <TableHeader>
@@ -13,7 +20,7 @@ export function MyReposTable({ repos }: { repos: Repo[] }) {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {repos.map((repo) => (
+        {!showAll && repos.slice(0, 5).map((repo) => (
           <TableRow key={repo.name}>
             <TableCell>{repo.name}</TableCell>
             <TableCell>
@@ -25,6 +32,20 @@ export function MyReposTable({ repos }: { repos: Repo[] }) {
             </TableCell>
           </TableRow>
         ))}
+        {showAll && (
+          repos.map((repo) => (
+            <TableRow key={repo.name}>
+              <TableCell>{repo.name}</TableCell>
+              <TableCell>
+                <div className="flex items-center justify-end mr-1">
+                  <Link href={repo.url} target="_blank" rel="noopener noreferrer">
+                    <ExternalLink className="h-4 w-4 cursor-pointer" />
+                  </Link>
+                </div>
+              </TableCell>
+            </TableRow>
+          ))
+        )}
       </TableBody>
     </Table>
   )

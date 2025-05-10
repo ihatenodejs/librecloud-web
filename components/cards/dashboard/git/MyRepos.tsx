@@ -6,10 +6,15 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { Book, Loader2, AlertCircle } from "lucide-react"
+import {
+  Book,
+  Loader2,
+  AlertCircle,
+} from "lucide-react"
 import CreateRepo from "@/components/cards/dashboard/git/CreateRepo"
 import { MyReposTable } from "@/components/git/MyReposTable"
 import { useState, useEffect } from "react"
+import { Button } from "@/components/ui/button"
 
 export interface ReposResponse {
   repos: Repo[]
@@ -26,6 +31,7 @@ export function MyRepos({ gitUser }: { gitUser: string }) {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [repoCount, setRepoCount] = useState(0)
+  const [showAll, setShowAll] = useState(false)
 
   useEffect(() => {
     const fetchRepos = async () => {
@@ -107,8 +113,13 @@ export function MyRepos({ gitUser }: { gitUser: string }) {
             <CreateRepo gitUser={gitUser} />
           </div>
         </CardHeader>
-        <CardContent>
-          <MyReposTable repos={repos} />
+        <CardContent className="-mb-2">
+          <div className="flex flex-col">
+            <MyReposTable repos={repos} showAll={showAll} />
+            <Button onClick={() => setShowAll(!showAll)} variant="link" className="cursor-pointer text-center">
+              {showAll ? "Show less" : "Show more"}
+            </Button>
+          </div>
         </CardContent>
       </Card>
     )

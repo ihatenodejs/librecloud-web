@@ -17,13 +17,10 @@ export interface DashboardState {
 
 export const GitTab = ({ dashboardState }: { dashboardState: DashboardState }) => {
   return (
-    <>
+    <div className="flex flex-col gap-4">
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {(dashboardState.gitUser && dashboardState.gitUser !== "Unlinked") && (
-          <>
-            <GiteaProfileCard dashboardState={dashboardState} />
-            <MyRepos gitUser={dashboardState.gitUser} />
-          </>
+          <GiteaProfileCard dashboardState={dashboardState} />
         )}
         <LinkGitea linked={!!dashboardState.gitUser && dashboardState.gitUser !== "Unlinked"} />
         {/*
@@ -33,7 +30,10 @@ export const GitTab = ({ dashboardState }: { dashboardState: DashboardState }) =
         <ChangeEmail gitEmail={dashboardState.gitEmail || ""} />
         */}
       </div>
-    </>
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <MyRepos gitUser={dashboardState.gitUser} />
+      </div>
+    </div>
   )
 }
 
