@@ -44,6 +44,14 @@ import { getBranches, BranchesResponse, getArchive } from "@/util/git-client"
 import { Input } from "@/components/ui/input"
 import { Skeleton } from "@/components/ui/skeleton"
 
+type ArchiveResponse = {
+  archiveLink: string
+  error?: undefined
+} | {
+  archiveLink?: undefined
+  error: string
+}
+
 interface Branch {
   value: string
 }
@@ -80,11 +88,20 @@ function BranchSelector({ branches, branch: selectedBranchProp, setBranch, useFa
                 {branches.map((itemBranch) => (
                   <CommandItem
                     key={itemBranch.value}
-                    value={itemBranch.value}
                     onSelect={(currentValue) => {
                       setBranch(currentValue)
-                      getArchive(repo.name, currentValue, fileEx).then((apiResponse) => {
-                        setDlUrl(apiResponse.archiveLink)
+                      console.log("Setting to", currentValue)
+                      getArchive(repo.name, currentValue, fileEx).then((apiResponse: ArchiveResponse) => {
+                        if (apiResponse.error) {
+                          console.error("[! getArchive BranchSelector]", apiResponse.error)
+                          setDlUrl("")
+                        } else if (apiResponse.archiveLink) {
+                          console.log("Setting dl link to", apiResponse.archiveLink)
+                          setDlUrl(apiResponse.archiveLink)
+                        } else {
+                          console.error("[! getArchive BranchSelector] No error but no archiveLink defined")
+                          setDlUrl("")
+                        }
                       })
                       setOpen(false)
                     }}
@@ -120,6 +137,12 @@ export function DownloadArchive({ repo }: { repo: Repo }) {
 
   useEffect(() => {
     setIsLoadingBranches(true)
+    setDlUrl("")
+    setErrorMessage("")
+    setUseFallbackBranchSelector(false)
+    setBranches([])
+    setFileEx("zip")
+
     getBranches(repo.name, true).then((apiResponse: BranchesResponse) => {
       setIsLoadingBranches(false)
 
@@ -127,28 +150,50 @@ export function DownloadArchive({ repo }: { repo: Repo }) {
         console.error("[! getBranches] Error:", apiResponse.error)
         setErrorMessage(apiResponse.error)
         setUseFallbackBranchSelector(true)
+        setBranch("main") 
       } else {
         const fetchedBranchNames: string[] = apiResponse.branches || []
         const mappedDisplayBranches: Branch[] = fetchedBranchNames.map(name => ({ value: name }))
 
         setBranches(mappedDisplayBranches)
         setUseFallbackBranchSelector(false)
-
+        
+        let initialBranch = ""
         if (fetchedBranchNames.length > 0) {
           if (fetchedBranchNames.includes("main")) {
-            setBranch("main")
+            initialBranch = "main"
           } else if (fetchedBranchNames.includes("master")) {
-            setBranch("master")
+            initialBranch = "master"
           } else {
-            setBranch(fetchedBranchNames[0])
+            initialBranch = fetchedBranchNames[0]
           }
+          setBranch(initialBranch)
+
+          getArchive(repo.name, initialBranch, "zip").then((archiveResponse: ArchiveResponse) => {
+             if (archiveResponse.error) {
+               console.error("[! getArchive]", archiveResponse.error)
+               setDlUrl("")
+             } else if (archiveResponse.archiveLink) {
+               setDlUrl(archiveResponse.archiveLink)
+             } else {
+               console.error("[! getArchive] Unexpected response structure:", archiveResponse)
+               setDlUrl("")
+             }
+          })
+        } else {
+           setErrorMessage("No branches found for this repository.")
+           setUseFallbackBranchSelector(true) 
+           setBranch("")
         }
-        getArchive(repo.name, branch, fileEx).then((apiResponse) => {
-          setDlUrl(apiResponse.archiveLink)
-        })
       }
+    }).catch(error => {
+        console.error("[! getBranches]", error)
+        setIsLoadingBranches(false)
+        setErrorMessage("Failed to fetch branches.")
+        setUseFallbackBranchSelector(true)
+        setBranch("main")
     })
-  }, [repo.name, fileEx, branch])
+  }, [repo.name])
 
   return (
     <>
@@ -185,8 +230,16 @@ export function DownloadArchive({ repo }: { repo: Repo }) {
             <Label>Format</Label>
             <Tabs defaultValue="zip" onValueChange={(value) => {
               setFileEx(value)
-              getArchive(repo.name, branch, value).then((apiResponse) => {
-                setDlUrl(apiResponse.archiveLink)
+              getArchive(repo.name, branch, value).then((apiResponse: ArchiveResponse) => {
+                if (apiResponse.error) {
+                  console.error("[! getArchive Tabs]", apiResponse.error)
+                  setDlUrl("")
+                } else if (apiResponse.archiveLink) {
+                  setDlUrl(apiResponse.archiveLink)
+                } else {
+                  console.error("[! getArchive Tabs] No error but no archiveLink defined")
+                  setDlUrl("")
+                }
               })
             }}>
               <TabsList className="w-full">
