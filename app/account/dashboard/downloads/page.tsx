@@ -6,6 +6,10 @@ import { HomeTab } from "@/components/pages/dashboard/downloads/HomeTab"
 import { EmailTab } from "@/components/pages/dashboard/downloads/EmailTab"
 import { PassTab } from "@/components/pages/dashboard/downloads/PassTab"
 import { GitTab } from "@/components/pages/dashboard/downloads/GitTab"
+import { TbHome } from "react-icons/tb"
+import { TbMail } from "react-icons/tb"
+import { TbLock } from "react-icons/tb"
+import { SiGitea } from "react-icons/si"
 
 const fadeIn = {
   initial: { opacity: 0, y: 20 },
@@ -19,10 +23,22 @@ export default function DownloadCenter() {
       <h1 className="text-3xl font-bold mb-6 text-foreground">Download Center</h1>
       <Tabs defaultValue="home" className="w-full">
         <TabsList className="mb-4 flex flex-wrap">
-          <TabsTrigger value="home" className="cursor-pointer">Home</TabsTrigger>
-          <TabsTrigger value="email" className="cursor-pointer">Email</TabsTrigger>
-          <TabsTrigger value="pass" className="cursor-pointer">Pass</TabsTrigger>
-          <TabsTrigger value="git" className="cursor-pointer">Git</TabsTrigger>
+          <TabsTrigger value="home" className="cursor-pointer">
+            <TbHome size={16} className="mr-2" />
+            Home
+          </TabsTrigger>
+          <TabsTrigger value="email" className="cursor-pointer">
+            <TbMail size={16} className="mr-2" />
+            Email
+          </TabsTrigger>
+          <TabsTrigger value="pass" className="cursor-pointer">
+            <TbLock size={16} className="mr-2" />
+            Pass
+          </TabsTrigger>
+          <TabsTrigger value="git" className="cursor-pointer">
+            <SiGitea size={16} className="mr-2" />
+            Git
+          </TabsTrigger>
         </TabsList>
         <TabsContent value="home">
           <HomeTab />

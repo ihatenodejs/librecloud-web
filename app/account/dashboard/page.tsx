@@ -7,6 +7,9 @@ import { OverviewTab } from "@/components/pages/dashboard/OverviewTab"
 import { SecurityTab } from "@/components/pages/dashboard/SecurityTab"
 import { ServicesTab } from "@/components/pages/dashboard/ServicesTab"
 import { GitTab } from "@/components/pages/dashboard/GitTab"
+import { SiGitea } from "react-icons/si"
+import { TbHome } from "react-icons/tb"
+import { Wrench, ShieldCheck } from "lucide-react"
 
 const fadeIn = {
   initial: { opacity: 0, y: 20 },
@@ -72,10 +75,22 @@ export default function Dashboard() {
       <h1 className="text-3xl font-bold mb-6 text-foreground">Dashboard</h1>
       <Tabs defaultValue="overview" className="w-full">
         <TabsList className="mb-4 flex flex-wrap">
-          <TabsTrigger value="overview" className="cursor-pointer">Overview</TabsTrigger>
-          <TabsTrigger value="security" className="cursor-pointer">Security</TabsTrigger>
-          <TabsTrigger value="services" className="cursor-pointer">Services</TabsTrigger>
-          <TabsTrigger value="git" className="cursor-pointer">Git</TabsTrigger>
+          <TabsTrigger value="overview" className="cursor-pointer">
+            <TbHome size={16} className="mr-2" />
+            Overview
+          </TabsTrigger>
+          <TabsTrigger value="security" className="cursor-pointer">
+            <ShieldCheck size={16} className="mr-2" />
+            Security
+          </TabsTrigger>
+          <TabsTrigger value="services" className="cursor-pointer">
+            <Wrench size={16} className="mr-2" />
+            Services
+          </TabsTrigger>
+          <TabsTrigger value="git" className="cursor-pointer">
+            <SiGitea size={16} className="mr-2" />
+            Git
+          </TabsTrigger>
         </TabsList>
         <TabsContent value="overview">
           <OverviewTab />

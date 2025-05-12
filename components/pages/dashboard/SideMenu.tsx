@@ -74,9 +74,11 @@ export const SideMenu: React.FC<SideMenuProps> = ({ initialSettings }) => {
     <Sidebar className="h-full">
       <SidebarContent className="h-full bg-background">
         <div className="flex items-center justify-center pt-6">
-          <h3 className="text-2xl font-bold text-primary">
-            LibreCloud
-          </h3>
+          <Link href="/account/dashboard">
+            <h3 className="text-2xl font-bold text-primary">
+              LibreCloud
+            </h3>
+          </Link>
         </div>
         <SidebarGroup>
           <SidebarGroupLabel>Services</SidebarGroupLabel>
