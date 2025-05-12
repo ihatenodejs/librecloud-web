@@ -57,7 +57,7 @@ export function MyRepos({ gitUser }: { gitUser: string }) {
 
   if (loading) {
     return (
-      <Card className="overflow-hidden transition-all hover:shadow-lg">
+      <Card className="overflow-hidden transition-all hover:shadow-lg col-span-full">
         <CardHeader>
           <div className="flex items-center justify-between">
             <CardTitle className="flex items-center gap-2">
@@ -76,7 +76,7 @@ export function MyRepos({ gitUser }: { gitUser: string }) {
     )
   } else if (error) {
     return (
-      <Card className="overflow-hidden transition-all hover:shadow-lg">
+      <Card className="overflow-hidden transition-all hover:shadow-lg col-span-full">
         <CardHeader>
           <div className="flex items-center justify-between">
             <CardTitle className="flex items-center gap-2">
@@ -98,7 +98,7 @@ export function MyRepos({ gitUser }: { gitUser: string }) {
     )
   } else {
     return (
-        <Card className="overflow-hidden transition-all hover:shadow-lg">
+        <Card className="overflow-hidden transition-all hover:shadow-lg col-span-full">
           <CardHeader>
             <div className="flex items-center justify-between">
             <CardTitle className="flex flex-row items-center gap-2">

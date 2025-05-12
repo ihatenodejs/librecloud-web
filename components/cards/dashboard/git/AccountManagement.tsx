@@ -28,7 +28,7 @@ export function AccountManagement({ dashboardState }: { dashboardState: Dashboar
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 gap-4">
           <ChangePassword />
           <Link href={`${process.env.NEXT_PUBLIC_GITEA_URL}/user/forgot_password?email=${encodeURIComponent(dashboardState.gitEmail || "")}`} target="_blank">
             <Button className="w-full cursor-pointer">

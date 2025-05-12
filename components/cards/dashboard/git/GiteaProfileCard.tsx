@@ -14,7 +14,7 @@ export function GiteaProfileCard({ dashboardState }: { dashboardState: Dashboard
   }
 
   return (
-    <Card className="overflow-hidden transition-all hover:shadow-lg">
+    <Card className="overflow-hidden transition-all hover:shadow-lg md:col-span-full xl:col-span-1">
       <CardContent className="space-y-6 mt-6">
         <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:gap-8">
           <Avatar className="h-24 w-24 shrink-0 border-2 border-border">
