@@ -171,7 +171,7 @@ export function DownloadArchive({ repo }: { repo: Repo }) {
         setBranches([])
         setFileEx("zip")
       }}>
-        <DialogContent>
+        <DialogContent closeClassName="absolute right-5.5 top-6.25">
           <DialogHeader>
             <DialogTitle>Download Archive</DialogTitle>
           </DialogHeader>

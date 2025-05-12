@@ -11,7 +11,8 @@ This is intended because only the user's repos are shown on the dashboard.
 */
 export async function GET(request: NextRequest) {
   const session = await auth()
-  const namesOnly = request.nextUrl.searchParams.get("namesOnly")
+  const namesOnlyHeader = request.nextUrl.searchParams.get("namesOnly")
+  const namesOnly = namesOnlyHeader === "true"
   const repo = request.nextUrl.searchParams.get("repo")
 
   if (!session) {
@@ -68,7 +69,7 @@ export async function GET(request: NextRequest) {
     }
   }
 
-  const branches: BranchesResponse = await getBranches(repo, namesOnly === "true")
+  const branches: BranchesResponse = await getBranches(repo, namesOnly)
 
   if (branches.error) {
     console.log("[! getBranches] Error fetching branches, sending error to client")

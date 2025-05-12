@@ -36,7 +36,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "No email found in session" }, { status: 401 })
   }
 
-  const clientEmail = session.user?.email
+  const clientEmail = session.user.email
   
   if (!name) {
     console.log("[! createRepo] Sent err to client: Name is required")
@@ -44,9 +44,6 @@ export async function POST(request: NextRequest) {
   } else if (!gitUser) {
     console.log("[! createRepo] Sent err to client: Git user is required")
     return NextResponse.json({ error: "Git user is required" }, { status: 400 })
-  } else if (!clientEmail) {
-    console.log("[! createRepo] Sent err to client: Session does not contain email address")
-    return NextResponse.json({ error: "Session does not contain an email address" }, { status: 400 })
   }
 
   // several pre-auth checks
@@ -110,20 +107,12 @@ export async function POST(request: NextRequest) {
     body: JSON.stringify(bodyPayload),
   })
 
-  // start processing the response
   if (!response.ok) {
     console.log("[! createRepo] Sent err to client: Failed to create repository")
     console.log("[! createRepo]", response.statusText)
     return NextResponse.json({ error: "API Error" }, { status: response.status })
-  }
-
-  const data = await response.json()
-
-  if (response.status === 201) {
+  } else {
     console.log("[i] createRepo] Sent success to client")
     return NextResponse.json({ success: true })
-  } else if (response.status === 400 || response.status === 403 || response.status === 404 || response.status === 409 || response.status === 422 || response.status === 500) {
-    console.log("[! createRepo] Error", response.status, data)
-    return NextResponse.json({ error: "API Error" }, { status: response.status })
   }
 }

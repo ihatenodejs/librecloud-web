@@ -60,7 +60,7 @@ export function ChangePassword() {
     const chgResponseData = await chgResponse.json()
 
     if (!chgResponse.ok) {
-      console.log("[! changePass] Responded with error:", chgResponse.statusText)
+      console.log(`[! changePass] Responded with error: ${chgResponse.statusText} - ${chgResponseData.error}`)
       if (chgResponseData.error) {
         setErrorMessage(chgResponseData.error)
       } else {
