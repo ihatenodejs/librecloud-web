@@ -1,4 +1,6 @@
+import { GiteaRepoResponse } from "@/app/api/git/repos/route"
 import { prisma } from "@/lib/prisma"
+import { BranchesResponse } from "@/util/git-client"
 
 export interface GiteaUidResponse {
   uid?: number
@@ -14,6 +16,18 @@ export interface GiteaLoginNameResponse {
 
 export interface SourceIdResponse {
   source_id?: number
+  error?: string
+  code?: number
+}
+
+export interface ContributorsResponse {
+  contributors?: any[]
+  error?: string
+  code?: number
+}
+
+export interface UserReposResponse {
+  repos?: any[]
   error?: string
   code?: number
 }
@@ -141,6 +155,99 @@ export async function getGiteaLoginName(username: string): Promise<GiteaLoginNam
   } else {
     return {
       login_name: dbLoginName.giteaLoginName,
+    }
+  }
+}
+
+export async function getBranches(repo: string, namesOnly: boolean = false): Promise<BranchesResponse> {
+  const branchesRes = await fetch(`${process.env.GITEA_API_URL}/repos/${repo}/branches`, {
+    headers: {
+      Authorization: `token ${process.env.GITEA_API_KEY}`,
+    },
+  })
+
+  if (!branchesRes.ok) {
+    return {
+      error: "API error",
+      code: branchesRes.status,
+    }
+  }
+
+  const branchesData = await branchesRes.json()
+  if (namesOnly) {
+    const branchNames = branchesData.map((branch: any) => branch.name)
+    return {
+      branches: branchNames,
+    }
+  } else {
+    return {
+      branches: branchesData,
+    }
+  }
+}
+
+export async function getContributors(repo: string, namesOnly: boolean): Promise<ContributorsResponse> {
+  const contributorsRes = await fetch(`${process.env.GITEA_API_URL}/repos/${repo}/collaborators`, {
+    headers: {
+      Authorization: `token ${process.env.GITEA_API_KEY}`,
+    },
+  })
+
+  if (!contributorsRes.ok) {
+    return {
+      error: "API error",
+      code: contributorsRes.status,
+    }
+  }
+
+  const contributorsData = await contributorsRes.json()
+  console.log("[i getContributors] Contributors:", contributorsData)
+  console.log("[i getContributors] URL:", `${process.env.GITEA_API_URL}/repos/${repo}/collaborators`)
+  if (namesOnly) {
+    const contributorNames = contributorsData.map((contributor: any) => contributor.login)
+    return {
+      contributors: contributorNames,
+    }
+  } else {
+    return {
+      contributors: contributorsData,
+    }
+  }
+}
+
+export async function getUserRepos(uid: number, namesOnly: boolean): Promise<UserReposResponse> {
+  const reposResponse = await fetch(`${process.env.GITEA_API_URL}/repos/search?uid=${uid}`, {
+    headers: {
+      Authorization: `token ${process.env.GITEA_API_KEY}`,
+    },
+  })
+
+  if (!reposResponse.ok) {
+    console.log("[! getRepos] Error while fetching repos:", reposResponse.statusText)
+    return {
+      error: "API error",
+      code: reposResponse.status,
+    }
+  }
+
+  const repoData = await reposResponse.json() as GiteaRepoResponse
+
+  if (!repoData.ok) {
+    console.log("[! getRepos] Gitea returned failure while fetching repos")
+    return {
+      error: "API error",
+      code: reposResponse.status,
+    }
+  } else {
+    if (namesOnly) {
+      const repoNames = repoData.data.map((repo: any) => repo.full_name)
+      return {
+        repos: repoNames,
+      }
+    } else {
+      return {
+        repos: repoData.data,
+      }
     }
   }
 }

@@ -2,9 +2,9 @@ import { auth } from "@/auth"
 import { prisma } from "@/lib/prisma"
 import { NextResponse } from "next/server"
 import { Repo, ReposResponse } from "@/components/cards/dashboard/git/MyRepos"
-import { getGiteaUid, GiteaUidResponse } from "@/util/git"
+import { getGiteaUid, getUserRepos, GiteaUidResponse, UserReposResponse } from "@/util/git"
 
-interface GiteaRepoResponse {
+export interface GiteaRepoResponse {
   ok: boolean
   data: {
     full_name: string
@@ -55,27 +55,19 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: "Failed to fetch uid" } as ReposResponse, { status: 500 })
   }
 
-  const reposResponse = await fetch(`${process.env.GITEA_API_URL}/repos/search?uid=${giteaUidRes.uid}`, {
-    headers: {
-      Authorization: `token ${process.env.GITEA_API_KEY}`,
-    },
-  })
+  const userReposRes: UserReposResponse = await getUserRepos(giteaUidRes.uid, false)
 
-  if (!reposResponse.ok) {
-    console.log("[! getRepos] Error while fetching repos:", reposResponse.statusText)
-    return NextResponse.json({ error: "Failed to fetch repos" } as ReposResponse, { status: reposResponse.status })
-  }
-
-  const repoData = await reposResponse.json() as GiteaRepoResponse
-
-  if (!repoData.ok) {
-    console.log("[! getRepos] Gitea returned failure while fetching repos")
+  if (userReposRes.error) {
+    console.log("[! getRepos] Error while fetching repos:", userReposRes.error)
+    return NextResponse.json({ error: userReposRes.error } as ReposResponse, { status: userReposRes.code })
+  } else if (!userReposRes.repos) {
+    console.log("[! getRepos] Failed to fetch repos, sending error to client")
     return NextResponse.json({ error: "Failed to fetch repos" } as ReposResponse, { status: 500 })
   }
 
-  console.log(`[i getRepos] Found ${repoData.data.length} repos, sending to client`)
+  console.log(`[i getRepos] Found ${userReposRes.repos.length} repos, sending to client`)
 
-  const repos: Repo[] = repoData.data.map((repo: { full_name: string, html_url: string }) => ({
+  const repos: Repo[] = userReposRes.repos.map((repo: { full_name: string, html_url: string }) => ({
     name: repo.full_name,
     url: repo.html_url,
   }))
