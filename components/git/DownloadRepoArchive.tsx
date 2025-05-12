@@ -90,13 +90,11 @@ function BranchSelector({ branches, branch: selectedBranchProp, setBranch, useFa
                     key={itemBranch.value}
                     onSelect={(currentValue) => {
                       setBranch(currentValue)
-                      console.log("Setting to", currentValue)
                       getArchive(repo.name, currentValue, fileEx).then((apiResponse: ArchiveResponse) => {
                         if (apiResponse.error) {
                           console.error("[! getArchive BranchSelector]", apiResponse.error)
                           setDlUrl("")
                         } else if (apiResponse.archiveLink) {
-                          console.log("Setting dl link to", apiResponse.archiveLink)
                           setDlUrl(apiResponse.archiveLink)
                         } else {
                           console.error("[! getArchive BranchSelector] No error but no archiveLink defined")
