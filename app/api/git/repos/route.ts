@@ -17,8 +17,14 @@ export async function GET(request: Request) {
   let username = searchParams.get("username")
   const session = await auth()
 
-  if (!session || !session.user || !session.user.email) {
+  if (!session) {
     console.log("[! getRepos] Sent to client: Unauthorized")
+    return NextResponse.json({ error: "Unauthorized" } as ReposResponse, { status: 401 })
+  } else if (!session.user) {
+    console.log("[! getRepos] No user found in session, sending: Unauthorized")
+    return NextResponse.json({ error: "Unauthorized" } as ReposResponse, { status: 401 })
+  } else if (!session.user.email) {
+    console.log("[! getRepos] No email found in session, sending: Unauthorized")
     return NextResponse.json({ error: "Unauthorized" } as ReposResponse, { status: 401 })
   } else if (!username || username === "") {
     console.log("[i getRepos] Username is empty, fetching from db")

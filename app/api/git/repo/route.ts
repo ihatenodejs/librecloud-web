@@ -53,17 +53,12 @@ export async function POST(request: NextRequest) {
   })
 
   if (!giteaPreAuthResponse.ok) {
-    console.log("[! createRepo] Sent err to client: API error while fetching authentication")
-    console.log("[! createRepo]", giteaPreAuthResponse.statusText)
+    console.log("[! createRepo] Sent err to client: API error while fetching authentication:", giteaPreAuthResponse.statusText)
     return NextResponse.json({ error: "API error while fetching authentication" }, { status: 400 })
   }
 
   const giteaPreAuthData = await giteaPreAuthResponse.json()
   const giteaPreAuthEmail = giteaPreAuthData.find((email: GiteaEmailResponse) => email.email === clientEmail)
-
-  console.log("[i] createRepo] Does email match:", giteaPreAuthEmail ? "true" : "false")
-  console.log("[i] createRepo] Is email verified:", giteaPreAuthEmail?.verified ? "true" : "false")
-  console.log("[i] createRepo] Does git user match:", giteaPreAuthEmail?.username === gitUser ? "true" : "false")
 
   if (!giteaPreAuthEmail) {
     console.log("[! createRepo] Sent err to client: Email does not match in Gitea")

@@ -50,7 +50,6 @@ export async function GET(request: NextRequest) {
   } else if (gitUser !== repo.split("/")[0]) {
     // user is not primary owner of repo, check user repositories
     const userReposRes: UserReposResponse = await getUserRepos(gitUid, true)
-    console.log("[i getBranches] User repositories:", userReposRes.repos)
     if (userReposRes.error) {
       console.log("[! getBranches] Error fetching user repositories, sending error to client")
       return NextResponse.json({ error: userReposRes.error }, { status: userReposRes.code })
