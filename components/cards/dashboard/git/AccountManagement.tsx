@@ -13,7 +13,7 @@ import {
   CircleHelp,
 } from "lucide-react"
 import Link from "next/link"
-import { ChangePassword } from "./ChangePassword"
+import { ChangePassword } from "@/components/git/ChangePassword"
 
 export function AccountManagement({ dashboardState }: { dashboardState: DashboardState }) {
   return (

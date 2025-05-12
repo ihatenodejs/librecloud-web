@@ -222,13 +222,13 @@ export function DownloadArchive({ repo }: { repo: Repo }) {
             )}
 
             {errorMessage && (
-              <div className="flex flex-col gap-1 mt-4">
+              <div className="flex flex-col gap-1 mt-4 text-red-500">
                 <div className="flex flex-row gap-2 items-center">
-                  <AlertCircle className="h-4 w-4 text-red-500" />
-                  <p className="text-red-500 font-bold">{errorMessage}</p>
+                  <AlertCircle className="h-4 w-4" />
+                  <p className="font-bold">{errorMessage}</p>
                 </div>
-                <p className="text-red-500 text-sm">We couldn&apos;t fetch the branches for this repo automatically.</p>
-                <p className="text-red-500 text-sm">Don&apos;t worry, you can still set the branch manually with the box above.</p>
+                <p className="text-sm">We couldn&apos;t fetch the branches for this repo automatically.</p>
+                <p className="text-sm">Don&apos;t worry, you can still set the branch manually with the box above.</p>
               </div>
             )}
           </div>

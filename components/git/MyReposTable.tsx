@@ -49,6 +49,17 @@ function RepoActions({ repo }: { repo: Repo }) {
   )
 }
 
+function RepoRow({ repo }: { repo: Repo }) {
+  return (
+    <TableRow key={repo.name}>
+      <TableCell>{repo.name}</TableCell>
+      <TableCell className="text-right">
+        <RepoActions repo={repo} />
+      </TableCell>
+    </TableRow>
+  )
+}
+
 export function MyReposTable({ repos, showAll }: { repos: Repo[], showAll: boolean }) {
   return (
     <Table>
@@ -60,21 +71,11 @@ export function MyReposTable({ repos, showAll }: { repos: Repo[], showAll: boole
       </TableHeader>
       <TableBody>
         {!showAll && repos.slice(0, 5).map((repo) => (
-          <TableRow key={repo.name}>
-            <TableCell>{repo.name}</TableCell>
-            <TableCell className="text-right">
-              <RepoActions repo={repo} />
-            </TableCell>
-          </TableRow>
+          <RepoRow key={repo.name} repo={repo} />
         ))}
         {showAll && (
           repos.map((repo) => (
-            <TableRow key={repo.name}>
-              <TableCell>{repo.name}</TableCell>
-              <TableCell className="text-right">
-                <RepoActions repo={repo} />
-              </TableCell>
-            </TableRow>
+            <RepoRow key={repo.name} repo={repo} />
           ))
         )}
       </TableBody>

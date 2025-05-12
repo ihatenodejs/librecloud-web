@@ -13,6 +13,11 @@ async function getBranches(repo: string, namesOnly: boolean) {
   }
 
   const branches = await branchRes.json()
+
+  if (branches.error) {
+    return { error: branches.error }
+  }
+
   return { branches: branches.branches }
 }
 

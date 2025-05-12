@@ -201,8 +201,7 @@ export async function getContributors(repo: string, namesOnly: boolean): Promise
   }
 
   const contributorsData = await contributorsRes.json()
-  console.log("[i getContributors] Contributors:", contributorsData)
-  console.log("[i getContributors] URL:", `${process.env.GITEA_API_URL}/repos/${repo}/collaborators`)
+  
   if (namesOnly) {
     const contributorNames = contributorsData.map((contributor: any) => contributor.login)
     return {
