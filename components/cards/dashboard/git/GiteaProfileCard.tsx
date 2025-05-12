@@ -5,16 +5,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Users, Clock, User, Mail } from "lucide-react"
 import { Separator } from "@/components/ui/separator"
-
-interface DashboardState {
-  gitUser: string
-  gitAvatar?: string
-  gitLastLogin?: string
-  gitFollowerCt: number
-  gitFollowingCt: number
-  gitIsAdmin: boolean
-  gitEmail?: string
-}
+import { type DashboardState } from "@/components/pages/dashboard/GitTab"
 
 export function GiteaProfileCard({ dashboardState }: { dashboardState: DashboardState }) {
   const convDate = (dateStr: string) => {
@@ -23,7 +14,7 @@ export function GiteaProfileCard({ dashboardState }: { dashboardState: Dashboard
   }
 
   return (
-    <Card className="overflow-hidden transition-all hover:shadow-lg">
+    <Card className="overflow-hidden transition-all hover:shadow-lg md:col-span-full xl:col-span-1">
       <CardContent className="space-y-6 mt-6">
         <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:gap-8">
           <Avatar className="h-24 w-24 shrink-0 border-2 border-border">

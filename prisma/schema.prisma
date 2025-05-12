@@ -8,17 +8,19 @@ datasource db {
 }
 
 model User {
-  id            String      @id @default(cuid())
-  email         String      @unique
-  username      String?     @unique
-  nextcloudId   String?     @unique
-  hideGenAI     Boolean     @default(false)
-  hideUpgrades  Boolean     @default(false)
-  hideCrypto    Boolean     @default(false)
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
-  otps          OTP[]
-  otpRequests   OTPRequest[]
+  id             String      @id @default(cuid())
+  email          String      @unique
+  username       String?     @unique
+  giteaLoginName String?     @unique
+  nextcloudId    String?     @unique
+  giteaUid       Int?        @unique
+  hideGenAI      Boolean     @default(false)
+  hideUpgrades   Boolean     @default(false)
+  hideCrypto     Boolean     @default(false)
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+  otps           OTP[]
+  otpRequests    OTPRequest[]
 }
 
 model OTP {

@@ -4,13 +4,31 @@ import { useState } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card"
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter,
+} from "@/components/ui/card"
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { SiGitea } from "react-icons/si"
 import { AlertCircle, Loader2 } from "lucide-react"
-import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert"
+import {
+  Alert,
+  AlertTitle,
+  AlertDescription,
+} from "@/components/ui/alert"
 import Link from "next/link"
 
 const giteaFormSchema = z.object({
@@ -170,7 +188,7 @@ export function LinkGitea({ linked }: { linked: boolean }) {
             Gitea Link
           </CardTitle>
           <CardDescription>
-            Your Gitea account is currently linked to your LibreCloud account.
+            Your Gitea account is currently <span className="font-bold">linked</span> to your LibreCloud account.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -181,14 +199,21 @@ export function LinkGitea({ linked }: { linked: boolean }) {
               <AlertDescription>{unlinkError}</AlertDescription>
             </Alert>
           )}
-          <p className="text-sm mb-4">
-            Unlinking your Gitea account will not delete your Gitea account. You can delete your Gitea account
-            <Link
-              href="https://git.pontusmail.org/user/settings/account"
-              target="_blank"
-              className="underline hover:text-muted-foreground transition-all ml-1"
-            >here</Link>.
-          </p>
+          <div className="flex flex-col gap-3">
+            <p className="text-sm">
+              Unlinking your Gitea account will not delete your Gitea account. You can delete your Gitea account
+              <Link
+                href="https://git.pontusmail.org/user/settings/account"
+                target="_blank"
+                className="underline hover:text-muted-foreground transition-all ml-1"
+              >here</Link>.
+            </p>
+            <p className="text-sm">
+              History of your Gitea link is never stored.
+            </p>
+          </div>
+        </CardContent>
+        <CardFooter>
           {unlinkLoading ? (
             <Button variant="destructive" disabled className="w-full">
               <Loader2 className="animate-spin" />
@@ -200,7 +225,7 @@ export function LinkGitea({ linked }: { linked: boolean }) {
               Unlink Gitea Account
             </Button>
           )}
-        </CardContent>
+        </CardFooter>
       </Card>
     )
   }
