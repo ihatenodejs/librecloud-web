@@ -9,12 +9,20 @@ import {
 } from "@/util/git"
 import { z } from "zod"
 
-export const formSchema = z.object({
+const formSchema = z.object({
   password: z.string().min(8, { message: "Password must be at least 8 characters long" }).max(64, { message: "Password must be less than 64 characters long" }),
 })
 
 export async function POST(request: NextRequest) {
-  const { password }: z.infer<typeof formSchema> = await request.json()
+  const body = await request.json()
+  const safeBody = formSchema.safeParse(body)
+
+  if (!safeBody.success) {
+    console.log("[! changePass] Invalid request body:", safeBody.error.errors)
+    return NextResponse.json({ error: "Invalid request body", issues: safeBody.error.format() }, { status: 400 })
+  }
+
+  const { password } = safeBody.data
   const session = await auth()
 
   if (!session || !session.user || !session.user.email) {
