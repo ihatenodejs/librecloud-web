@@ -108,8 +108,7 @@ export async function POST(request: NextRequest) {
   })
 
   if (!response.ok) {
-    console.log("[! createRepo] Sent err to client: Failed to create repository")
-    console.log("[! createRepo]", response.statusText)
+    console.log(`[! createRepo] Sent err to client: Failed to create repository - ${response.statusText}`)
     return NextResponse.json({ error: "API Error" }, { status: response.status })
   } else {
     console.log("[i] createRepo] Sent success to client")
