@@ -7,9 +7,14 @@ import {
   getSourceId,
   SourceIdResponse,
 } from "@/util/git"
+import { z } from "zod"
+
+export const formSchema = z.object({
+  password: z.string().min(8, { message: "Password must be at least 8 characters long" }).max(64, { message: "Password must be less than 64 characters long" }),
+})
 
 export async function POST(request: NextRequest) {
-  const { password } = await request.json()
+  const { password }: z.infer<typeof formSchema> = await request.json()
   const session = await auth()
 
   if (!session || !session.user || !session.user.email) {
@@ -24,11 +29,18 @@ export async function POST(request: NextRequest) {
 
   const dbUser = await prisma.user.findUnique({
     where: { email },
+    select: {
+      username: true,
+      giteaUid: true,
+    },
   })
 
-  if (!dbUser || !dbUser.username) {
+  if (!dbUser) {
     console.log("[! changePass] User not found in database, sending error to client")
     return NextResponse.json({ error: "User not found in database" }, { status: 404 })
+  } else if (!dbUser.username) {
+    console.log("[! changePass] No username found in database, sending error to client")
+    return NextResponse.json({ error: "No username found in database" }, { status: 404 })
   } else if (!dbUser.giteaUid) {
     console.log("[! changePass] Git account not linked, sending error to client")
     return NextResponse.json({ error: "Git account not linked" }, { status: 404 })

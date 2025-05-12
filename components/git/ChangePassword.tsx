@@ -24,7 +24,7 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
  
-const formSchema = z.object({
+export const formSchema = z.object({
   password: z.string().min(8, { message: "Password must be at least 8 characters long" }).max(64, { message: "Password must be less than 64 characters long" }),
   confirmPassword: z.string().min(8, { message: "Password must be at least 8 characters long" }).max(64, { message: "Password must be less than 64 characters long" }),
 })

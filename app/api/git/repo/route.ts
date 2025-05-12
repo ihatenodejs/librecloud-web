@@ -28,6 +28,12 @@ export async function POST(request: NextRequest) {
   if (!session) {
     console.log("[! createRepo] Sent err to client: Unauthorized")
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+  } else if (!session.user) {
+    console.log("[! createRepo] Sent err to client: No user found in session")
+    return NextResponse.json({ error: "No user found in session" }, { status: 401 })
+  } else if (!session.user.email) {
+    console.log("[! createRepo] Sent err to client: No email found in session")
+    return NextResponse.json({ error: "No email found in session" }, { status: 401 })
   }
 
   const clientEmail = session.user?.email

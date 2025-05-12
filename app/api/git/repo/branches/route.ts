@@ -11,16 +11,19 @@ This is intended because only the user's repos are shown on the dashboard.
 */
 export async function GET(request: NextRequest) {
   const session = await auth()
+  const namesOnly = request.nextUrl.searchParams.get("namesOnly")
+  const repo = request.nextUrl.searchParams.get("repo")
+
   if (!session) {
     console.log("[! getBranches] Unauthorized, sending error to client")
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-  } else if (!session.user || !session.user.email) {
-    console.log("[! getBranches] Something wrong with user session, sending error to client")
-    return NextResponse.json({ error: "Session error" }, { status: 401 })
-  }
-
-  const repo = request.nextUrl.searchParams.get("repo")
-  if (!repo) {
+  } else if (!session.user) {
+    console.log("[! getBranches] No user found in session, sending error to client")
+    return NextResponse.json({ error: "No user found in session" }, { status: 401 })
+  } else if (!session.user.email) {
+    console.log("[! getBranches] No email found in session, sending error to client")
+    return NextResponse.json({ error: "No email found in session" }, { status: 401 })
+  } else if (!repo) {
     console.log("[! getBranches] Repository not provided, sending error to client")
     return NextResponse.json({ error: "Repository not provided" }, { status: 400 })
   }
@@ -44,10 +47,7 @@ export async function GET(request: NextRequest) {
   const gitUser = dbUser.username
   const gitUid = dbUser.giteaUid
 
-  if (!gitUser || !gitUid) {
-    console.log("[! getBranches] User not found in git, sending error to client")
-    return NextResponse.json({ error: "User not found in git" }, { status: 404 })
-  } else if (gitUser !== repo.split("/")[0]) {
+  if (gitUser !== repo.split("/")[0]) {
     // user is not primary owner of repo, check user repositories
     const userReposRes: UserReposResponse = await getUserRepos(gitUid, true)
     if (userReposRes.error) {
@@ -68,7 +68,6 @@ export async function GET(request: NextRequest) {
     }
   }
 
-  const namesOnly = request.nextUrl.searchParams.get("namesOnly")
   const branches: BranchesResponse = await getBranches(repo, namesOnly === "true")
 
   if (branches.error) {
