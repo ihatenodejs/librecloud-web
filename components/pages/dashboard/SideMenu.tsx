@@ -126,7 +126,7 @@ export const SideMenu: React.FC<SideMenuProps> = ({ initialSettings }) => {
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
                   <Link 
-                    href="https://search.librecloud.cc" 
+                    href={process.env.NEXT_PUBLIC_SEARXNG_URL || "https://search.librecloud.cc"}
                     onClick={handleLinkClick}
                     target="_blank"
                   >
