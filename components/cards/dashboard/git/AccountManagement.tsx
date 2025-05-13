@@ -17,7 +17,7 @@ import { ChangePassword } from "@/components/git/ChangePassword"
 
 export function AccountManagement({ dashboardState }: { dashboardState: DashboardState }) {
   return (
-    <Card>
+    <Card className="overflow-hidden transition-all hover:shadow-lg md:col-span-full xl:col-span-1">
       <CardHeader>
         <CardTitle className="flex items-center text-xl gap-2">
           <User size={20} />

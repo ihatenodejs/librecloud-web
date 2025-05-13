@@ -74,23 +74,25 @@ export default function Dashboard() {
     <motion.div {...fadeIn}>
       <h1 className="text-3xl font-bold mb-6 text-foreground">Dashboard</h1>
       <Tabs defaultValue="overview" className="w-full">
-        <TabsList className="mb-4 flex flex-wrap">
-          <TabsTrigger value="overview" className="cursor-pointer">
-            <TbHome size={16} className="mr-2" />
-            Overview
-          </TabsTrigger>
-          <TabsTrigger value="security" className="cursor-pointer">
-            <ShieldCheck size={16} className="mr-2" />
-            Security
-          </TabsTrigger>
-          <TabsTrigger value="services" className="cursor-pointer">
-            <Wrench size={16} className="mr-2" />
-            Services
-          </TabsTrigger>
-          <TabsTrigger value="git" className="cursor-pointer">
-            <SiGitea size={16} className="mr-2" />
-            Git
-          </TabsTrigger>
+        <TabsList className="mb-4 flex w-full overflow-x-auto justify-start">
+          <div className="flex gap-2">
+            <TabsTrigger value="overview" className="cursor-pointer shrink-0">
+              <TbHome size={16} className="mr-2" />
+              Overview
+            </TabsTrigger>
+            <TabsTrigger value="security" className="cursor-pointer shrink-0">
+              <ShieldCheck size={16} className="mr-2" />
+              Security
+            </TabsTrigger>
+            <TabsTrigger value="services" className="cursor-pointer shrink-0">
+              <Wrench size={16} className="mr-2" />
+              Services
+            </TabsTrigger>
+            <TabsTrigger value="git" className="cursor-pointer shrink-0">
+              <SiGitea size={16} className="mr-2" />
+              Git
+            </TabsTrigger>
+          </div>
         </TabsList>
         <TabsContent value="overview">
           <OverviewTab />

@@ -23,7 +23,7 @@ export const WelcomeCard = () => {
   if (!visible) return null
 
   return (
-    <Card className="col-span-full md:col-span-1">
+    <Card className="overflow-hidden transition-all hover:shadow-lg">
       <CardHeader>
         <CardTitle className="text-xl">Welcome to <span className="italic mr-0.5">your</span> dashboard!</CardTitle>
       </CardHeader>

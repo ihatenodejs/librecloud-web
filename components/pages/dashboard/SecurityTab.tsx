@@ -75,7 +75,7 @@ export const SecurityTab = () => {
 
   return (
     <div className="grid gap-6 grid-cols-1 md:grid-cols-2">
-      <Card>
+      <Card className="overflow-hidden transition-all hover:shadow-lg md:col-span-full xl:col-span-1">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <ShieldCheck size={18} />
@@ -159,7 +159,7 @@ export const SecurityTab = () => {
           )}
         </CardContent>
       </Card>
-      <Card>
+      <Card className="overflow-hidden transition-all hover:shadow-lg md:col-span-full xl:col-span-1">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Lightbulb size={18} />

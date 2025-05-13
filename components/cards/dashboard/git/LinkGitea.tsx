@@ -114,7 +114,7 @@ export function LinkGitea({ linked }: { linked: boolean }) {
 
   if (!linked) {
     return (
-      <Card>
+      <Card className="overflow-hidden transition-all hover:shadow-lg md:col-span-full xl:col-span-1">
         <CardHeader>
           <CardTitle className="flex items-center text-xl gap-2">
             <SiGitea size={20} />
@@ -181,7 +181,7 @@ export function LinkGitea({ linked }: { linked: boolean }) {
     )
   } else {
     return (
-      <Card>
+      <Card className="overflow-hidden transition-all hover:shadow-lg md:col-span-full xl:col-span-1">
         <CardHeader>
           <CardTitle className="flex items-center text-xl gap-2">
             <SiGitea size={20} />

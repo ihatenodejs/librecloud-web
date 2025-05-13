@@ -1,12 +1,12 @@
 import Link from "next/link"
 import { Mail, Key, ExternalLink } from "lucide-react"
-import { SiGitea, SiAuthentik, SiNextcloud } from "react-icons/si";
+import { SiGitea, SiAuthentik, SiNextcloud, SiSearxng } from "react-icons/si";
 import { Card, CardFooter, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 
 export const ServicesTab = () => (
   <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-    <Card>
+    <Card className="overflow-hidden transition-all hover:shadow-lg md:col-span-full xl:col-span-1">
       <CardHeader>
         <CardTitle className="flex items-center">
           <Mail className="mr-2 h-4 w-4" />
@@ -24,7 +24,7 @@ export const ServicesTab = () => (
       </CardFooter>
     </Card>
 
-    <Card>
+    <Card className="overflow-hidden transition-all hover:shadow-lg md:col-span-full xl:col-span-1">
       <CardHeader>
         <CardTitle className="flex items-center">
           <SiGitea className="mr-2 h-4 w-4" />
@@ -42,7 +42,7 @@ export const ServicesTab = () => (
       </CardFooter>
     </Card>
 
-    <Card>
+    <Card className="overflow-hidden transition-all hover:shadow-lg md:col-span-full xl:col-span-1">
       <CardHeader>
         <CardTitle className="flex items-center">
           <Key className="mr-2 h-4 w-4" />
@@ -60,7 +60,7 @@ export const ServicesTab = () => (
       </CardFooter>
     </Card>
 
-    <Card>
+    <Card className="overflow-hidden transition-all hover:shadow-lg md:col-span-full xl:col-span-1">
       <CardHeader>
         <CardTitle className="flex items-center">
           <SiAuthentik className="mr-2 h-4 w-4" />
@@ -78,7 +78,7 @@ export const ServicesTab = () => (
       </CardFooter>
     </Card>
 
-    <Card>
+    <Card className="overflow-hidden transition-all hover:shadow-lg md:col-span-full xl:col-span-1">
       <CardHeader>
         <CardTitle className="flex items-center">
           <SiNextcloud className="mr-2 h-4 w-4" />
@@ -90,6 +90,24 @@ export const ServicesTab = () => (
         <Button className="cursor-pointer">
           <ExternalLink className="h-4 w-4" />
           <Link href="https://files.librecloud.cc/" target="_blank">
+            Open App
+          </Link>
+        </Button>
+      </CardFooter>
+    </Card>
+
+    <Card className="overflow-hidden transition-all hover:shadow-lg md:col-span-full xl:col-span-1">
+      <CardHeader>
+        <CardTitle className="flex items-center">
+          <SiSearxng className="mr-2 h-4 w-4" />
+          Search
+        </CardTitle>
+        <CardDescription className="pt-4">Search the web privately with our SearXNG instance.</CardDescription>
+      </CardHeader>
+      <CardFooter>
+        <Button className="cursor-pointer">
+          <ExternalLink className="h-4 w-4" />
+          <Link href="https://search.librecloud.cc/" target="_blank">
             Open App
           </Link>
         </Button>

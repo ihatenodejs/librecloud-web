@@ -22,23 +22,25 @@ export default function DownloadCenter() {
     <motion.div {...fadeIn}>
       <h1 className="text-3xl font-bold mb-6 text-foreground">Download Center</h1>
       <Tabs defaultValue="home" className="w-full">
-        <TabsList className="mb-4 flex flex-wrap">
-          <TabsTrigger value="home" className="cursor-pointer">
-            <TbHome size={16} className="mr-2" />
-            Home
-          </TabsTrigger>
-          <TabsTrigger value="email" className="cursor-pointer">
-            <TbMail size={16} className="mr-2" />
-            Email
-          </TabsTrigger>
-          <TabsTrigger value="pass" className="cursor-pointer">
-            <TbLock size={16} className="mr-2" />
-            Pass
-          </TabsTrigger>
-          <TabsTrigger value="git" className="cursor-pointer">
-            <SiGitea size={16} className="mr-2" />
-            Git
-          </TabsTrigger>
+        <TabsList className="mb-4 flex w-full overflow-x-auto justify-start">
+          <div className="flex gap-2">
+            <TabsTrigger value="home" className="cursor-pointer shrink-0">
+              <TbHome size={16} className="mr-2" />
+              Home
+            </TabsTrigger>
+            <TabsTrigger value="email" className="cursor-pointer shrink-0">
+              <TbMail size={16} className="mr-2" />
+              Email
+            </TabsTrigger>
+            <TabsTrigger value="pass" className="cursor-pointer shrink-0">
+              <TbLock size={16} className="mr-2" />
+              Pass
+            </TabsTrigger>
+            <TabsTrigger value="git" className="cursor-pointer shrink-0">
+              <SiGitea size={16} className="mr-2" />
+              Git
+            </TabsTrigger>
+          </div>
         </TabsList>
         <TabsContent value="home">
           <HomeTab />

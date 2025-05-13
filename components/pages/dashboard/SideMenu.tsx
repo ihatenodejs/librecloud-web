@@ -25,6 +25,7 @@ import {
 import LogoutMenuItem from "@/components/custom/LogoutMenuItem"
 import type React from "react"
 import Link from "next/link"
+import { usePathname } from "next/navigation"
 import { useState, useEffect } from "react"
 
 interface UserSettings {
@@ -38,6 +39,7 @@ interface SideMenuProps {
 }
 
 export const SideMenu: React.FC<SideMenuProps> = ({ initialSettings }) => {
+  const pathname = usePathname()
   const [hideGenAI, setHideGenAI] = useState(initialSettings?.hideGenAI ?? true)
   const [hideUpgrades, setHideUpgrades] = useState(initialSettings?.hideUpgrades ?? true)
   const [hideCrypto, setHideCrypto] = useState(initialSettings?.hideCrypto ?? true)
@@ -86,7 +88,11 @@ export const SideMenu: React.FC<SideMenuProps> = ({ initialSettings }) => {
             <SidebarMenu>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
-                  <Link href="/account/dashboard" onClick={handleLinkClick}>
+                  <Link 
+                    href="/account/dashboard" 
+                    onClick={handleLinkClick}
+                    className={pathname === "/account/dashboard" ? "bg-accent text-accent-foreground" : ""}
+                  >
                     <LayoutDashboard />
                     <span>Dashboard</span>
                   </Link>
@@ -101,7 +107,11 @@ export const SideMenu: React.FC<SideMenuProps> = ({ initialSettings }) => {
                 !hideGenAI && (
                   <SidebarMenuItem>
                     <SidebarMenuButton asChild>
-                      <Link href="/account/dashboard/ai" onClick={handleLinkClick}>
+                      <Link 
+                        href="/account/dashboard/ai" 
+                        onClick={handleLinkClick}
+                        className={pathname === "/account/dashboard/ai" ? "bg-accent text-accent-foreground" : ""}
+                      >
                         <Sparkle />
                         <span>Generative AI</span>
                       </Link>
@@ -112,7 +122,11 @@ export const SideMenu: React.FC<SideMenuProps> = ({ initialSettings }) => {
 
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
-                  <Link href="/account/dashboard/downloads" onClick={handleLinkClick}>
+                  <Link 
+                    href="/account/dashboard/downloads" 
+                    onClick={handleLinkClick}
+                    className={pathname === "/account/dashboard/downloads" ? "bg-accent text-accent-foreground" : ""}
+                  >
                     <HardDriveDownload />
                     <span>Download Center</span>
                   </Link>
@@ -134,7 +148,11 @@ export const SideMenu: React.FC<SideMenuProps> = ({ initialSettings }) => {
                 !hideCrypto && (
                   <SidebarMenuItem>
                     <SidebarMenuButton asChild>
-                      <Link href="/account/dashboard/exchange" onClick={handleLinkClick}>
+                      <Link 
+                        href="/account/dashboard/exchange" 
+                        onClick={handleLinkClick}
+                        className={pathname === "/account/dashboard/exchange" ? "bg-accent text-accent-foreground" : ""}
+                      >
                         <Bitcoin />
                         <span>Exchange Crypto</span>
                       </Link>
@@ -145,7 +163,11 @@ export const SideMenu: React.FC<SideMenuProps> = ({ initialSettings }) => {
 
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
-                  <Link href="/account/dashboard/statistics" onClick={handleLinkClick}>
+                  <Link 
+                    href="/account/dashboard/statistics" 
+                    onClick={handleLinkClick}
+                    className={pathname === "/account/dashboard/statistics" ? "bg-accent text-accent-foreground" : ""}
+                  >
                     <BarChartIcon />
                     <span>Statistics</span>
                   </Link>
@@ -167,7 +189,11 @@ export const SideMenu: React.FC<SideMenuProps> = ({ initialSettings }) => {
                 !hideUpgrades && (
                   <SidebarMenuItem>
                     <SidebarMenuButton asChild>
-                      <Link href="/account/dashboard/upgrades" onClick={handleLinkClick}>
+                      <Link 
+                        href="/account/dashboard/upgrades" 
+                        onClick={handleLinkClick}
+                        className={pathname === "/account/dashboard/upgrades" ? "bg-accent text-accent-foreground" : ""}
+                      >
                         <Crown />
                         <span>Upgrades</span>
                       </Link>
@@ -178,7 +204,11 @@ export const SideMenu: React.FC<SideMenuProps> = ({ initialSettings }) => {
 
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
-                  <Link href="/account/dashboard/support" onClick={handleLinkClick}>
+                  <Link 
+                    href="/account/dashboard/support" 
+                    onClick={handleLinkClick}
+                    className={pathname === "/account/dashboard/support" ? "bg-accent text-accent-foreground" : ""}
+                  >
                     <Headset />
                     <span>Support</span>
                   </Link>
@@ -187,7 +217,11 @@ export const SideMenu: React.FC<SideMenuProps> = ({ initialSettings }) => {
 
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
-                  <Link href="/account/dashboard/settings" onClick={handleLinkClick}>
+                  <Link 
+                    href="/account/dashboard/settings" 
+                    onClick={handleLinkClick}
+                    className={pathname === "/account/dashboard/settings" ? "bg-accent text-accent-foreground" : ""}
+                  >
                     <Settings />
                     <span>Settings</span>
                   </Link>

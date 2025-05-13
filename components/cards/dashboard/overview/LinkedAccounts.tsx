@@ -56,7 +56,7 @@ export const LinkedAccounts = () => {
   }, []);
 
   return (
-    <Card className="col-span-full md:col-span-1">
+    <Card className="overflow-hidden transition-all hover:shadow-lg">
       <CardHeader>
         <CardTitle className="flex items-center text-xl gap-2">
           <Link size={20} />
