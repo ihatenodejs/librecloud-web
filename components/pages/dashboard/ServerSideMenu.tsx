@@ -24,16 +24,12 @@ async function fetchUserSettings(email: string) {
   const user = await prisma.user.findUnique({ where: { email } });
   if (user) {
     return {
-      hideGenAI: user.hideGenAI,
-      hideUpgrades: user.hideUpgrades,
-      hideCrypto: user.hideCrypto,
+      hidePaidFeatures: user.hidePaidFeatures,
     }
   } else {
     const newUser = await prisma.user.create({ data: { email } });
     return {
-      hideGenAI: newUser.hideGenAI,
-      hideUpgrades: newUser.hideUpgrades,
-      hideCrypto: newUser.hideCrypto,
+      hidePaidFeatures: newUser.hidePaidFeatures,
     }
   }
 } 

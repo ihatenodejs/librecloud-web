@@ -52,9 +52,7 @@ export async function POST(request: Request) {
         data: {
           email,
           username,
-          hideGenAI: false,
-          hideUpgrades: false,
-          hideCrypto: false,
+          hidePaidFeatures: false,
         },
       })
       return NextResponse.json({ success: true })

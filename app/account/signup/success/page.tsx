@@ -111,9 +111,9 @@ const WelcomePage = () => {
                 whileHover={{ y: -5 }}
                 transition={{ type: "spring", stiffness: 300 }}
               >
-                <h4 className="text-lg font-semibold mb-2">Generative AI</h4>
+                <h4 className="text-lg font-semibold mb-2">Unmetered Storage</h4>
                 <p className="text-sm">
-                  Use GenAI tools at API pricing, without compromising on the UI.
+                  Use as much storage as you want, subject only to our fair use policies.
                 </p>
               </motion.div>
               <motion.div

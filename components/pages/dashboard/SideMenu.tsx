@@ -4,9 +4,7 @@ import {
   LayoutDashboard,
   Crown,
   Settings,
-  Sparkle,
   HardDriveDownload,
-  Bitcoin,
   Headset,
   BarChartIcon,
 } from "lucide-react"
@@ -27,11 +25,10 @@ import type React from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useState, useEffect } from "react"
+import { SiSearxng } from "react-icons/si"
 
 interface UserSettings {
-  hideGenAI: boolean
-  hideUpgrades: boolean
-  hideCrypto: boolean
+  hidePaidFeatures: boolean
 }
 
 interface SideMenuProps {
@@ -40,9 +37,7 @@ interface SideMenuProps {
 
 export const SideMenu: React.FC<SideMenuProps> = ({ initialSettings }) => {
   const pathname = usePathname()
-  const [hideGenAI, setHideGenAI] = useState(initialSettings?.hideGenAI ?? true)
-  const [hideUpgrades, setHideUpgrades] = useState(initialSettings?.hideUpgrades ?? true)
-  const [hideCrypto, setHideCrypto] = useState(initialSettings?.hideCrypto ?? true)
+  const [hidePaidFeatures, setHidePaidFeatures] = useState(initialSettings?.hidePaidFeatures ?? false)
   const [isLoading, setIsLoading] = useState(!initialSettings)
   const { setOpenMobile } = useSidebar()
 
@@ -56,9 +51,7 @@ export const SideMenu: React.FC<SideMenuProps> = ({ initialSettings }) => {
     fetch("/api/users/settings")
       .then((res) => res.json())
       .then((data) => {
-        setHideGenAI(data.hideGenAI)
-        setHideUpgrades(data.hideUpgrades)
-        setHideCrypto(data.hideCrypto)
+        setHidePaidFeatures(data.hidePaidFeatures)
         setIsLoading(false)
       })
       .catch((error) => {
@@ -98,28 +91,6 @@ export const SideMenu: React.FC<SideMenuProps> = ({ initialSettings }) => {
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
-
-              {isLoading ? (
-                <SidebarMenuItem>
-                  <SidebarMenuSkeleton showIcon />
-                </SidebarMenuItem>
-              ) : (
-                !hideGenAI && (
-                  <SidebarMenuItem>
-                    <SidebarMenuButton asChild>
-                      <Link 
-                        href="/account/dashboard/ai" 
-                        onClick={handleLinkClick}
-                        className={pathname === "/account/dashboard/ai" ? "bg-accent text-accent-foreground" : ""}
-                      >
-                        <Sparkle />
-                        <span>Generative AI</span>
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                )
-              )}
-
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
                   <Link 
@@ -140,27 +111,6 @@ export const SideMenu: React.FC<SideMenuProps> = ({ initialSettings }) => {
           <SidebarGroupLabel>Tools</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {isLoading ? (
-                <SidebarMenuItem>
-                  <SidebarMenuSkeleton showIcon />
-                </SidebarMenuItem>
-              ) : (
-                !hideCrypto && (
-                  <SidebarMenuItem>
-                    <SidebarMenuButton asChild>
-                      <Link 
-                        href="/account/dashboard/exchange" 
-                        onClick={handleLinkClick}
-                        className={pathname === "/account/dashboard/exchange" ? "bg-accent text-accent-foreground" : ""}
-                      >
-                        <Bitcoin />
-                        <span>Exchange Crypto</span>
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                )
-              )}
-
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
                   <Link 
@@ -170,6 +120,18 @@ export const SideMenu: React.FC<SideMenuProps> = ({ initialSettings }) => {
                   >
                     <BarChartIcon />
                     <span>Statistics</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <Link 
+                    href="https://search.librecloud.cc" 
+                    onClick={handleLinkClick}
+                    target="_blank"
+                  >
+                    <SiSearxng />
+                    <span>Search</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
@@ -186,7 +148,7 @@ export const SideMenu: React.FC<SideMenuProps> = ({ initialSettings }) => {
                   <SidebarMenuSkeleton showIcon />
                 </SidebarMenuItem>
               ) : (
-                !hideUpgrades && (
+                !hidePaidFeatures && (
                   <SidebarMenuItem>
                     <SidebarMenuButton asChild>
                       <Link 

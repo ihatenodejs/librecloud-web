@@ -17,12 +17,11 @@ import {
 } from "@/components/ui/input-otp"
 import { signOut } from "next-auth/react"
 import { useRouter } from "next/navigation"
+import { TbFreeRights } from "react-icons/tb"
 
 export default function Settings() {
   const [settings, setSettings] = useState({
-    hideGenAI: false,
-    hideUpgrades: false,
-    hideCrypto: false
+    hidePaidFeatures: false,
   });
   const [loading, setLoading] = useState(false)
   const [deleteOTP, setDeleteOTP] = useState('')
@@ -286,29 +285,14 @@ export default function Settings() {
           <CardContent>
             <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <Label htmlFor="hideGenAI">Hide Generative AI</Label>
+                <Label htmlFor="hideUpgrades" className="flex items-center">
+                  <TbFreeRights className="w-4 h-4 mr-1" />
+                  Hide all paid features
+                </Label>
                 <Switch
-                  id="hideGenAI"
-                  checked={settings.hideGenAI}
-                  onCheckedChange={(checked) => updateSetting('hideGenAI', checked)}
-                  disabled={loading}
-                />
-              </div>
-              <div className="flex items-center justify-between">
-                <Label htmlFor="hideUpgrades">Hide Upgrades</Label>
-                <Switch
-                  id="hideUpgrades"
-                  checked={settings.hideUpgrades}
-                  onCheckedChange={(checked) => updateSetting('hideUpgrades', checked)}
-                  disabled={loading}
-                />
-              </div>
-              <div className="flex items-center justify-between">
-                <Label htmlFor="hideCrypto">Hide Crypto Exchange</Label>
-                <Switch
-                  id="hideCrypto"
-                  checked={settings.hideCrypto}
-                  onCheckedChange={(checked) => updateSetting('hideCrypto', checked)}
+                  id="hidePaidFeatures"
+                  checked={settings.hidePaidFeatures}
+                  onCheckedChange={(checked) => updateSetting('hidePaidFeatures', checked)}
                   disabled={loading}
                 />
               </div>

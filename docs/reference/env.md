@@ -106,15 +106,12 @@ We suggest starting by allowing Auth.js
 | AUTH_TRUST_HOST      | Required, should always be set to `true`          | `true`                                                                |
 | NEXTAUTH_URL         | The URL LibreCloud will be publicly accessible at | `http://localhost:3000` (testing), `https://example.com` (production) |
 
-## Cloudflare
+## SearXNG
 
-We use Cloudflare Turnstile for detecting bots and automated scripts attempting to abuse our services. We chose it because it's the perfect balance of security and convenience for users. It was also the most preferred option in the [poll we ran on my Telegram channel](https://t.me/pontushub/457).
+SearXNG is our search provider of choice for LibreCloud. These options configure the dashboard to use your instance for several services.
 
-You can get the keys you need for Cloudflare Turnstile [here](https://www.cloudflare.com/application-services/products/turnstile/). It's very plug and play.
+Don't be afraid to use LibreCloud Search for your private/public LibreCloud instance. We don't mind!
 
-If you would like to simply test or bypass Cloudflare Turnstile, you can use one of the site keys provided [here](https://developers.cloudflare.com/turnstile/troubleshooting/testing/) instead of your own.
-
-| Environment Variable   | Description                               | Example                               |
-|------------------------|-------------------------------------------|---------------------------------------|
-| NEXT_PUBLIC_CF_SITEKEY | Cloudflare Turnstile site key (public)    | `1x00000000000000000000AA`            |
-| CF_SECRETKEY           | Cloudflare Turnstile secret key (private) | `0xXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX` |
+| Environment Variable    | Description               | Example                        |
+|-------------------------|---------------------------|--------------------------------|
+| NEXT_PUBLIC_SEARXNG_URL | Your SearXNG instance URL | `https://search.librecloud.cc` |
