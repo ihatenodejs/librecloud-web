@@ -1,6 +1,6 @@
 {
   "name": "web",
-  "version": "1.3.0",
+  "version": "1.3.2",
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
@@ -75,9 +75,11 @@
   "trustedDependencies": [
     "@prisma/client",
     "@prisma/engines",
+    "@tailwindcss/oxide",
     "altcha",
     "esbuild",
     "prisma",
-    "sharp"
+    "sharp",
+    "unrs-resolver"
   ]
 }

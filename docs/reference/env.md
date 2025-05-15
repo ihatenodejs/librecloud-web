@@ -61,17 +61,17 @@ For deleting user accounts, two-factor authentication via email is enforced. Thu
 | NOREPLY_EMAIL        | Email account to send from             | `noreply@example.com` |
 | NOREPLY_PASSWORD     | Password for the account given         | Your password         |
 
-## Nextcloud
+## ownCloud
 
-The Nextcloud integration requires an admin or service account credentials for the OCS API.
+The ownCloud integration requires an admin or service account credentials for the OCS API.
 
-It is highly recommended that you create a service account.
+You must create a service account and enter its login details into your `.env` file to use these features. You will also likely want to use an app password for this, which can be created in the user settings.
 
-| Environment Variable     | Description                                            | Example                       |
-|--------------------------|--------------------------------------------------------|-------------------------------|
-| NEXTCLOUD_URL            | The URL of your Nextcloud instance (no trailing slash) | `https://files.librecloud.cc` |
-| NEXTCLOUD_ADMIN_USERNAME | Admin/service account username                         | `service-account`             |
-| NEXTCLOUD_ADMIN_PASSWORD | Corresponding password to given admin/service account  | Password                      |
+| Environment Variable     | Description                                          | Example                       |
+|--------------------------|------------------------------------------------------|-------------------------------|
+| OWNCLOUD_URL            | The URL of your OWNCLOUD instance (no trailing slash) | `https://files.librecloud.cc` |
+| OWNCLOUD_ADMIN_USERNAME | Admin/service account username                        | `service-account`             |
+| OWNCLOUD_ADMIN_PASSWORD | Corresponding password to given admin/service account | Password                      |
 
 ## Gitea
 
