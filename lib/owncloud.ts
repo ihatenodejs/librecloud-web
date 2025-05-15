@@ -3,17 +3,15 @@ import { XMLParser } from "fast-xml-parser"
 
 let lastSyncTime: number | null = null
 const SYNC_INTERVAL = 60 * 60 * 1000 // 1h
+const owncloudUsername = process.env.OWNCLOUD_ADMIN_USERNAME
+const owncloudPassword = process.env.OWNCLOUD_ADMIN_PASSWORD
+const owncloudUrl = process.env.OWNCLOUD_URL
+const basicAuth = Buffer.from(`${owncloudUsername}:${owncloudPassword}`).toString('base64')
 
 async function fetchOwncloudUsers() {
-  const owncloudUsername = process.env.OWNCLOUD_ADMIN_USERNAME
-  const owncloudPassword = process.env.OWNCLOUD_ADMIN_PASSWORD
-  const owncloudUrl = process.env.OWNCLOUD_URL
-  
   if (!owncloudUsername || !owncloudPassword || !owncloudUrl) {
     throw new Error("[!] Missing ownCloud credentials or URL")
   }
-  
-  const basicAuth = Buffer.from(`${owncloudUsername}:${owncloudPassword}`).toString('base64')
   
   const response = await fetch(`${owncloudUrl}/ocs/v2.php/cloud/users`, {
     headers: {
@@ -34,15 +32,9 @@ async function fetchOwncloudUsers() {
 }
 
 async function fetchOwncloudUserDetails(userId: string) {
-  const owncloudUsername = process.env.OWNCLOUD_ADMIN_USERNAME
-  const owncloudPassword = process.env.OWNCLOUD_ADMIN_PASSWORD
-  const owncloudUrl = process.env.OWNCLOUD_URL
-  
   if (!owncloudUsername || !owncloudPassword || !owncloudUrl) {
     throw new Error("[!] Missing ownCloud credentials or URL")
   }
-  
-  const basicAuth = Buffer.from(`${owncloudUsername}:${owncloudPassword}`).toString('base64')
   
   const response = await fetch(`${owncloudUrl}/ocs/v2.php/cloud/users/${userId}`, {
     headers: {
@@ -116,17 +108,11 @@ async function syncAllOwncloudUsers() {
 
 export async function deleteOwncloudUser(owncloudId: string): Promise<boolean> {
   try {
-    const owncloudUsername = process.env.OWNCLOUD_ADMIN_USERNAME
-    const owncloudPassword = process.env.OWNCLOUD_ADMIN_PASSWORD
-    const owncloudUrl = process.env.OWNCLOUD_URL
-    
     if (!owncloudUsername || !owncloudPassword || !owncloudUrl) {
       console.error("[!] Missing ownCloud credentials or URL")
       return false
     }
-    
-    const basicAuth = Buffer.from(`${owncloudUsername}:${owncloudPassword}`).toString('base64')
-    
+        
     const response = await fetch(`${owncloudUrl}/ocs/v2.php/cloud/users/${owncloudId}`, {
       method: 'DELETE',
       headers: {
