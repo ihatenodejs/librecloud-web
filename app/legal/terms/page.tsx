@@ -20,12 +20,12 @@ export default function Terms() {
             <h3 className="text-2xl text-muted-foreground my-4">
               LibreCloud is a community-driven project to provide free and open-source cloud services to the public.
             </h3>
-            <h4 className="text-xl"><span className="font-bold">Date Effective:</span> 21 April 2025</h4>
+            <h4 className="text-xl"><span className="font-bold">Date Effective:</span> 15 May 2025</h4>
             <Separator className="my-4" />
             
             <h2 className="text-3xl font-bold">I. Introduction & Agreement</h2>
             <p className="my-2">By accessing or using LibreCloud services (&quot;Services&quot;), you agree to be bound by these Terms of Service (&quot;Terms&quot;). If you do not agree to these Terms, please do not use our Services.</p>
-            <p className="my-2">LibreCloud (&quot;LibreCloud&quot;, &quot;We&quot;, &quot;Us&quot;) is operated by individual volunteers and is not a business. We offer self-hosted open-source software services, including but not limited to Email, Gitea, NextCloud, and Vaultwarden, connected through a unified dashboard.</p>
+            <p className="my-2">LibreCloud (&quot;LibreCloud&quot;, &quot;We&quot;, &quot;Us&quot;) is operated by individual volunteers and is not a business. We offer self-hosted open-source software services, including but not limited to Email, Gitea, ownCloud, and Vaultwarden, connected through a unified dashboard.</p>
             <p className="my-2">A user (&quot;User&quot;, &quot;You&quot;, &quot;Your&quot;) refers to an individual who has created an account with LibreCloud and agreed to these Terms.</p>
             <p className="my-2">These Terms should be read in conjunction with our <Link href="/legal/privacy" className="underline">Privacy Policy</Link>, which explains how we handle your data.</p>
             <p className="my-2">LibreCloud is not intended for users under 16 years of age. By using our Services, you declare that you are at least 16 years old.</p>

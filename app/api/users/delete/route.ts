@@ -2,7 +2,7 @@ import { NextResponse } from "next/server"
 import { auth } from "@/auth"
 import { prisma } from "@/lib/prisma"
 import { verifyOTP } from "@/lib/otp"
-import { syncUserWithNextcloud, deleteNextcloudUser } from "@/lib/nextcloud"
+import { syncUserWithOwncloud, deleteOwncloudUser } from "@/lib/owncloud"
 
 export async function POST(request: Request) {
   const session = await auth()
@@ -20,7 +20,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ success: false, error: "User not found" }, { status: 404 })
   }
 
-  if (!step || step === 'nextcloud') {
+  if (!step || step === 'owncloud') {
     if (!otp) {
       return NextResponse.json({ success: false, error: "OTP is required" }, { status: 400 })
     }
@@ -31,19 +31,19 @@ export async function POST(request: Request) {
     }
     
     try {
-      const nextcloudId = await syncUserWithNextcloud(user.email, true) // true bypasses the cache
+      const owncloudId = await syncUserWithOwncloud(user.email, true) // true bypasses the cache
       
-      if (nextcloudId) {
-        const nextcloudDeleted = await deleteNextcloudUser(nextcloudId)
+      if (owncloudId) {
+        const owncloudDeleted = await deleteOwncloudUser(owncloudId)
         
-        if (!nextcloudDeleted) {
-          console.error("[!] Failed to delete user from Nextcloud")
+        if (!owncloudDeleted) {
+          console.error("[!] Failed to delete user from ownCloud")
           return NextResponse.json({ 
             success: false, 
-            error: "Failed to delete user from Nextcloud",
-            details: "The Nextcloud service is currently unavailable or the user could not be deleted. Please try again later or contact support.",
+            error: "Failed to delete user from ownCloud",
+            details: "The ownCloud service is currently unavailable or the user could not be deleted. Please try again later or contact support.",
             steps: {
-              nextcloud: { status: 'error', message: 'Failed to delete Nextcloud account' },
+              owncloud: { status: 'error', message: 'Failed to delete ownCloud account' },
               database: { status: 'pending', message: 'Not started' }
             }
           }, { status: 500 })
@@ -51,32 +51,32 @@ export async function POST(request: Request) {
         
         return NextResponse.json({ 
           success: false, 
-          message: "Nextcloud account deleted successfully",
+          message: "ownCloud account deleted successfully",
           steps: {
-            nextcloud: { status: 'success', message: 'Nextcloud account deleted' },
+            owncloud: { status: 'success', message: 'ownCloud account deleted' },
             database: { status: 'pending', message: 'Not started' }
           }
         }, { status: 200 })
       } else {
-        console.log("[i] No Nextcloud ID found for user, skipping Nextcloud deletion")
+        console.log("[i] No ownCloud ID found for user, skipping ownCloud deletion")
         
         return NextResponse.json({ 
           success: false, 
-          message: "No Nextcloud account found, skipping Nextcloud deletion",
+          message: "No ownCloud account found, skipping ownCloud deletion",
           steps: {
-            nextcloud: { status: 'success', message: 'No Nextcloud account found' },
+            owncloud: { status: 'success', message: 'No ownCloud account found' },
             database: { status: 'pending', message: 'Not started' }
           }
         }, { status: 200 })
       }
     } catch (error) {
-      console.error("[!] Error in Nextcloud deletion:", error)
+      console.error("[!] Error in ownCloud deletion:", error)
       return NextResponse.json({ 
         success: false,
-        error: "Failed to delete Nextcloud account",
+        error: "Failed to delete ownCloud account",
         details: error instanceof Error ? error.message : "Unknown error",
         steps: {
-          nextcloud: { status: 'error', message: 'Error during Nextcloud deletion' },
+          owncloud: { status: 'error', message: 'Error during ownCloud deletion' },
           database: { status: 'pending', message: 'Not started' }
         }
       }, { status: 500 })
@@ -101,7 +101,7 @@ export async function POST(request: Request) {
         success: true, 
         message: "User deleted successfully",
         steps: {
-          nextcloud: { status: 'success', message: 'Completed' },
+          owncloud: { status: 'success', message: 'Completed' },
           database: { status: 'success', message: 'Completed' }
         }
       }, { status: 200 })
@@ -112,7 +112,7 @@ export async function POST(request: Request) {
         error: "Failed to delete user from database",
         details: dbError instanceof Error ? dbError.message : "Unknown database error",
         steps: {
-          nextcloud: { status: 'success', message: 'Completed' },
+          owncloud: { status: 'success', message: 'Completed' },
           database: { status: 'error', message: 'Failed to delete database records' }
         }
       }, { status: 500 })
@@ -124,7 +124,7 @@ export async function POST(request: Request) {
       success: false, 
       error: "Invalid step specified",
       steps: {
-        nextcloud: { status: 'pending', message: 'Not started' },
+        owncloud: { status: 'pending', message: 'Not started' },
         database: { status: 'pending', message: 'Not started' }
       }
     }, { status: 400 })

@@ -1,6 +1,6 @@
 import Link from "next/link"
 import { Mail, Key, ExternalLink } from "lucide-react"
-import { SiGitea, SiAuthentik, SiNextcloud, SiSearxng } from "react-icons/si";
+import { SiGitea, SiAuthentik, SiOwncloud, SiSearxng } from "react-icons/si";
 import { Card, CardFooter, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 
@@ -81,10 +81,10 @@ export const ServicesTab = () => (
     <Card className="overflow-hidden transition-all hover:shadow-lg md:col-span-full xl:col-span-1">
       <CardHeader>
         <CardTitle className="flex items-center">
-          <SiNextcloud className="mr-2 h-4 w-4" />
+          <SiOwncloud className="mr-2 h-4 w-4" />
           Files
         </CardTitle>
-        <CardDescription className="pt-4">Store, share, edit, and synchronize files with Nextcloud.</CardDescription>
+        <CardDescription className="pt-4">Store, share, edit, and synchronize files with our ownCloud instance.</CardDescription>
       </CardHeader>
       <CardFooter>
         <Button className="cursor-pointer">

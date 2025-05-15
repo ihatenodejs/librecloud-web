@@ -12,7 +12,7 @@ model User {
   email            String      @unique
   username         String?     @unique
   giteaLoginName   String?     @unique
-  nextcloudId      String?     @unique
+  owncloudId       String?     @unique
   giteaUid         Int?        @unique
   hidePaidFeatures Boolean     @default(false)
   createdAt        DateTime    @default(now())
