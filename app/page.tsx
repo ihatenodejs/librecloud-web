@@ -4,38 +4,40 @@ import Navbar from "@/components/pages/main/Navbar"
 import Footer from "@/components/pages/main/Footer"
 import PoweredBySection from "@/components/pages/main/PoweredBySection"
 import Pricing from "@/components/pages/main/Pricing"
+import { Mail, Lock, Disc3 } from "lucide-react"
+import { SiOwncloud, SiGitea, SiAuthentik } from "react-icons/si"
 
 export default function Home() {
   const features = [
     {
       title: "Email",
       description: "Free email service with webmail and antispam, powered by a custom docker-mailserver setup.",
-      iconName: "Mail",
+      icon: <Mail className="h-6 w-6 mr-2" />,
     },
     {
       title: "Password Manager",
       description: "Securely store and manage your passwords across devices with Vaultwarden.",
-      iconName: "Lock",
+      icon: <Lock className="h-6 w-6 mr-2" />,
     },
     {
       title: "Git",
       description: "Host your repositories and run actions free of charge on our Gitea instance.",
-      iconName: "SiGitea",
+      icon: <SiGitea className="h-6 w-6 mr-2" />,
     },
     {
       title: "Authentik",
       description: "A secure single-sign-on service for easy login to your other services.",
-      iconName: "SiAuthentik",
+      icon: <SiAuthentik className="h-6 w-6 mr-2" />,
     },
     {
       title: "Music",
       description: "Coming soon. Host your music on our community server and stream it everywhere.",
-      iconName: "Disc3",
+      icon: <Disc3 className="h-6 w-6 mr-2" />,
     },
     {
       title: "Files",
-      description: "Store, share, edit, and synchronize files with our private Nextcloud instance.",
-      iconName: "SiNextcloud",
+      description: "Store, share, edit, and synchronize files with our private ownCloud instance.",
+      icon: <SiOwncloud className="h-6 w-6 mr-2" />,
     },
   ] as const
 
