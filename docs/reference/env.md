@@ -67,9 +67,9 @@ The ownCloud integration requires an admin or service account credentials for th
 
 You must create a service account and enter its login details into your `.env` file to use these features. You will also likely want to use an app password for this, which can be created in the user settings.
 
-| Environment Variable     | Description                                          | Example                       |
-|--------------------------|------------------------------------------------------|-------------------------------|
-| OWNCLOUD_URL            | The URL of your OWNCLOUD instance (no trailing slash) | `https://files.librecloud.cc` |
+| Environment Variable    | Description                                           | Example                       |
+|-------------------------|-------------------------------------------------------|-------------------------------|
+| OWNCLOUD_URL            | The URL of your ownCloud instance (no trailing slash) | `https://files.librecloud.cc` |
 | OWNCLOUD_ADMIN_USERNAME | Admin/service account username                        | `service-account`             |
 | OWNCLOUD_ADMIN_PASSWORD | Corresponding password to given admin/service account | Password                      |
 
