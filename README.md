@@ -5,6 +5,6 @@
 
 LibreCloud's website, dashboard, and API
 
-You can also view the documentation in the `docs/` [folder](https://git.pontusmail.org/librecloud/web/src/branch/main/docs) of this repository.
+You can also view the documentation in the `docs/content/docs` [folder](https://github.com/ihatenodejs/librecloud-web/tree/v1.4.0/docs/content/docs) of this repository.
 
-## <div style="text-align: center;">[Documentation](https://docs.librecloud.cc) | [Donate](https://donate.stripe.com/6oE8yxaPk6yXbpS145)</div>
+## <div style="text-align: center;">[Documentation](https://librecloud.cc/docs) | [Donate](https://donate.stripe.com/6oE8yxaPk6yXbpS145)</div>
