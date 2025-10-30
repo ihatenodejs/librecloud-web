@@ -1,0 +1,668 @@
+---
+title: Full LibreCloud Instance
+description: Setup a full LibreCloud production environment
+icon: TbStar
+---
+
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+
+This is a Docker-based setup which requires both Docker *and* Docker Compose. It allows you to run a full LibreCloud instance with all services configured as they should be.
+
+<InfoBox type="warning">
+LibreCloud is still in its early stages! Production doesn't mean it's ready for your business. Use at your own risk.
+</InfoBox>
+
+## 1. Install Dependencies
+
+<Steps>
+<Step>
+### Docker
+
+Docker is a containerization platform which we use to run LibreCloud.
+
+```bash
+curl -fsSL https://get.docker.com -o get-docker.sh
+sudo sh get-docker.sh
+```
+</Step>
+<Step>
+### Bun
+
+Bun is a fast JavaScript runtime, which we prefer over `npm`. These instructions will be written for Bun, but could be adapted to `npm` or `yarn` if needed.
+
+```bash
+curl -fsSL https://bun.sh/install | bash
+```
+</Step>
+</Steps>
+
+## 2. Local Repo Setup
+
+### 2a. Clone the Remote and Prepare for Production
+
+We will now create a local copy of the repository and prepare it for production.
+
+This is the directory structure you should have by the end of this guide:
+
+<DirectoryTree rootLabel="librecloud">
+  <Folder name="web" />
+  <Folder name="nginx-pm" />
+  <Folder name="authentik" />
+  <Folder name="owncloud" />
+  <Folder name="vaultwarden" />
+  <File name="docker-compose.yml" />
+</DirectoryTree>
+
+<InfoBox type="info" title="Truncated Display">
+This example shows the main directories. Actual files will vary.
+</InfoBox>
+
+For now, we will be configuring the `web` service, which is the main LibreCloud instance.
+
+<Steps>
+<Step>
+#### Clone the Remote
+
+Based on the directory structure provided above, we assume you are in the root `librecloud` directory.
+
+```bash
+git clone https://github.com/ihatenodejs/librecloud-web web
+```
+</Step>
+<Step>
+#### Copy Docker Compose Example
+
+```bash
+cp web/examples/docker/librecloud-full/docker-compose.yml docker-compose.yml
+```
+
+Your actual directory structure should now look like this:
+
+<DirectoryTree rootLabel="librecloud">
+  <Folder name="web" highlight defaultOpen>
+    <File name="package.json" highlight />
+    <File name="tsconfig.json" type="json" highlight />
+    <File name="next.config.ts" highlight />
+    <File name="README.md" highlight />
+    <File name="CODE_OF_CONDUCT.md" highlight />
+  </Folder>
+  <File name="docker-compose.yml" highlight />
+</DirectoryTree>
+</Step>
+</Steps>
+
+<InfoBox type="info" title="Truncated Display">
+The `web` directory will have many more files. This visualization shows the main files.
+</InfoBox>
+
+### 2b. Configure Initial Environment Variables
+
+Now, we will be working in the `web` directory. As we configure LibreCloud services, we will move between the root and individual service directories.
+
+<Steps>
+<Step>
+#### Move to Web Directory
+
+```bash
+cd web
+```
+</Step>
+<Step>
+#### AUTH_SECRET
+
+Execute the below command to generate a `.env.local` file with an `AUTH_SECRET`.
+
+```bash
+bunx auth secret
+```
+</Step>
+<Step>
+#### Altcha token
+
+If you plan to use the signup forms, you will need to use Altcha, a private proof-of-work CAPTCHA. All you need to do is execute the script below, and it will be written to your `.env` or `.env.local`.
+
+```bash
+$ bun tools/hmac.ts
+Successfully wrote ALTCHA_SECRETKEY to .env.local
+```
+</Step>
+<Step>
+You will now have a `.env.local` file in your `web` directory. Keep note of its location as we will be updating it frequently along this guide.
+
+<DirectoryTree rootLabel="librecloud" compact>
+  <Folder name="web" defaultOpen>
+    <File name=".env.local" highlight />
+  </Folder>
+</DirectoryTree>
+</Step>
+</Steps>
+
+### 2c. Bring Up Nginx Proxy Manager
+
+Shortly, you will need to configure Nginx Proxy Manager to route traffic to your new services, and LibreCloud itself. To do this, you will need to bring up Nginx Proxy Manager.
+
+Run the following command to bring up Nginx Proxy Manager:
+
+```bash
+docker compose up -d nginx-pm
+```
+
+### 2d. Configure initial environment variables
+
+Now, you should update your `.env.local` file (in `web/`) with your desired
+configuration. Follow the next steps in order.
+
+<Steps>
+<Step>
+#### AUTH_TRUST_HOST
+
+If you're using a reverse proxy (e.g. Nginx Proxy Manager), add this line to your `.env.local` file:
+
+```ini
+AUTH_TRUST_HOST=true
+```
+</Step>
+<Step>
+#### NEXTAUTH_URL
+
+Add this line to your `.env.local` file:
+
+```ini
+NEXTAUTH_URL=http://web.local
+```
+
+Replace `web.local` with your actual domain name.
+This is where the LibreCloud homepage will be, and where clients access their account.
+
+For example, we use `NEXTAUTH_URL=https://librecloud.cc` for our production instance.
+</Step>
+<Step>
+#### Generic Variables
+
+Now, you should read more about configuration on the [Environment Variables](/docs/reference/env) page, and set your desired environment variables.
+
+For now, you should at least set the following variables before continuing:
+
+- `NEXT_PUBLIC_SIGNUP_ENABLED`
+- `NEXT_PUBLIC_DONATE_URL`
+- `NEXT_PUBLIC_SUPPORT_EMAIL`
+- `NEXT_PUBLIC_TELEGRAM_CHANNEL_URL`
+- `NEXT_PUBLIC_TELEGRAM_GROUP_URL`
+
+These variables should already be set in the example `.env.local` file from the last steps:
+
+- `AUTH_SECRET`
+- `ALTCHA_SECRETKEY`
+</Step>
+<Step>
+#### Email 2FA
+
+Now, you should configure email 2FA. Follow the [Email 2FA](/docs/guides/email-2fa) page from start-to-finish, then continue on.
+</Step>
+</Steps>
+
+### 2e. Initialize Prisma
+
+Because `web` uses a database for storing Git link statuses (and other things to come),
+you will need to initialize the SQLite database.
+
+However, if you are using Docker Compose, a database has already been generated in the container image and is blank.
+
+If you have a reason to initialize Prisma now, feel free to execute:
+
+```bash
+bunx prisma migrate dev --name init
+```
+
+### 2f. Configure Authentik
+
+<Steps>
+<Step>
+#### Install Authentik
+
+You can now install Authentik, per their guide on the [Docker Compose installation page](https://docs.goauthentik.io/install-config/install/docker-compose/).
+</Step>
+<Step>
+#### Creating Proxy Host for Authentik in Nginx Proxy Manager
+
+Open Nginx Proxy Manager and go to the "Proxy Hosts" page.
+
+Click the "Add Proxy Host" button.
+</Step>
+<Step>
+Fill in the following fields:
+
+- Domain Names: `authentik.local` (replace with your desired Authentik (sub)domain name)
+- Forward Hostname/IP: `authentik`
+- Forward Port: `3019`
+
+Enable the "Block Common Exploits" switch.
+
+Then, click the "SSL" tab.
+</Step>
+<Step>
+On the "SSL Certificates" dropdown, select "Request a new SSL certificate"
+
+Enable the "Force SSL", "HTTP/2 Support", and "HSTS Enabled" switches.
+
+Click "Save".
+</Step>
+<Step>
+Follow the [Connecting Authentik with LibreCloud](/docs/guides/authentik) guide from start-to-finish.
+</Step>
+</Steps>
+
+After following the instructions, you should have the following environment variables set, along with a running Authentik instance:
+
+- `AUTH_AUTHENTIK_ID`
+- `AUTH_AUTHENTIK_SECRET`
+- `AUTH_AUTHENTIK_ISSUER`
+- `AUTHENTIK_API_KEY`
+- `AUTHENTIK_API_URL`
+
+## 3. Service Setup
+
+We will now setup some required LibreCloud services.
+
+### 3a. owncloud
+
+ownCloud will be used to offer file storage to users of your LibreCloud instance.
+
+Follow the [ownCloud](/docs/guides/owncloud) page from start-to-finish, then continue.
+
+After this step, your directory structure should look like so:
+
+<DirectoryTree rootLabel="librecloud">
+  <Folder name="web" collapsible defaultOpen>
+    <File name=".env.local" />
+  </Folder>
+  <Folder name="owncloud" collapsible highlight defaultOpen>
+    <File name="docker-compose.yml" highlight />
+  </Folder>
+  <File name="docker-compose.yml" />
+</DirectoryTree>
+
+<InfoBox type="info">
+Your directory structure may vary based on your setup, which is completely fine.
+
+Only the important files are shown in the directory tree.
+</InfoBox>
+
+### 3b. Forgejo
+
+As a part of the `examples/docker/librecloud-full/docker-compose.yml`, you have a Forgejo instance and database pre-configured. We will use this file to deploy Forgejo.
+
+<Steps>
+<Step>
+#### Configure your Docker Compose File
+
+Open your `docker-compose.yml` and find the `forgejo` service.
+
+Change the `FORGEJO__database__PASSWD` and `POSTGRES_PASSWORD` to a secure password (they both should match).
+</Step>
+<Step>
+#### Create Docker Network
+
+```bash
+docker network create lcweb
+```
+</Step>
+<Step>
+#### Bring Up Forgejo Container
+
+<InfoBox type="warning">
+Please note: `sudo` may be required.
+
+Ensure you do not bring up other services yet, as we have not configured them yet.
+</InfoBox>
+
+```bash
+docker compose up forgejo forgejo-db -d
+```
+</Step>
+<Step>
+#### Continue to Guide
+
+You should now follow the [Deploy Forgejo for LibreCloud](/docs/guides/forgejo) page from step two (you already completed step one), then continue with this guide.
+</Step>
+</Steps>
+
+Now, your directory structure should look like the following:
+
+<DirectoryTree rootLabel="librecloud">
+  <Folder name="web" defaultOpen>
+    <File name=".env.local" />
+  </Folder>
+  <Folder name="owncloud" defaultOpen>
+    <File name="docker-compose.yml" />
+  </Folder>
+  <Folder name="forgejo" highlight />
+  <File name="docker-compose.yml" />
+</DirectoryTree>
+
+We can proceed to creating a Proxy Host in Nginx Proxy Manager for Forgejo.
+
+<Steps>
+<Step>
+#### Create Proxy Host
+
+Open Nginx Proxy Manager and go to the "Proxy Hosts" page.
+
+Click the "Add Proxy Host" button.
+</Step>
+<Step>
+#### Configure Proxy Host
+
+Fill in the following fields:
+
+- Domain Names: `forgejo.local` (replace with your desired Forgejo (sub)domain name)
+- Forward Hostname/IP: `forgejo`
+- Forward Port: `3000`
+
+Enable the "Block Common Exploits" switch.
+
+Then, click the "SSL" tab.
+</Step>
+<Step>
+#### Configure SSL
+
+On the "SSL Certificates" dropdown, select "Request a new SSL certificate"
+
+Enable the "Force SSL", "HTTP/2 Support", and "HSTS Enabled" switches.
+
+Click "Save".
+</Step>
+</Steps>
+
+### 3c. Mailserver
+
+Did you think we were done? Hah! It's time to configure your mailserver and `mail-connect`.
+
+This is no easy task. It may decrease the time you spend touching grass by no more than 100%, which I am *not* responsible for!
+
+Follow this "simple" process to prepare your mailserver:
+
+<Steps>
+<Step>
+#### Prior Reading
+
+You may want to read the [Introduction page for docker-mailserver](https://docker-mailserver.github.io/docker-mailserver/latest/introduction/) to learn more about mailservers and how `docker-mailserver` works.
+</Step>
+<Step>
+#### PTR Record
+
+Now, you will need to prepare your server for becoming a mailserver.
+
+You should start by creating a PTR record, which your host should allow you to modify. This is normally done through a support ticket or your host's control panel.
+
+A PTR record is a reverse DNS record that maps an IP address to a hostname. This is required to prevent your emails from being marked as spam.
+
+Set the PTR to your desired mailserver hostname. For ease-of-deployment, you should use `mail.yourdomain.com`, but if you want to get creative, feel free to use `yourdomain.com`.
+</Step>
+<Step>
+#### Ensure Email Ports are Open
+
+Many hosts block access to email ports such as `25` and `587`. You will need to ensure these ports are open.
+
+You can test this by running:
+
+```bash
+telnet smtp.gmail.com 25
+```
+
+If the connection times out or you get stuck on `Trying [ip address]...`, your host is blocking access to email ports.
+</Step>
+<Step>
+#### DNS Configuration
+
+You will have some DNS setup to do, which is documented on the [Usage page for docker-mailserver](https://docker-mailserver.github.io/docker-mailserver/latest/usage/#minimal-dns-setup).
+
+You will need to set the following records:
+
+- `MX` record
+- `SPF` record
+- `DKIM` record
+- `DMARC` record
+</Step>
+<Step>
+#### Deploying `docker-mailserver`
+
+Now, we will part again so you can follow the latest documentation for docker-mailserver.
+
+<InfoBox type="info">
+It is suggested that you change the `docker-data` folder that docker-mailserver's default Compose file mounts to a better name. In our example, we will use `mailserver` as the name of this directory.
+</InfoBox>
+
+You can start from the [Deploying the Actual Image](https://docker-mailserver.github.io/docker-mailserver/latest/usage/#deploying-the-actual-image) section.
+
+Ensure you take a look at the [Environment Variables](https://docker-mailserver.github.io/docker-mailserver/latest/config/environment/) page to setup docker-mailserver with your preferences.
+
+<InfoBox type="tip">
+You can keep the internal authentication, as `mail-connect` will help with managing accounts within `docker-mailserver`. LDAP setup is not needed at the moment.
+</InfoBox>
+
+After following the instructions, you should have a running mailserver.
+</Step>
+</Steps>
+
+Now that your mailserver is running as expected, we will have a directory structure that looks something like this:
+
+<DirectoryTree rootLabel="librecloud" compact>
+  <Folder name="web" defaultOpen>
+    <File name=".env.local" />
+  </Folder>
+  <Folder name="owncloud" defaultOpen>
+    <File name="docker-compose.yml" />
+  </Folder>
+  <Folder name="forgejo" />
+  <Folder name="mailserver" highlight />
+  <File name="docker-compose.yml" />
+</DirectoryTree>
+
+We will not need to edit `web/.env.local` at the moment because `mail-connect` will be the interaction layer for managing `docker-mailserver`.
+
+### 3d. `mail-connect`
+
+We will now clone `mail-connect`, configure it, and deploy.
+
+<Steps>
+<Step>
+#### Clone `mail-connect`
+
+This command should be run in your `librecloud` directory (the root).
+
+```bash
+git clone https://github.com/ihatenodejs/mail-connect mail-connect
+```
+</Step>
+<Step>
+#### Copy Docker Compose File
+
+We will now copy the example `docker-compose.yml` file.
+This should be run from `librecloud`, and not inside the new `mail-connect` directory:
+
+```bash
+cp mail-connect/docker-compose.yml.example mail-connect/docker-compose.yml
+```
+
+</Step>
+<Step>
+#### Configure and Deploy `mail-connect`
+
+You should now follow the steps in the [README](https://github.com/ihatenodejs/mail-connect/blob/main/README.md) to configure and deploy `mail-connect`.
+
+You can step step one and step three's first `mv` command, which we've already done.
+
+Ensure you comment out the `ports` section in `mail-connect/docker-compose.yml`, which should not be exposed in a production setup.
+</Step>
+<Step>
+#### Configure LibreCloud with `mail-connect`
+
+We will now configure LibreCloud with `mail-connect`.
+Provided you kept the `mail-connect` service name, this example line will work for you.
+
+Open `web/.env.local` and add the following line:
+
+```ini
+MAIL_CONNECT_API_URL=http://mail-connect:3000
+```
+</Step>
+</Steps>
+
+Now, your directory structure should look like the following:
+
+<DirectoryTree rootLabel="librecloud" compact>
+  <Folder name="web" defaultOpen>
+    <File name=".env.local" />
+  </Folder>
+  <Folder name="owncloud" defaultOpen>
+    <File name="docker-compose.yml" />
+  </Folder>
+  <Folder name="forgejo" />
+  <Folder name="mailserver" />
+  <Folder name="mail-connect" highlight>
+    <File name="docker-compose.yml" highlight />
+    <File name="ratelimit.json" highlight />
+    <File name=".env" highlight />
+  </Folder>
+</DirectoryTree>
+
+After following the instructions, you should have a running `mail-connect` instance.
+
+### 3e. SearXNG (optional)
+
+We can now deploy SearXNG, a privacy-friendly search engine.
+If you do not want to use it, you can remove the `searxng` service from your `docker-compose.yml` file.
+
+This is already included in your `docker-compose.yml` file, and just needs to be started.
+
+<Steps>
+<Step>
+#### Start SearXNG
+
+```bash
+docker compose up searxng -d
+```
+</Step>
+</Steps>
+
+We will now create a proxy host for SearXNG in Nginx Proxy Manager.
+
+<Steps>
+<Step>
+### Creating a Proxy Host for SearXNG in Nginx Proxy Manager
+
+Open Nginx Proxy Manager and go to the "Proxy Hosts" page.
+
+Click the "Add Proxy Host" button.
+</Step>
+<Step>
+### Configuring the Proxy Host
+
+Fill in the following fields:
+
+- Domain Names: `searxng.local` (replace with your desired SearXNG (sub)domain name)
+- Forward Hostname/IP: `searxng`
+- Forward Port: `8080`
+
+Enable the "Block Common Exploits" switch.
+
+Then, click the "SSL" tab.
+</Step>
+<Step>
+### Configuring SSL
+
+On the "SSL Certificates" dropdown, select "Request a new SSL certificate"
+
+Enable the "Force SSL", "HTTP/2 Support", and "HSTS Enabled" switches.
+
+Click "Save".
+</Step>
+</Steps>
+
+Your directory structure should look like the following:
+
+<DirectoryTree rootLabel="librecloud">
+  <Folder name="web" defaultOpen>
+    <File name=".env.local" />
+  </Folder>
+  <Folder name="owncloud" defaultOpen>
+    <File name="docker-compose.yml" />
+  </Folder>
+  <Folder name="forgejo" />
+  <Folder name="mailserver" />
+  <Folder name="mail-connect">
+    <File name="docker-compose.yml" />
+    <File name="ratelimit.json" />
+    <File name=".env" />
+  </Folder>
+  <Folder name="searxng" highlight defaultOpen>
+    <Folder name="data" highlight />
+    <Folder name="config" highlight />
+  </Folder>
+</DirectoryTree>
+
+This means you can now set the following environment variable in your `web/.env.local` file:
+
+```ini
+NEXT_PUBLIC_SEARXNG_URL=https://searxng.local
+```
+
+Replace `searxng.local` with your SearXNG domain.
+
+## 4. First Start and Finalizing Setup
+
+Great work! We can now startup the LibreCloud web interface, and any other missing services.
+
+<Steps>
+<Step>
+### Starting LibreCloud and Other Services
+
+Execute the following from the root directory (`librecloud`):
+
+```bash
+cd web
+docker compose up -d --build # Build and start LibreCloud Web
+
+cd .. # Return to librecloud directory
+docker compose up -d # Bring up any stragglers
+```
+
+<InfoBox type="warning">Please note: `sudo` may be required.</InfoBox>
+
+You may customize the container with the included `docker-compose.yml` file if needed.
+</Step>
+<Step>
+### Creating a Proxy Host for LibreCloud Web in Nginx Proxy Manager
+
+Open Nginx Proxy Manager and go to the "Proxy Hosts" page.
+
+Click the "Add Proxy Host" button.
+</Step>
+<Step>
+### Configuring the Proxy Host
+
+Fill in the following fields:
+
+- Domain Names: `librecloud.local` (replace with your desired LibreCloud (sub)domain name)
+- Forward Hostname/IP: `librecloud`
+- Forward Port: `3000`
+
+Enable the "Block Common Exploits" switch.
+
+Then, click the "SSL" tab.
+</Step>
+<Step>
+### Configuring SSL
+
+On the "SSL Certificates" dropdown, select "Request a new SSL certificate"
+
+Enable the "Force SSL", "HTTP/2 Support", and "HSTS Enabled" switches.
+
+Click "Save".
+</Step>
+</Steps>
+
+## 5. All Done!
+
+Now, you will have a fully functioning LibreCloud instance! Great work.

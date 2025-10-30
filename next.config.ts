@@ -1,9 +1,11 @@
+import { createMDX } from "fumadocs-mdx/next"
 import type { NextConfig } from "next"
 
-/** @type {NextConfig} */
+const withMDX = createMDX()
+
 const nextConfig: NextConfig = {
   reactStrictMode: true,
-  output: 'standalone',
+  output: "standalone",
   images: {
     remotePatterns: [
       {
@@ -16,4 +18,4 @@ const nextConfig: NextConfig = {
   },
 }
 
-export default nextConfig
+export default withMDX(nextConfig)

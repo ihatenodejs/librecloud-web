@@ -1,0 +1,115 @@
+---
+title: Connecting Authentik with LibreCloud
+icon: SiAuthentik
+---
+
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+
+## Prerequisites
+
+<InfoBox type="tip">
+Docker is suggested for both for ease of setup, but is not required.
+</InfoBox>
+
+- An Authentik instance
+- A LibreCloud instance
+
+## Setup
+
+### 1. Creating the Application and OAuth2/OpenID Connect Provider
+
+#### 1a. Creating an Application in Authentik
+
+<Steps>
+<Step>
+Go to your Authentik instance's Admin interface in your browser.
+</Step>
+<Step>
+Navigate to `Applications -> Applications` in the Admin interface.
+</Step>
+<Step>
+Click the `Create with Provider` button.
+</Step>
+<Step>
+In the name field, enter `LibreCloud` and leave the default slug. Then, click "Next".
+</Step>
+</Steps>
+
+#### 1b. Creating the OAuth2/OpenID Connect Provider in Authentik
+
+<Steps>
+<Step>
+When asked about choosing a provider type, select "OAuth2/OpenID Connect Provider" and click "Next."
+</Step>
+<Step>
+On the next page, select an authorization flow (explicit consent is best)
+</Step>
+<Step>
+Staying on the same page, note down the Client ID and Client Secret. You will need these later.
+</Step>
+<Step>
+Add a Redirect URI (strict) with the value `http://localhost:3019/api/auth/callback/oauth2`, replacing `localhost:3019` with your domain if applicable.
+</Step>
+<Step>
+Click "Next"
+</Step>
+</Steps>
+
+#### 1c. Configure Bindings in Authentik (optional)
+
+You might want to make access to LibreCloud exclusive, or inclusive with additional constraints. Whatever your use is, you may add policies to the application as you wish.
+
+If this does not apply to you, simply click "Next."
+
+#### 1d. Finalizing Authentik Application and Provider
+
+After these steps are complete, check the details and click "Submit" when you are ready to create the application and provider.
+
+### 2. Configuring Environment Variables
+
+After creating the application and provider, you will need to configure the environment variables to establish a connection between Authentik and LibreCloud.
+
+In step 1b, you noted down the Client ID and Client Secret. You will need these now.
+
+#### 2a. Client ID and Secret
+
+In your `.env.local` file, add the following lines:
+
+```ini
+AUTH_AUTHENTIK_ID=MyClientIdHere
+AUTH_AUTHENTIK_SECRET=MyClientSecretHere
+```
+
+Replace `MyClientIdHere` and `MyClientSecretHere` with the values you noted down in step 1b.
+
+#### 2b. Issuer
+
+To get the issuer URL, navigate to Applications -> Providers, and click on the provider you just created. It will likely be named "Provider for LibreCloud."
+
+Copy the "OpenID Configuration Issuer" value and paste it into your `.env.local` file like so:
+
+```ini
+AUTH_AUTHENTIK_ISSUER=http://authentik.local/application/o/librecloud/
+```
+
+#### 2c. API Key and URL
+
+To get the API key, we will first need to create a LibreCloud service account with admin permissions inside Authentik. This user will query Authentik via its own API key.
+
+To do this, go to Directory -> Users, and click the "Create Service account" button. Give the service account a username, and optionally change the group creation and expiry options. Then, click "Create".
+
+You will be given a password for the user, which will be the account's token. Copy this token and paste it into your `.env.local` file like so:
+
+```ini
+AUTHENTIK_API_KEY=MyServiceAccountTokenHere
+```
+
+The API URL `http://authentik.local/api/v3`, where `authentik.local` is the domain of your Authentik instance (or it's hostname). Put this in your `.env.local` file like so:
+
+```ini
+AUTHENTIK_API_URL=http://authentik.local/api/v3
+```
+
+### 3. All done!
+
+Great work! If everything went as planned, LibreCloud will now be able to work with your Authentik instance.

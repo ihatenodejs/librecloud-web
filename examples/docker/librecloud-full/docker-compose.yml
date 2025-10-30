@@ -1,0 +1,120 @@
+# This is a full example of a LibreCloud production setup using Docker.
+#
+# It assumes you have deployed the following services per the latest docs:
+# - Authentik
+# - ownCloud
+# - docker-mailserver
+# - mail-connect
+
+services:
+  #                                                     #
+  # =============== LibreCloud Frontend =============== #
+  #                                                     #
+  librecloud-web:
+    build: .
+    # ports:
+    #  - "3019:3000"
+    env_file: ".env.local"
+    volumes:
+      - ./prisma:/app/prisma
+    restart: always
+    networks:
+      - lcweb
+
+  #                                            #
+  # =============== Watchtower =============== #
+  #                                            #
+  watchtower:
+    image: containrrr/watchtower
+    container_name: watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    restart: always
+    environment:
+      - WATCHTOWER_LABEL_ENABLE=true
+      - WATCHTOWER_POLL_INTERVAL=18000
+
+  #                                                     #
+  # =============== Nginx Proxy Manager =============== #
+  #                                                     #
+  nginx-pm:
+    image: 'jc21/nginx-proxy-manager:latest'
+    container_name: nginx-proxy-manager
+    restart: always
+    ports:
+      - '80:80'
+      - '443:443'
+    networks:
+      - lcweb
+    volumes:
+      - ./nginx-pm/data:/data
+      - ./nginx-pm/letsencrypt:/etc/letsencrypt
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+
+  #                                         #
+  # =============== Forgejo =============== #
+  #                                         #
+  forgejo:
+    image: codeberg.org/forgejo/forgejo:13
+    container_name: forgejo
+    environment:
+      - USER_UID=1000
+      - USER_GID=1000
+      - FORGEJO__database__DB_TYPE=postgres
+      - FORGEJO__database__HOST=forgejo-db:5432
+      - FORGEJO__database__NAME=forgejo
+      - FORGEJO__database__USER=forgejo
+      # Don't forget to change this! =====
+      - FORGEJO__database__PASSWD=changeme
+      # ==================================
+    restart: always
+    networks:
+      - lcweb
+    volumes:
+      - ./forgejo/data:/data
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    ports:
+      - '222:22'
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+
+  #                                                  #
+  # =============== Forgejo Database =============== #
+  #                                                  #
+  forgejo-db:
+    image: postgres:14
+    restart: always
+    container_name: forgejo-db
+    environment:
+      - POSTGRES_USER=forgejo
+      - POSTGRES_PASSWORD=asieqh8eerHRQWiuwah8dsae7asd
+      - POSTGRES_DB=forgejo
+    networks:
+      - lcweb
+    volumes:
+      - ./forgejo/postgres:/var/lib/postgresql/data
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+
+  #                                         #
+  # =============== SearXNG =============== #
+  #                                         #
+  searxng:
+    image: docker.io/searxng/searxng:latest
+    container_name: searxng
+    restart: always
+    networks:
+      - lcweb
+    volumes:
+      - ./searxng/data:/var/cache/searxng/
+      - ./searxng/config:/etc/searxng/
+    #ports:
+    #  - '8080:8080'
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+
+networks:
+  lcweb:
+    external: true

@@ -54,3 +54,7 @@ bun.lockb
 # prisma
 prisma/dev.db*
 prisma/migrations/
+
+# fumadocs artifacts
+docs/.source
+.source/

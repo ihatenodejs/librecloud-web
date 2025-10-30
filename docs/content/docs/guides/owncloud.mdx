@@ -1,0 +1,303 @@
+---
+title: Deploying and Configuring ownCloud for LibreCloud
+icon: SiOwncloud
+---
+
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+
+## Prerequisites
+
+- A LibreCloud instance
+- An Authentik instance
+- Nginx Proxy Manager (preferred)
+
+## Setup
+
+### 1. Setup with Docker Compose
+
+As the instructions will vary and change, it is recommended to follow the [official ownCloud Docker deployment documentation](https://doc.owncloud.com/server/next/admin_manual/installation/docker/) for setup.
+
+Before you continue, ensure you have ownCloud running on a domain. To follow the best practices of deploying a complete LibreCloud instance, it is recommend to use Nginx Proxy Manager.
+
+### 2. Configuring ownCloud with OIDC
+
+We will now connect and configure ownCloud with your Authentik instance. If you do not have an Authentik instance, please see [Connecting Authentik with LibreCloud](authentik.md) for instructions.
+
+#### 2a. Creating an Application in Authentik
+
+<Steps>
+<Step>
+Go to your Authentik instance's Admin interface in your browser.
+</Step>
+<Step>
+Navigate to `Applications -> Applications` in the Admin interface.
+</Step>
+<Step>
+Click the `Create with Provider` button.
+</Step>
+<Step>
+In the name field, enter `ownCloud` and leave the default slug.
+</Step>
+<Step>
+Click the "UI settings" chevron to expand the section. Under "Launch URL", enter `https://owncloud.local/index.php/apps/openidconnect/redirect`, replacing `owncloud.local` with your ownCloud instance's domain.
+</Step>
+<Step>
+Click "Next".
+</Step>
+</Steps>
+
+#### 2b. Creating the OAuth2/OpenID Connect Provider in Authentik
+
+<Steps>
+<Step>
+When asked about choosing a provider type, select "OAuth2/OpenID Connect Provider" and click "Next."
+</Step>
+<Step>
+On the next page, select an authorization flow (explicit consent is best)
+</Step>
+<Step>
+Staying on the same page, note down the Client ID and Client Secret. You will need these later.
+</Step>
+<Step>
+Add the follwoing Redirect URIs with the provided mode and value, replacing `owncloud.local` with your ownCloud instance's domain.
+- Strict: `https://owncloud.local/apps/openidconnect/redirect` - WebUI
+- Strict: `oc://android.owncloud.com` - Android App
+- Strict: `oc://ios.owncloud.com` - iOS App
+- Regex: `http://localhost:\d+` - Desktop App
+- Regex: `http://127.0.0.1:\d+` - Desktop App
+</Step>
+<Step>
+Click the "Advanced protocol configuration" chevron to expand the section. Under the "Scopes" section, add the `offline_access` scope.
+
+You should have the `openid`, `profile`, `email`, and `offline_access` scopes selected before continuing.
+</Step>
+<Step>
+Click "Next"
+</Step>
+</Steps>
+
+#### 2c. Configure Bindings in Authentik (optional)
+
+You might want to make access to ownCloud exclusive, or inclusive with additional constraints. Whatever your use is, you may add policies to the application as you wish.
+
+If this does not apply to you, simply click "Next."
+
+#### 2d. Finalizing Authentik Application and Provider
+
+After these steps are complete, check the details and click "Submit" when you are ready to create the application and provider.
+
+#### 2e. Enabling Service Discovery for ownCloud
+
+Before we continue with the setup of OpenID Connect, we'll setup service discovery. This will allow ownCloud apps to login with OpenID Connect. This will integrate with the "OpenID Connect" app we will install on ownCloud in the next step.
+
+A standard, complete LibreCloud setup is expected to use Nginx Proxy Manager. The following step is written specifically for Nginx Proxy Manager, though it could be adapted to other reverse proxies.
+
+At this step, we are assuming you have a Proxy Host created for ownCloud.
+
+<Steps>
+<Step>
+Go to your Nginx Proxy Manager panel.
+</Step>
+<Step>
+Navigate to `Hosts -> Proxy Hosts`.
+</Step>
+<Step>
+Identify the Proxy Host for ownCloud and click the three dots to the right of it. Click "Edit".
+</Step>
+<Step>
+Click on the "Advanced" tab, and under the "Custom Nginx Configuration" section, add the following:
+
+```nginx
+proxy_set_header X-Real-IP $remote_addr;
+proxy_set_header X-Forwarded-For $remote_addr;
+
+location = /.well-known/openid-configuration {
+  rewrite ^ /index.php/apps/openidconnect/config break;
+  proxy_pass http://owncloud:8080;
+}
+```
+</Step>
+<Step>
+Click "Save" to save the changes.
+</Step>
+</Steps>
+
+#### 2f. Install OpenID Connect in ownCloud
+
+To use OIDC, we will install the OpenID Connect app from the ownCloud Market.
+
+To do this, use the hamburger menu in the top-left of your screen, and select "Market." Find the "OpenID Connect" app, click the tile to open the details page, and click "Install."
+
+You can also navigate to the following URL to install the app on your instance:
+
+```plaintext
+https://owncloud.local/apps/market/#/app/openidconnect
+```
+
+Replace `owncloud.local` with your ownCloud instance's domain.
+
+#### 2g. Configure OpenID Connect in ownCloud
+
+To configure OpenID Connect, we will need to create the `oidc.config.php` file with the details given in Authentik.
+
+Provided you followed the [ownCloud Docker deployment documentation](https://doc.owncloud.com/server/next/admin_manual/installation/docker/), this file should be placed at `./files/config/oidc.config.php`, where `.` is the same directory as your `docker-compose.yml` file.
+
+Create the `oidc.config.php` file with the following contents:
+
+```php
+<?php
+  'openid-connect' => [
+    'provider-url' => 'https://authentik.local/application/o/owncloud/',
+    'client-id' => '<Client ID from authentik>',
+    'client-secret' => '<Client secret from authentik>',
+    'loginButtonName' => 'Log in with authentik',
+    'mode' => 'userid',
+    'search-attribute' => 'preferred_username',
+    'auto-provision' => [
+      'enabled' => true,
+      'email-claim' => 'email',
+      'display-name-claim' => 'given_name',
+      'update' => [
+        'enabled' => true,
+      ],
+    ],
+    // ===================================
+    // We will uncomment this later
+    // ===================================
+    //'autoRedirectOnLoginPage' => true,
+  ],
+  'http.cookie.samesite' => 'None',
+  // ===================================
+  // We will uncomment this later
+  // ===================================
+  //'token_auth_enforced' => true,
+];
+```
+
+Ensure you make the following changes before continuing:
+
+<Steps>
+<Step>
+Replace `authentik.local` in `provider-url` with your Authentik instance's domain.
+</Step>
+<Step>
+Replace `<Client ID from authentik>` in `client-id` with your OAuth2/OpenID Connect Provider's client ID.
+</Step>
+<Step>
+Replace `<Client secret from authentik>` in `client-secret` with your OAuth2/OpenID Connect Provider's client secret.
+</Step>
+<Step>
+**(optional)** Replace `owncloud` in `provider-url` with your application's slug. You likely don't need to change this if you used the name provided in step 2b ("ownCloud").
+</Step>
+<Step>
+**(optional)** Replace `Log in with authentik` in `loginButtonName` if you intend to change the branding/text of the button.
+</Step>
+<Step>
+**(optional)** Remove the `auto-provision` section if you do not want to auto-provision accounts for users in Authentik.
+</Step>
+</Steps>
+
+#### 2h. Testing ownCloud with OIDC
+
+After you have completed the above steps, logout of your ownCloud administrator account, and attempt to login with OIDC. **Before continuing to the next step, ensure that you can login with OIDC.**
+
+#### 2i. Making Yourself an Admin in ownCloud
+
+Before we disable the built-in authentication and fully switch to OIDC, you should make your OIDC-associated administrator account in ownCloudan administrator. To do this, login again with your admin account (using password authentication).
+
+<Steps>
+<Step>
+Click on your admin name in the top right of the screen to collapse the dropdown menu.
+</Step>
+<Step>
+Click "Users"
+</Step>
+<Step>
+Identify your OIDC-authenticated admin account and click the dropdown under "Groups". Check the "admin" checkbox to add yourself to the admin group.
+</Step>
+</Steps>
+
+You can now logout of your admin account and login with OIDC again.
+
+You may also delete the `admin` user at this point, if you are sure you can login with OIDC. You may want to consider keeping the admin account (protecting it with a strong password) for emergency purposes.
+
+#### 2j. Disabling Built-in Authentication
+
+To disable built-in authentication, we will comment out the `token_auth_enforced` and `openid-connect` sections in the `oidc.config.php` file.
+
+Your `oidc.config.php` file should now include the following options, uncommented:
+
+```php
+<?php
+$CONFIG = [
+  'openid-connect' => [
+    [...]
+    'autoRedirectOnLoginPage' => true,
+  ],
+  [...]
+  'token_auth_enforced' => true,
+];
+```
+
+If you ever have issues with logging in, you can comment out the `token_auth_enforced` and `openid-connect` sections again to allow built-in authentication.
+
+### 3. Configuring LibreCloud for ownCloud
+
+Now that we have enabled OIDC in ownCloud, we can proceed to configuring LibreCloud with ownCloud.
+
+#### 3a. Creating a Service Account in ownCloud
+
+To create a service account in ownCloud, we will need to create a new user and assign it to the `admin` group. This will allow LibreCloud to access the OCS API.
+
+You may use the `admin` account for this purpose, but it is recommended to create a new service account with a different username.
+
+<Steps>
+<Step>
+Click on your admin name in the top right of the screen to collapse the dropdown menu.
+</Step>
+<Step>
+Click "Users"
+</Step>
+<Step>
+In the textboxes at the top of the page, fill in the service account's username and email. Select the "admin" group to make the service account an admin in ownCloud.
+</Step>
+<Step>
+Click "Create"
+</Step>
+</Steps>
+
+After creating the service account, you will need to set a password for the account.
+
+Do this by hovering over the password column under the service account's row and clicking the pencil icon. You can save the changes by hitting the `Enter` key.
+
+**It is important to use a strong password for this account.**
+
+#### 3b. Configuring LibreCloud with the Service Account
+
+In order to configure LibreCloud with your new service account, you will edit our `.env.local` file. Ensure you do this in your `librecloud-web` directory.
+
+Add/replace the following environment variables:
+
+```ini
+OWNCLOUD_URL=https://owncloud.local
+OWNCLOUD_ADMIN_USERNAME=<service account username>
+OWNCLOUD_ADMIN_PASSWORD=<service account password>
+```
+
+Replace `owncloud.local` with your ownCloud instance's domain, and replace `<service account username>` and `<service account password>` with the service account's username and password.
+
+### 4. That's it!
+
+Users will now be able to:
+
+- Login to ownCloud with their account in Authentik
+- Manage their account in the LibreCloud web interface
+
+## Sources
+
+The following sources aided in the completion of this guide:
+
+- [Integrate with ownCloud - Authentik Docs](https://integrations.goauthentik.io/chat-communication-collaboration/owncloud/)
+- [Installing with Docker - ownCloud Documentation](https://doc.owncloud.com/server/next/admin_manual/installation/docker/)
+- [Example Setup Using Kopano Konnect - ownCloud Documentation](https://doc.owncloud.com/server/next/admin_manual/configuration/user/oidc/kopano-setup.html)
+- [OpenID Connect for ownCloud](https://github.com/owncloud/openidconnect)

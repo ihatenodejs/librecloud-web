@@ -6,4 +6,4 @@ services:
     env_file: ".env.local"
     volumes:
       - ./prisma:/app/prisma
-    restart: unless-stopped
+    restart: always

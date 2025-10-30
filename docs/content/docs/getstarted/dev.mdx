@@ -1,0 +1,96 @@
+---
+title: Dev Environment for web
+description: Setup a development environment for LibreCloud's web service
+icon: TbCode
+---
+
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+
+This guide will walk you through setting up a development environment for LibreCloud's `web` service.
+
+<InfoBox type="info">
+This guide is for setting up a development environment for LibreCloud's `web` service. It does not include the full
+suite of services. If you want to set up a full LibreCloud instance, see the [Full](/docs/getstarted/full) guide.
+</InfoBox>
+
+## Prerequisites
+
+- A computer running Linux, macOS, or Windows with WSL
+- Git
+
+## Setup
+
+<Steps>
+<Step>
+### Installing Bun (optional)
+
+If you haven't already installed Bun, you will need to.
+Bun is a fast JavaScript runtime, which we prefer over `npm`.
+
+```bash
+curl -fsSL https://bun.sh/install | bash
+```
+</Step>
+<Step>
+### Cloning the repo
+
+```bash
+git clone https://git.pontusmail.org/librecloud/web.git
+cd web
+```
+</Step>
+<Step>
+### Install dependencies
+
+```bash
+bun install
+```
+</Step>
+<Step>
+### Generate auth secret
+
+This step is relatively painless. Execute the below command to generate a `.env.local` file with an `AUTH_SECRET`.
+
+```bash
+bunx auth secret
+```
+</Step>
+<Step>
+### Generate Altcha token
+
+If you plan to use the signup forms, you will need to use Altcha, a private proof-of-work CAPTCHA.
+All you need to do is execute the script below, and it will be written to your `.env` or `.env.local`.
+
+```bash
+$ bun tools/hmac.ts
+Successfully wrote ALTCHA_SECRETKEY to .env.local
+```
+</Step>
+<Step>
+### Configure environment variables
+
+Following the environment variables section of this README, update your newly created `.env.local` file with
+your configuration. You can read more about configuration on the [Environment Variables](/docs/reference/env) page.
+</Step>
+<Step>
+### Initialize Prisma
+
+Because `web` uses a database for storing Git link statuses (and other things to come), you will need to initialize
+the SQLite database.
+
+A `schema.prisma` file has been provided to make this easy.
+
+This can be done by executing:
+
+```bash
+bunx prisma migrate dev --name init
+```
+</Step>
+<Step>
+### Start dev server
+
+```bash
+bun dev
+```
+</Step>
+</Steps>

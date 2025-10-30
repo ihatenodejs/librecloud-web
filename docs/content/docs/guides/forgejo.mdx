@@ -1,0 +1,350 @@
+---
+title: Deploy Forgejo for LibreCloud
+description: Deploy Forgejo and configure it for use by LibreCloud users
+icon: SiForgejo
+---
+
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+
+## Prerequisites
+
+- An Authentik instance
+- Nginx Proxy Manager (preferred) or a reverse proxy
+
+## Setup
+
+### 1. Deploy with Docker Compose
+
+<Steps>
+<Step>
+#### Determine the Server
+
+Forgejo is recommended over Gitea, and is the default for this guide. You could also use Gitea, but as of 1.4.0, it is not the main focus of development and may have broken features.
+</Step>
+<Step>
+#### Setup the Forgejo Docker Compose File
+
+Create a `docker-compose.yml` file in your desired directory (e.g. `forgejo`), and add the following content:
+
+```yaml
+services:
+  forgejo:
+    image: codeberg.org/forgejo/forgejo:13
+    container_name: forgejo
+    environment:
+      - USER_UID=1000
+      - USER_GID=1000
+      - FORGEJO__database__DB_TYPE=postgres
+      - FORGEJO__database__HOST=forgejo-db:5432
+      - FORGEJO__database__NAME=forgejo
+      - FORGEJO__database__USER=forgejo
+      # Don't forget to change this! =====
+      - FORGEJO__database__PASSWD=changeme
+      # ==================================
+    restart: always
+    networks:
+      - lcweb
+    volumes:
+      - ./data:/data
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    ports:
+      - '222:22'
+    # Optional, if using Watchtower
+    #labels:
+    #  - "com.centurylinklabs.watchtower.enable=true"
+  forgejo-db:
+    image: postgres:14
+    restart: always
+    container_name: forgejo-db
+    environment:
+      - POSTGRES_USER=forgejo
+      # Don't forget to change this!
+      - POSTGRES_PASSWORD=changeme
+      # ============================
+      - POSTGRES_DB=forgejo
+    networks:
+      - lcweb
+    volumes:
+      - ./postgres:/var/lib/postgresql/data
+    # Optional, if using Watchtower
+    #labels:
+    #  - "com.centurylinklabs.watchtower.enable=true"
+
+networks:
+  lcweb:
+    external: true
+```
+
+You should change the `POSTGRES_PASSWORD` and `FORGEJO__database__PASSWD` to a secure password.
+
+Uncomment the `labels` lines if you are using [Watchtower](https://containrrr.dev/watchtower/).
+
+We do not expose any ports but `222` (for SSH) because Nginx Proxy Manager will route them to domains for us.
+</Step>
+</Steps>
+
+#### Bring up the Containers
+
+Now, we will bring up Forgeo and its database in the `lcweb` network.
+
+<Steps>
+<Step>
+#### Create Docker Network
+
+```bash
+docker network create lcweb
+```
+</Step>
+<Step>
+#### Bring the container up
+
+```bash
+docker compose up -d
+```
+
+<InfoBox type="warning">Please note: `sudo` may be required.</InfoBox>
+
+You may customize the container with the included `docker-compose.yml` file if needed.
+</Step>
+</Steps>
+
+### 2. Configure Nginx Proxy Manager
+
+To route Forgejo to our domain, adding a proxy host in Nginx Proxy Manager is required. You can use another reverse proxy if you prefer.
+
+<Steps>
+<Step>
+#### Add a Proxy Host
+
+Go to the Nginx Proxy Manager dashboard, and click the "Add Proxy Host" button.
+
+Fill in the form with the following information in the "Details" tab:
+
+- Domain: Your (sub)domain name (e.g. `forgejo.yourdomain.com`)
+- Forward Hostname / IP: `forgejo`
+- Forward Port: `3000`
+- Enable "Block Common Exploits"
+
+Click on the "SSL" tab, then the "SSL Certificate" dropdown. Select "Request a new SSL certificate".
+
+Ensure your email is set in the "Email Address for Let's Encrypt" field.
+
+Toggle the "I Agree to the Let's Encrypt Terms of Service" switch if you agree to the terms.
+
+Next, click on the "Advanced" tab and paste in the following config:
+
+```nginx
+proxy_set_header X-Real-IP $remote_addr;
+proxy_set_header X-Forwarded-For $remote_addr;
+```
+
+Click "Save" to save the proxy host.
+</Step>
+<Step>
+#### Forcing SSL on Forgejo
+
+We will now force SSL on Forgejo using our newly generated config.
+
+Find your domain in the Nginx Proxy Manager dashboard, and click on the three dots, then "Edit".
+
+In the "SSL" tab, enable the "Force SSL", "HSTS Enabled", "HTTP/2 Support" switches.
+
+Click "Save" to save the proxy host.
+</Step>
+</Steps>
+
+### 3. Configure Forgejo
+
+You will now be able to navigate to Forgejo with https on your configured domain.
+
+Complete the initial setup, then we will configure SSO.
+
+#### 3a. Creating an Application and Provider in Authentik for Forgejo
+
+Go to the Authentik dashboard, and click on the "Applications" dropdown on the sidebar, then click on Applications option.
+
+Click on the "Create with Provider" button, then configure the following options:
+
+- Name: `Forgejo`
+
+Click "Next" to continue.
+
+Then, click "OAuth2/OpenID Provider" option, and click the "Next" button.
+
+To configure the provider, do the following:
+
+<Steps>
+<Step>
+Select the explicit consent Authorization flow.
+</Step>
+<Step>
+Note down your Client ID and Client Secret.
+</Step>
+<Step>
+Add the following Redirect URIs:
+   - `https://forgejo.local/user/oauth2/authentik/callback` where `forgejo.local` is your domain.
+</Step>
+<Step>
+If you'd like, replace `authentik` in the Redirect URI with a custom name set Forgejo later.
+</Step>
+<Step>
+Under "Advanced flow settings," set the invalidation flow to `provider-invalidation-flow` or similar.
+</Step>
+<Step>
+Click Next to continue.
+</Step>
+<Step>
+You might want to make access to ownCloud exclusive, or inclusive with additional constraints.
+
+Whatever your use is, you may add policy/user/group bindings to the application as you wish.
+
+If this does not apply to you, simply click "Next."
+</Step>
+<Step>
+Click "Submit" to create the provider and application after reviewing the details.
+</Step>
+<Step>
+Finally, we will get the OpenID Connect Auto Discovery URL.
+
+Go to the "Applications" dropdown on the sidebar, then click on "Providers" option.
+
+Click on your Forgeo provider's name, likely named "Provider for Forgeo" (not the edit button).
+
+Note down the value of the `OpenID Configuration Issuer` field. That is the OpenID Connect Auto Discovery URL which we will use later.
+</Step>
+</Steps>
+
+#### 3b. Configuring Forgejo with OpenID Connect
+
+<Steps>
+<Step>
+Navigate to the following URL:
+
+```plaintext
+https://forgejo.local/admin/auths
+```
+
+Replace `forgejo.local` with your domain.
+</Step>
+<Step>
+Click on the "Add authentication source" button
+</Step>
+<Step>
+In the "Authentication type" dropdown, select `OAuth2`.
+
+Under "Name", enter `authentik`. If you set anything other than `authentik` in the Redirect URI in step 3a, replace `authentik` with your custom name.
+
+Click on the "OAuth2 Provider" dropdown, and select `OpenID Connect`.
+</Step>
+<Step>
+Under "Client ID (Key)" and "Client Secret", enter the values you noted down in step 3a.
+</Step>
+<Step>
+Under "OpenID Connect Auto Discovery URL", enter the URL you noted down in step 3a.
+</Step>
+<Step>
+Click "Add authentication source" to save the authentication source.
+</Step>
+</Steps>
+
+#### 3b. Creating a Service Account in Forgejo
+
+<Steps>
+<Step>
+Navigate to the following URL:
+
+```plaintext
+https://forgejo.local/admin/users
+```
+
+Replace `forgejo.local` with your domain.
+</Step>
+<Step>
+Click on the "Create user account" button
+</Step>
+<Step>
+In the "User visibility" dropdown, select `Private`
+</Step>
+<Step>
+In the "Username" field, enter `service-account` or a username of your choice.
+</Step>
+<Step>
+In the "Email address" field, enter `service-account@forgejo.local` or whatever you desire.
+
+This account does not need notifications for LibreCloud to work, but you may want to use a real email address.
+</Step>
+<Step>
+In the "Password" field, enter a secure password
+</Step>
+<Step>
+Uncheck the "Require user to change password"
+</Step>
+<Step>
+Click "Create user account" to save the user
+</Step>
+<Step>
+You will now be directed to the user's page.
+
+Click on the "Edit" button under the "User details" card.
+</Step>
+<Step>
+Towards the bottom of the Edit page, check the `Administrator account` box and click "Update user account".
+</Step>
+</Steps>
+
+#### 3c. Creating an API Token in Forgejo
+
+An API token is required to access the Forgejo API, so we will use the service account to create one.
+
+<Steps>
+<Step>
+Sign out of your Forgejo account, and sign into the service account you created.
+</Step>
+<Step>
+Go to the following URL:
+
+```plaintext
+https://forgejo.local/user/settings/applications
+```
+
+Replace `forgejo.local` with your domain.
+</Step>
+<Step>
+In the "Name" field of the "Access Tokens" card, enter `librecloud` or a name of your choice.
+</Step>
+<Step>
+Under the "Select permissions" section (click the chevron to expand), select the following permissions:
+
+- `admin` - Read and Write
+- `repository` - Read and Write
+- `user` - Read and Write
+</Step>
+<Step>
+Click "Generate token" to save the token.
+</Step>
+<Step>
+Copy the token and save it in a safe place. You will need this for the next step.
+</Step>
+</Steps>
+
+### 4. Setting Environment Variables
+
+Now, we will put together our environment variables in `.env.local`.
+
+Here is what you should add:
+
+```ini
+GITEA_API_KEY=<Your API Token>
+GITEA_API_URL=http://forgejo.local/api/v1
+NEXT_PUBLIC_GITEA_URL=http://forgejo.local
+```
+
+Replace `<Your API Token>` with the token you copied in step 3c.
+
+You should also replace `forgejo.local` with your domain.
+
+### 5. All done!
+
+Your users will now be able to authenticate with their Authentik account, and
+connections within LibreCloud will function.

@@ -1,0 +1,36 @@
+---
+title: Email 2FA
+description: Configure LibreCloud's email 2FA
+icon: TbMail
+---
+
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+
+## Prerequisites
+
+- A mailserver capable of sending emails
+
+## Setup
+
+<Steps>
+<Step>
+### Configure Environment Variables
+
+In your `.env.local` file, add the following lines:
+
+```ini
+EMAIL_HOST=<mailserver>
+EMAIL_PORT=<smtp port>
+EMAIL_SSL=<true/false>
+NOREPLY_EMAIL=noreply@<your domain>
+NOREPLY_PASSWORD=<password>
+```
+
+Replace `<mailserver>`, `<smtp port>`, `<true/false>`, `<your domain>`, and `<password>` with your mailserver's information.
+</Step>
+<Step>
+### Done!
+
+Yep, it's that easy :)
+</Step>
+</Steps>

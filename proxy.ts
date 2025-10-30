@@ -1,4 +1,4 @@
-export { auth as middleware } from "@/auth"
+import { auth } from "@/auth"
 
 export const config = {
   matcher: [
@@ -6,3 +6,5 @@ export const config = {
     "/api/users/otp",
   ],
 };
+
+export const proxy = auth;

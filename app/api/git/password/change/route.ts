@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
   const safeBody = formSchema.safeParse(body)
 
   if (!safeBody.success) {
-    console.log("[! changePass] Invalid request body:", safeBody.error.errors)
+    console.log("[! changePass] Invalid request body:", safeBody.error.issues)
     return NextResponse.json({ error: "Invalid request body", issues: safeBody.error.format() }, { status: 400 })
   }
 
